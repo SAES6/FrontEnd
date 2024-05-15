@@ -40,7 +40,9 @@ const FullLayout = () => {
                     <Typography sx={{
                         marginLeft: "5px",
                         fontFamily: "Poppins, sans-serif",
-                        fontWeight: "500"
+                        fontSize: "1.2em",
+                        fontWeight: "500",
+                        letterSpacing: "-1px"
                     }}>
                         Informare Valorem
                     </Typography>

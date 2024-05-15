@@ -1,5 +1,7 @@
 import { useRoutes } from "react-router-dom";
 import ThemeRoutes from "./security/Router";
+import { ThemeProvider } from '@mui/material/styles';
+import { theme } from "./theme";
 import './App.css';
 
 const App = () => {
@@ -7,9 +9,10 @@ const App = () => {
 
   return (
     <>
-      <div>
+
+      <ThemeProvider theme={theme}>
         {routing}
-      </div>
+      </ThemeProvider>
     </>
   );
 };
