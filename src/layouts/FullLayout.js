@@ -2,6 +2,7 @@ import { Box, Typography } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 import { Outlet } from "react-router-dom";
 import Button from '@mui/material/Button';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import { theme } from "../theme";
 import { styled } from '@mui/material/styles';
@@ -22,16 +23,22 @@ const FullLayout = () => {
         <Box>
             <Box sx={{
                 width: "80vw",
-                height: "60px",
+                height: "50px",
                 backgroundColor: themeLayout.palette.primary.main,
                 display: "flex",
                 flexDirection: "row",
                 justifyContent: "space-between",
+                alignItems: "center",
                 padding: "10px 10vw"
             }}>
-                <Box>
-                    <i class="fas-solid fa-chart-pie"></i>
+                <Box sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    color: theme.palette.primary.contrastText
+                }}>
+                    <QueryStatsIcon />
                     <Typography sx={{
+                        marginLeft: "5px",
                         fontFamily: "Poppins, sans-serif",
                         fontWeight: "500"
                     }}>
