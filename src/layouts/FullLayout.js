@@ -6,6 +6,7 @@ import {
   Modal,
   TextField,
   IconButton,
+  useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Outlet, useNavigate } from "react-router-dom";
@@ -27,6 +28,7 @@ const ColorButton = styled(Button)(({ theme }) => ({
 
 const FullLayout = () => {
   const themeLayout = useTheme(theme);
+  const screenSize = useMediaQuery('(min-width:1600px)');
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
@@ -99,12 +101,12 @@ const FullLayout = () => {
           alignContent={"center"}
           justifyContent="space-between"
           sx={{
-            maxWidth: "1400px",
+            maxWidth: screenSize ? "1500px" : "1300px",
             padding: "15px 0",
           }}
         >
           <Grid item container alignItems="center" xs={6}>
-            <QueryStatsIcon />
+            <QueryStatsIcon sx={{ color: themeLayout.palette.primary.contrastText }} />
             <Typography
               sx={{
                 marginLeft: "5px",
@@ -273,15 +275,16 @@ const FullLayout = () => {
               sx={{
                 mt: 3,
                 mb: 2,
-                borderRadius: "10px",
+                borderRadius: "15px",
                 backgroundColor: "#0D5282",
                 color: "#F7F9FB",
                 fontFamily: "Poppins, sans-serif",
                 fontWeight: "600",
                 fontSize: "16px",
                 lineHeight: "24px",
-                padding: "10px 15px 10px 15px",
+                padding: "10px 15px",
                 textTransform: "none",
+                boxShadow: "none"
               }}
               onClick={handleLogin}
             >
