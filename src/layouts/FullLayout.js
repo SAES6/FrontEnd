@@ -99,7 +99,9 @@ const FullLayout = () => {
             sx={{
               marginLeft: "5px",
               fontFamily: "Poppins, sans-serif",
+              fontSize: "1.2em",
               fontWeight: "500",
+              letterSpacing: "-1px",
             }}
           >
             Informare Valorem
