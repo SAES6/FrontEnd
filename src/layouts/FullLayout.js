@@ -78,7 +78,10 @@ const FullLayout = () => {
       container
       direction="column"
       sx={{
+        flexWrap: "nowrap",
         filter: open ? "blur(5px)" : "none",
+        height: "100%",
+        alignItems: "center",
       }}
     >
       <Grid
@@ -96,7 +99,7 @@ const FullLayout = () => {
           alignContent={"center"}
           justifyContent="space-between"
           sx={{
-            maxWidth: "1200px",
+            maxWidth: "1400px",
             padding: "15px 0",
           }}
         >
