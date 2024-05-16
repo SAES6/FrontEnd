@@ -18,7 +18,7 @@ const Home = () => {
 
     return (
         <Box sx={{
-            height: "500px",
+            height: "100%",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
@@ -31,20 +31,22 @@ const Home = () => {
                 alignItems: "flex-end"
             }}>
                 <Box sx={{
-                    width: "600px"
+                    width: "50%",
+                    marginRight: "20px"
                 }}>
                     <Typography sx={{
                         fontFamily: "Poppins, sans-serif",
-                        fontSize: "3em",
-                        fontWeight: "500",
-                        letterSpacing: "-1px"
+                        fontSize: "64px",
+                        fontWeight: "700",
+                        lineHeight: "1.2",
+                        letterSpacing: "-2px"
                     }}>
                         Projet Informare Valorem
                     </Typography>
                     <Typography sx={{
                         fontFamily: "Poppins, sans-serif",
-                        fontSize: "1em",
-                        fontWeight: "400",
+                        fontSize: "16px",
+                        fontWeight: "300",
                         letterSpacing: "-1px"
                     }}>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
@@ -52,17 +54,12 @@ const Home = () => {
                     </Typography>
                 </Box>
                 <Box sx={{
-                    width: "600px",
-                    height: "300px",
+                    width: "50%",
+                    height: "350px",
                     backgroundColor: themeLayout.palette.secondary.main,
                     borderRadius: "20px"
-                }}>
-
-                </Box>
+                }} />
             </Box>
-            <ColorButton sx={{ marginTop: "20px" }} variant="contained">
-                Commencer
-            </ColorButton>
         </Box>
     );
 }
