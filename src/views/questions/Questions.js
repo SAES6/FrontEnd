@@ -4,7 +4,7 @@ import { styled } from "@mui/material/styles";
 import { theme } from "../../theme";
 import QuestionOpen from "../../components/QuestionOpen";
 import { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import QuestionSimple from "../../components/QuestionSimple";
@@ -17,13 +17,15 @@ const Questions = () => {
   const [currentQuestions, setCurrentQuestions] = useState([]);
   const [currentSection, setCurrentSection] = useState(1);
   // recupere l'id du questionnaire via l'url
-  const id = window.location.pathname.split("/")[2];
+  const { id } = useParams();
 
   const loadQuestions = () => {
+    console.log(id);
     axios
-      .get(`${process.env.REACT_APP_API_URL}/questionnaires/${id}`)
+      .get(`${process.env.REACT_APP_API_URL}/questionnaire/loadById?id=${id}`)
       .then((response) => {
-        setQuestions(response.data.questions);
+        console.log(response);
+        setQuestions(response.data);
       })
       .catch(() => {
         toast.error("Aucune question", {
@@ -41,13 +43,20 @@ const Questions = () => {
   }, []);
 
   useEffect(() => {
+    console.log(questions);
     if (questions.length > 0) {
-      setCurrentQuestions(
-        questions.filter((question) => question.page === currentSection)
-      );
+      console.log("mdr2");
+      let array = [];
+      array = questions.filter((question) => question.page === currentSection);
+      array = array.sort((a, b) => a.order - b.order);
+      setCurrentQuestions(array);
     }
-    setCurrentQuestions(currentQuestions.sort((a, b) => a.order - b.order));
   }, [questions, currentSection]);
+
+  useEffect(() => {
+    console.log("mdr");
+    console.log(currentQuestions);
+  }, [currentQuestions]);
   return (
     <Grid
       container
@@ -61,11 +70,11 @@ const Questions = () => {
         overflow: "auto",
       }}
     >
-      {currentQuestions.map((question, index) => {
+      {currentQuestions.map((question) => {
         if (question.type === "text") {
           return (
             <QuestionOpen questionTitle={question.title}>
-              {question.text}
+              {question.description}
             </QuestionOpen>
           );
         }
@@ -78,14 +87,14 @@ const Questions = () => {
               questionTitle={question.title}
               questionType={question.type}
             >
-              {question.text}
+              {question.description}
             </QuestionSimple>
           );
         }
         if (question.type === "slider") {
           return (
             <QuestionEchelle questionTitle={question.title}>
-              {question.text}
+              {question.description}
             </QuestionEchelle>
           );
         }
