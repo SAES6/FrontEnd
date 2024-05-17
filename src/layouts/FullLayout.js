@@ -141,7 +141,15 @@ const FullLayout = () => {
             padding: "15px 0",
           }}
         >
-          <Grid item container alignItems="center" xs={6} gap={1}>
+          <Grid
+            item
+            container
+            alignItems="center"
+            xs={6}
+            gap={1}
+            sx={{ cursor: "pointer" }}
+            onClick={() => navigate("/")}
+          >
             <FontAwesomeIcon
               icon="fa-solid fa-chart-pie"
               style={{
