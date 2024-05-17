@@ -75,6 +75,33 @@ const Home = () => {
                     }}
                 />
             </Grid>
+            <Grid
+                container
+                spacing={2}
+                sx={{
+                    height: "fit-content",
+                    width: "100%",
+                    flexDirection: "row",
+                    alignItems: "flex-end",
+                }}>
+                <Grid>
+                    <Grid>
+                        <Typography sx={{
+                            fontFamily: "Poppins, sans-serif",
+                            fontSize: "24px",
+                            fontWeight: "600",
+                            letterSpacing: "-1px",
+                            textTransform: "none"
+                        }}>
+                            Form Title
+                        </Typography>
+                    </Grid>
+                    <Grid>
+
+                    </Grid>
+
+                </Grid>
+            </Grid>
         </Grid>
     );
 };
