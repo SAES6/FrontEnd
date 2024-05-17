@@ -1,9 +1,16 @@
-import { Grid, Typography, useMediaQuery, TextField } from "@mui/material";
+import {
+  Grid,
+  Typography,
+  useMediaQuery,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { theme } from "../theme";
 
-const QuestionOpen = ({ children, questionTitle }) => {
+const QuestionSimple = ({ children, questionTitle, questionType }) => {
   const themeQuestion = useTheme(theme);
   const screenSize = useMediaQuery("(min-width:1600px)");
 
@@ -51,8 +58,8 @@ const QuestionOpen = ({ children, questionTitle }) => {
           }}
         >
           <FontAwesomeIcon
-            icon="fa-solid fa-feather"
-            style={{ opacity: "0.50" }}
+            icon="fa-solid fa-bullseye"
+            style={{ opacity: "0.5" }}
           />
           <Typography
             sx={{
@@ -61,9 +68,10 @@ const QuestionOpen = ({ children, questionTitle }) => {
               fontWeight: "600",
               lineHeight: "24px",
               marginLeft: "5px",
+              color: themeQuestion.palette.text.primary,
             }}
           >
-            Question Ouverte
+            Choix {questionType === "simple_choice" ? "simple" : "multiple"}
           </Typography>
         </Grid>
       </Grid>
@@ -81,6 +89,7 @@ const QuestionOpen = ({ children, questionTitle }) => {
             fontSize: "16px",
             fontWeight: "600",
             lineHeight: "24px",
+            color: themeQuestion.palette.text.primary,
           }}
         >
           Enoncé
@@ -91,44 +100,62 @@ const QuestionOpen = ({ children, questionTitle }) => {
             fontSize: "16px",
             fontWeight: "400",
             lineHeight: "24px",
+            color: themeQuestion.palette.text.primary,
           }}
         >
           {children}
         </Typography>
       </Grid>
       <Grid
-        className="answer"
+        className="choices"
         sx={{
           width: "100%",
         }}
       >
-        <TextField
-          margin="normal"
-          required
-          sx={{
-            mt: "5px",
-            width: "100%",
-            borderRadius: "15px",
-            border: "1px solid",
-            borderColor: themeQuestion.palette.secondary.main,
-            input: {
-              padding: "10px 15px",
-              border: "none",
-              fontWeight: "400",
-              color: themeQuestion.palette.text.secondary,
-              fontFamily: "Poppins, sans-serif",
-              fontSize: "16px",
-            },
-            fieldset: {
-              border: "none",
-            },
-          }}
-          type="text"
-          placeholder="Saisissez votre réponse"
-        />
+        <FormGroup>
+          <FormControlLabel
+            sx={{
+              "& .MuiFormControlLabel-label": {
+                fontFamily: "Poppins, sans-serif",
+                fontSize: "16px",
+                fontWeight: "400",
+                lineHeight: "24px",
+                color: themeQuestion.palette.text.primary,
+              },
+            }}
+            control={<Checkbox />}
+            label="Choix 1"
+          />
+          <FormControlLabel
+            sx={{
+              "& .MuiFormControlLabel-label": {
+                fontFamily: "Poppins, sans-serif",
+                fontSize: "16px",
+                fontWeight: "400",
+                lineHeight: "24px",
+                color: themeQuestion.palette.text.primary,
+              },
+            }}
+            control={<Checkbox />}
+            label="Choix 2"
+          />
+          <FormControlLabel
+            sx={{
+              "& .MuiFormControlLabel-label": {
+                fontFamily: "Poppins, sans-serif",
+                fontSize: "16px",
+                fontWeight: "400",
+                lineHeight: "24px",
+                color: themeQuestion.palette.text.primary,
+              },
+            }}
+            control={<Checkbox />}
+            label="Choix 3"
+          />
+        </FormGroup>
       </Grid>
     </Grid>
   );
 };
 
-export default QuestionOpen;
+export default QuestionSimple;

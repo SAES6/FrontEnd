@@ -3,7 +3,9 @@ import { useTheme } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
 import { theme } from "../../theme";
 import { useEffect, useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { toast } from "react-toastify";
 import axios from "axios";
 const ColorButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
@@ -15,6 +17,7 @@ const ColorButton = styled(Button)(({ theme }) => ({
 }));
 
 const Home = () => {
+  const navigate = useNavigate();
   const themeLayout = useTheme(theme);
   const screenSize = useMediaQuery("(min-width:1600px)");
 
@@ -33,7 +36,19 @@ const Home = () => {
       })
       .catch((error) => {
         console.log(error);
+        toast.error("Aucun questionnaire", {
+          position: "top-center",
+          style: {
+            fontFamily: "Poppins, sans-serif",
+            borderRadius: "15px",
+            textAlign: "center",
+          },
+        });
       });
+  };
+
+  const goToQuestionnaire = (questionnaire) => {
+    navigate(`/questions/${questionnaire.id}`);
   };
 
   useEffect(() => {
@@ -58,7 +73,7 @@ const Home = () => {
     >
       <Grid
         container
-        spacing={2}
+        spacing={4}
         sx={{
           height: "fit-content",
           width: "100%",
@@ -119,6 +134,7 @@ const Home = () => {
         {questionnaires.map((questionnaire) => (
           <Grid>
             <ColorButton
+              onClick={() => goToQuestionnaire(questionnaire)}
               disabled={questionnaire.completed}
               sx={{
                 height: "200px",

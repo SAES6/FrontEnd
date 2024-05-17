@@ -17,7 +17,7 @@ const ThemeRoutes = [
       { path: "/", element: <Navigate to="/accueil" /> },
       { path: "/connection", exact: true, element: <SignIn /> },
       { path: "/accueil", exact: true, element: <Home /> },
-      { path: "/questions", exact: true, element: <Questions /> },
+      { path: "/questions/:id", exact: true, element: <Questions /> },
       {
         path: "/admin-console",
         exact: true,

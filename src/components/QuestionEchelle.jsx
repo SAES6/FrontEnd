@@ -1,9 +1,9 @@
-import { Grid, Typography, useMediaQuery, TextField } from "@mui/material";
+import { Grid, Typography, useMediaQuery, Slider } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { theme } from "../theme";
 
-const QuestionOpen = ({ children, questionTitle }) => {
+const QuestionEchelle = ({ children, questionTitle }) => {
   const themeQuestion = useTheme(theme);
   const screenSize = useMediaQuery("(min-width:1600px)");
 
@@ -51,8 +51,8 @@ const QuestionOpen = ({ children, questionTitle }) => {
           }}
         >
           <FontAwesomeIcon
-            icon="fa-solid fa-feather"
-            style={{ opacity: "0.50" }}
+            icon="fa-solid fa-sliders"
+            style={{ opacity: "0.5" }}
           />
           <Typography
             sx={{
@@ -61,9 +61,10 @@ const QuestionOpen = ({ children, questionTitle }) => {
               fontWeight: "600",
               lineHeight: "24px",
               marginLeft: "5px",
+              color: themeQuestion.palette.text.primary,
             }}
           >
-            Question Ouverte
+            Echelle
           </Typography>
         </Grid>
       </Grid>
@@ -81,6 +82,7 @@ const QuestionOpen = ({ children, questionTitle }) => {
             fontSize: "16px",
             fontWeight: "600",
             lineHeight: "24px",
+            color: themeQuestion.palette.text.primary,
           }}
         >
           Enoncé
@@ -91,44 +93,29 @@ const QuestionOpen = ({ children, questionTitle }) => {
             fontSize: "16px",
             fontWeight: "400",
             lineHeight: "24px",
+            color: themeQuestion.palette.text.primary,
           }}
         >
           {children}
         </Typography>
       </Grid>
       <Grid
-        className="answer"
+        className="slider"
         sx={{
           width: "100%",
         }}
       >
-        <TextField
-          margin="normal"
-          required
-          sx={{
-            mt: "5px",
-            width: "100%",
-            borderRadius: "15px",
-            border: "1px solid",
-            borderColor: themeQuestion.palette.secondary.main,
-            input: {
-              padding: "10px 15px",
-              border: "none",
-              fontWeight: "400",
-              color: themeQuestion.palette.text.secondary,
-              fontFamily: "Poppins, sans-serif",
-              fontSize: "16px",
-            },
-            fieldset: {
-              border: "none",
-            },
-          }}
-          type="text"
-          placeholder="Saisissez votre réponse"
+        <Slider
+          aria-label="Temperature"
+          valueLabelDisplay="auto"
+          step={10}
+          marks
+          min={0}
+          max={100}
         />
       </Grid>
     </Grid>
   );
 };
 
-export default QuestionOpen;
+export default QuestionEchelle;
