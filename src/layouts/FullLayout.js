@@ -16,6 +16,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { styled } from "@mui/material/styles";
 import axios from "axios";
 import { theme } from "../theme";
+import { toast } from "react-toastify";
 
 const ColorButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.main,
@@ -76,7 +77,26 @@ const FullLayout = () => {
         localStorage.setItem("authToken", response.data.token);
         setIsAuthenticated(true);
         setOpen(false);
+        toast.success("Connexion réussie", {
+          position: "top-center",
+          style: {
+            fontFamily: "Poppins, sans-serif",
+            borderRadius: "15px",
+            textAlign: "center",
+          },
+        });
         navigate("/admin-console");
+      })
+      .catch((error) => {
+        console.error("Error logging in:", error);
+        toast.error("Identifiants incorrect", {
+          position: "top-center",
+          style: {
+            fontFamily: "Poppins, sans-serif",
+            borderRadius: "15px",
+            textAlign: "center",
+          },
+        });
       });
   };
 
