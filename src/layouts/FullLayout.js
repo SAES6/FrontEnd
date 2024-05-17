@@ -11,7 +11,7 @@ import {
 import { useTheme } from "@mui/material/styles";
 import { Outlet, useNavigate } from "react-router-dom";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
-import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CloseIcon from "@mui/icons-material/Close";
 import { styled } from "@mui/material/styles";
 import axios from "axios";
@@ -105,8 +105,14 @@ const FullLayout = () => {
             padding: "15px 0",
           }}
         >
-          <Grid item container alignItems="center" xs={6}>
-            <QueryStatsIcon sx={{ color: themeLayout.palette.primary.contrastText }} />
+          <Grid item container alignItems="center" xs={6} gap={1}>
+            <FontAwesomeIcon
+              icon="fa-solid fa-newspaper"
+              style={{
+                fontSize: "24px",
+                color: themeLayout.palette.primary.contrastText
+              }}
+            />
             <Typography
               sx={{
                 marginLeft: "5px",
@@ -132,7 +138,7 @@ const FullLayout = () => {
                 textTransform: "none",
               }}
               variant="contained"
-              startIcon={<SupervisorAccountIcon />}
+              startIcon={<FontAwesomeIcon icon="fa-solid fa-user-tie" style={{ fontSize: "16px", margin: "0 5px" }} />}
               onClick={handleOpen}
             >
               Espace Admin
