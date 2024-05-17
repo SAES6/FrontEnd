@@ -123,7 +123,7 @@ const FullLayout = () => {
         >
           <Grid item container alignItems="center" xs={6} gap={1}>
             <FontAwesomeIcon
-              icon="fa-solid fa-newspaper"
+              icon="fa-solid fa-chart-pie"
               style={{
                 fontSize: "24px",
                 color: themeLayout.palette.primary.contrastText,

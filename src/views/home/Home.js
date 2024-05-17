@@ -3,6 +3,7 @@ import { useTheme } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
 import { theme } from "../../theme";
 import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 const ColorButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
@@ -118,6 +119,7 @@ const Home = () => {
         {questionnaires.map((questionnaire) => (
           <Grid>
             <ColorButton
+              disabled={questionnaire.completed}
               sx={{
                 height: "200px",
                 maxHeight: "200px",
@@ -131,70 +133,151 @@ const Home = () => {
                 padding: "20px 25px",
                 display: "flex",
                 flexDirection: "column",
-                justifyContent: "flex-start",
+                justifyContent: "space-between",
                 alignItems: "flex-start",
+                "&:disabled": {
+                  backgroundColor: themeLayout.palette.secondary.main, // Exemple de couleur lorsque le bouton est désactivé
+                },
               }}
               variant="contained"
             >
-              <Grid>
+              <Grid
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
+                  width: "100%",
+                }}
+              >
+                <Grid
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                    width: "100%",
+                  }}
+                >
+                  {questionnaire.completed && (
+                    <FontAwesomeIcon
+                      icon="fa-solid fa-lock"
+                      style={{
+                        fontSize: "24px",
+                        color: themeLayout.palette.primary.contrastText,
+                        marginRight: "10px",
+                      }}
+                    />
+                  )}
+                  <Typography
+                    sx={{
+                      fontFamily: "Poppins, sans-serif",
+                      fontSize: "24px",
+                      fontWeight: "600",
+                      lineHeight: "36px",
+                      color: themeLayout.palette.primary.contrastText,
+                      overflowWrap: "break-word",
+                      textTransform: "none",
+                      width: "100%",
+                      overflow: "scroll",
+                      textAlign: "left",
+                    }}
+                  >
+                    {questionnaire.name}
+                  </Typography>
+                </Grid>
                 <Typography
                   sx={{
                     fontFamily: "Poppins, sans-serif",
-                    fontSize: "24px",
-                    fontWeight: "600",
-                    lineHeight: "36px",
+                    fontSize: "16px",
+                    fontWeight: "400",
+                    lineHeight: "24px",
                     color: themeLayout.palette.primary.contrastText,
                     overflowWrap: "break-word",
                     textTransform: "none",
+                    width: "100%",
+                    maxHeight: "40%",
+                    overflow: "scroll",
+                    textAlign: "left",
                   }}
                 >
-                  {questionnaire.name}
+                  {questionnaire.description}
                 </Typography>
               </Grid>
-              <Typography
+              <Grid
                 sx={{
-                  fontFamily: "Poppins, sans-serif",
-                  fontSize: "16px",
-                  fontWeight: "400",
-                  lineHeight: "24px",
-                  color: themeLayout.palette.primary.contrastText,
-                  overflowWrap: "break-word",
-                  textTransform: "none",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "flex-end",
+                  alignItems: "flex-start",
+                  width: "100%",
+                  maxHeight: "20%",
                 }}
               >
-                {questionnaire.description}
-              </Typography>
-              <Grid>
-                <Typography
+                <Grid
                   sx={{
-                    fontFamily: "Poppins, sans-serif",
-                    fontSize: "16px",
-                    fontWeight: "600",
-                    lineHeight: "24px",
-                    color: themeLayout.palette.primary.contrastText,
-                    opacity: "0.75",
-                    textTransform: "none",
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    width: "100%",
                   }}
                 >
-                  {questionnaire.number_of_questions == 1
-                    ? "1 question"
-                    : questionnaire.number_of_questions + " questions"}
-                </Typography>
-              </Grid>
-              <Grid>
-                <Typography
+                  <FontAwesomeIcon
+                    icon="fa-solid fa-circle-question"
+                    style={{
+                      fontSize: "16px",
+                      color: themeLayout.palette.primary.contrastText,
+                      opacity: "0.75",
+                      marginRight: "5px",
+                    }}
+                  />
+                  <Typography
+                    sx={{
+                      fontFamily: "Poppins, sans-serif",
+                      fontSize: "16px",
+                      fontWeight: "600",
+                      lineHeight: "24px",
+                      color: themeLayout.palette.primary.contrastText,
+                      opacity: "0.75",
+                      textTransform: "none",
+                    }}
+                  >
+                    {questionnaire.number_of_questions == 1
+                      ? "1 question"
+                      : questionnaire.number_of_questions + " questions"}
+                  </Typography>
+                </Grid>
+                <Grid
                   sx={{
-                    fontFamily: "Poppins, sans-serif",
-                    fontSize: "16px",
-                    fontWeight: "600",
-                    lineHeight: "24px",
-                    color: themeLayout.palette.primary.contrastText,
-                    opacity: "0.75",
-                    textTransform: "none",
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    width: "100%",
                   }}
                 >
-                  {questionnaire.duree + " min"}
-                </Typography>
+                  <FontAwesomeIcon
+                    icon="fa-solid fa-clock"
+                    style={{
+                      fontSize: "16px",
+                      color: themeLayout.palette.primary.contrastText,
+                      opacity: "0.75",
+                      marginRight: "5px",
+                    }}
+                  />
+                  <Typography
+                    sx={{
+                      fontFamily: "Poppins, sans-serif",
+                      fontSize: "16px",
+                      fontWeight: "600",
+                      lineHeight: "24px",
+                      color: themeLayout.palette.primary.contrastText,
+                      opacity: "0.75",
+                      textTransform: "none",
+                    }}
+                  >
+                    {questionnaire.duree + " min"}
+                  </Typography>
+                </Grid>
               </Grid>
             </ColorButton>
           </Grid>
