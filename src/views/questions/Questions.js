@@ -7,11 +7,15 @@ import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
+import QuestionSimple from "../../components/QuestionSimple";
+import QuestionEchelle from "../../components/QuestionEchelle";
 
 const Questions = () => {
   const themeLayout = useTheme(theme);
   const screenSize = useMediaQuery("(min-width:1600px)");
   const [questions, setQuestions] = useState([]);
+  const [currentQuestions, setCurrentQuestions] = useState([]);
+  const [currentSection, setCurrentSection] = useState(1);
   // recupere l'id du questionnaire via l'url
   const id = window.location.pathname.split("/")[2];
 
@@ -36,29 +40,56 @@ const Questions = () => {
     loadQuestions();
   }, []);
 
+  useEffect(() => {
+    if (questions.length > 0) {
+      setCurrentQuestions(
+        questions.filter((question) => question.page === currentSection)
+      );
+    }
+    setCurrentQuestions(currentQuestions.sort((a, b) => a.order - b.order));
+  }, [questions, currentSection]);
   return (
     <Grid
       container
       sx={{
-        maxWidth: screenSize ? "1500px" : "1300px",
         height: "100%",
-        width: "auto",
-        alignItems: "center",
+        width: "100%",
+        display: "flex",
+        flexDirection: "row",
         justifyContent: "center",
-        alignContent: "center",
+        padding: "40px 0",
+        overflow: "auto",
       }}
     >
-      <Grid>
-        <Grid>
-          <QuestionOpen>
-            At vero eos et accusamus et iusto odio dignissimos ducimus qui
-            blanditiis praesentium voluptatum deleniti atque corrupti quos
-            dolores et quas molestias excepturi sint occaecati cupiditate non
-            provident, similique sunt in culpa qui officia deserunt mollitia
-            animi, id est laborum et dolorum fuga
-          </QuestionOpen>
-        </Grid>
-      </Grid>
+      {currentQuestions.map((question, index) => {
+        if (question.type === "text") {
+          return (
+            <QuestionOpen questionTitle={question.title}>
+              {question.text}
+            </QuestionOpen>
+          );
+        }
+        if (
+          question.type === "simple_choice" ||
+          question.type === "multiple_choice"
+        ) {
+          return (
+            <QuestionSimple
+              questionTitle={question.title}
+              questionType={question.type}
+            >
+              {question.text}
+            </QuestionSimple>
+          );
+        }
+        if (question.type === "slider") {
+          return (
+            <QuestionEchelle questionTitle={question.title}>
+              {question.text}
+            </QuestionEchelle>
+          );
+        }
+      })}
     </Grid>
   );
 };
