@@ -28,14 +28,30 @@ const ColorButton = styled(Button)(({ theme }) => ({
 
 const FullLayout = () => {
   const themeLayout = useTheme(theme);
-  const screenSize = useMediaQuery('(min-width:1600px)');
+  const screenSize = useMediaQuery("(min-width:1600px)");
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  useEffect(() => {
+  useEffect(async () => {
+    const checkToken = async () => {
+      const tokenUser = localStorage.getItem("token_access");
+      if (!tokenUser) {
+        try {
+          const response = await axios.get(
+            `${process.env.REACT_APP_API_URL}/createToken`
+          );
+          localStorage.setItem("token_access", response.data.token);
+        } catch (error) {
+          console.error("Error fetching the token:", error);
+          localStorage.removeItem("token_access");
+        }
+      }
+    };
+
+    await checkToken();
     const token = localStorage.getItem("authToken");
     if (token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -106,7 +122,9 @@ const FullLayout = () => {
           }}
         >
           <Grid item container alignItems="center" xs={6}>
-            <QueryStatsIcon sx={{ color: themeLayout.palette.primary.contrastText }} />
+            <QueryStatsIcon
+              sx={{ color: themeLayout.palette.primary.contrastText }}
+            />
             <Typography
               sx={{
                 marginLeft: "5px",
@@ -284,7 +302,7 @@ const FullLayout = () => {
                 lineHeight: "24px",
                 padding: "10px 15px",
                 textTransform: "none",
-                boxShadow: "none"
+                boxShadow: "none",
               }}
               onClick={handleLogin}
             >
