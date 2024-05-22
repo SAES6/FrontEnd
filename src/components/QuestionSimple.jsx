@@ -10,9 +10,10 @@ import { useTheme } from "@mui/material/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { theme } from "../theme";
 
-const QuestionSimple = ({ children, questionTitle, questionType }) => {
+const QuestionSimple = ({ children, questionTitle, questionType, questionChoices }) => {
   const themeQuestion = useTheme(theme);
   const screenSize = useMediaQuery("(min-width:1600px)");
+  console.log(questionChoices)
 
   return (
     <Grid
@@ -113,45 +114,22 @@ const QuestionSimple = ({ children, questionTitle, questionType }) => {
         }}
       >
         <FormGroup>
-          <FormControlLabel
-            sx={{
-              "& .MuiFormControlLabel-label": {
-                fontFamily: "Poppins, sans-serif",
-                fontSize: "16px",
-                fontWeight: "400",
-                lineHeight: "24px",
-                color: themeQuestion.palette.text.primary,
-              },
-            }}
-            control={<Checkbox />}
-            label="Choix 1"
-          />
-          <FormControlLabel
-            sx={{
-              "& .MuiFormControlLabel-label": {
-                fontFamily: "Poppins, sans-serif",
-                fontSize: "16px",
-                fontWeight: "400",
-                lineHeight: "24px",
-                color: themeQuestion.palette.text.primary,
-              },
-            }}
-            control={<Checkbox />}
-            label="Choix 2"
-          />
-          <FormControlLabel
-            sx={{
-              "& .MuiFormControlLabel-label": {
-                fontFamily: "Poppins, sans-serif",
-                fontSize: "16px",
-                fontWeight: "400",
-                lineHeight: "24px",
-                color: themeQuestion.palette.text.primary,
-              },
-            }}
-            control={<Checkbox />}
-            label="Choix 3"
-          />
+          {questionChoices.map((choice) => (
+            <FormControlLabel
+              sx={{
+                "& .MuiFormControlLabel-label": {
+                  fontFamily: "Poppins, sans-serif",
+                  fontSize: "16px",
+                  fontWeight: "400",
+                  lineHeight: "24px",
+                  color: themeQuestion.palette.text.primary,
+                },
+              }}
+              control={<Checkbox />}
+              label={choice.text}
+            />
+          ))
+          }
         </FormGroup>
       </Grid>
     </Grid>
