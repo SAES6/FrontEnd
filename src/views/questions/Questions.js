@@ -18,6 +18,7 @@ const Questions = () => {
   const [currentSection, setCurrentSection] = useState(1);
   // recupere l'id du questionnaire via l'url
   const { id } = useParams();
+  const getLocalStorageKey = (id) => `currentSection_${id}`;
 
   const loadQuestions = () => {
     console.log(id);
@@ -39,12 +40,12 @@ const Questions = () => {
   };
 
   useEffect(() => {
-    const storedSection = localStorage.getItem("currentSection");
+    const storedSection = localStorage.getItem(getLocalStorageKey(id));
     if (storedSection) {
       setCurrentSection(parseInt(storedSection, 10));
     }
     loadQuestions();
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     console.log(questions);
@@ -66,7 +67,7 @@ const Questions = () => {
       array = array.sort((a, b) => a.order - b.order);
       setCurrentQuestions(array);
       setCurrentSection(currentSection + 1)
-      localStorage.setItem("currentSection", currentSection + 1)
+      localStorage.setItem(getLocalStorageKey(id), currentSection + 1);
     }
   };
 
@@ -114,7 +115,12 @@ const Questions = () => {
           }
           if (question.type === "slider") {
             return (
-              <QuestionEchelle questionTitle={question.title}>
+              <QuestionEchelle
+                questionTitle={question.title}
+                questionSliderMin={question.slider_min}
+                questionSliderMax={question.slider_max}
+                questionSliderGap={question.slider_gap}
+              >
                 {question.description}
               </QuestionEchelle>
             );

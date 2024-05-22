@@ -3,9 +3,19 @@ import { useTheme } from "@mui/material/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { theme } from "../theme";
 
-const QuestionEchelle = ({ children, questionTitle }) => {
+const QuestionEchelle = ({ children, questionTitle, questionSliderMin, questionSliderMax, questionSliderGap }) => {
   const themeQuestion = useTheme(theme);
   const screenSize = useMediaQuery("(min-width:1600px)");
+
+  const generateMarks = (min, max, step) => {
+    const marks = [];
+    for (let i = min; i <= max; i += step) {
+      marks.push({ value: i, label: i.toString() });
+    }
+    return marks;
+  };
+
+  const marks = generateMarks(questionSliderMin, questionSliderMax, questionSliderGap);
 
   return (
     <Grid
@@ -108,10 +118,10 @@ const QuestionEchelle = ({ children, questionTitle }) => {
         <Slider
           aria-label="Temperature"
           valueLabelDisplay="auto"
-          step={10}
-          marks
-          min={0}
-          max={100}
+          step={questionSliderGap}
+          marks={marks}
+          min={questionSliderMin}
+          max={questionSliderMax}
         />
       </Grid>
     </Grid>
