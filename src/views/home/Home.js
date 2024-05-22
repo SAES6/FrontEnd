@@ -1,10 +1,18 @@
-import { Grid, Button, Typography, useMediaQuery } from "@mui/material";
+import {
+  Grid,
+  Button,
+  Typography,
+  useMediaQuery,
+  Modal,
+  IconButton,
+} from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
 import { theme } from "../../theme";
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
 import axios from "axios";
 const ColorButton = styled(Button)(({ theme }) => ({
@@ -20,9 +28,11 @@ const Home = () => {
   const navigate = useNavigate();
   const themeLayout = useTheme(theme);
   const screenSize = useMediaQuery("(min-width:1600px)");
+  const [openConsentPopup, setOpenConsentPopup] = useState(false);
 
   // load the questionnaires from the API
   const [questionnaires, setQuestionnaires] = useState([]);
+  const [selectedQuestionnaire, setSelectedQuestionnaire] = useState({});
 
   const loadQuestionnaires = () => {
     axios
@@ -48,7 +58,22 @@ const Home = () => {
   };
 
   const goToQuestionnaire = (questionnaire) => {
-    navigate(`/questions/${questionnaire.id}`);
+    if (localStorage.getItem("user_consent") === "true") {
+      navigate(`/questions/${questionnaire.id}`);
+    } else {
+      setOpenConsentPopup(true);
+      setSelectedQuestionnaire(questionnaire);
+    }
+  };
+
+  const handleConsent = () => {
+    localStorage.setItem("user_consent", "true");
+    setOpenConsentPopup(false);
+    navigate(`/questions/${selectedQuestionnaire.id}`);
+  };
+
+  const handleCloseConsent = () => {
+    setOpenConsentPopup(false);
   };
 
   useEffect(() => {
@@ -299,6 +324,145 @@ const Home = () => {
           </Grid>
         ))}
       </Grid>
+      <Modal open={openConsentPopup} onClose={handleCloseConsent}>
+        <Grid
+          container
+          direction="column"
+          alignItems="center"
+          justifyContent="center"
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "fit-content",
+            bgcolor: "background.paper",
+            borderRadius: "15px",
+            padding: "20px 25px",
+            boxShadow: 24,
+          }}
+        >
+          <Grid
+            container
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{ mb: 3, width: "100%" }}
+          >
+            <Grid item xs={2} />
+            <Grid item xs={8}>
+              <Typography
+                variant="h6"
+                component="h2"
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: "600",
+                  fontSize: "24px",
+                  lineHeight: "36px",
+                  color: "#0E1419",
+                  textAlign: "center",
+                }}
+              >
+                Un instant !
+              </Typography>
+            </Grid>
+            <Grid item xs={2} sx={{ textAlign: "right" }}>
+              <IconButton onClick={handleCloseConsent}>
+                <CloseIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            alignItems="center"
+            justifyContent="center"
+            sx={{ mb: 3, width: "500px" }}
+          >
+            <Typography
+              sx={{
+                fontFamily: "Poppins, sans-serif",
+                fontWeight: "400",
+                fontSize: "16px",
+                lineHeight: "24px",
+                color: "#0E1419",
+                textAlign: "start",
+                mb: 2,
+              }}
+            >
+              Avant de commencer, veuillez lire et accepter les conditions
+              d’utilisation générales :
+            </Typography>
+            <Grid
+              container
+              alignItems="center"
+              justifyContent="center"
+              sx={{
+                border: "1px solid",
+                borderColor: themeLayout.palette.secondary.main,
+                borderRadius: "15px",
+                padding: "10px 15px",
+                maxHeight: "200px",
+                overflow: "scroll",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: "400",
+                  fontSize: "16px",
+                  lineHeight: "24px",
+                  opacity: "0.5",
+                  textAlign: "start",
+                }}
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+                sunt in culpa qui officia deserunt mollit anim id est laborum.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
+                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
+                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+                sunt in culpa qui officia deserunt mollit anim id est laborum.
+              </Typography>
+            </Grid>
+          </Grid>
+
+          <Grid>
+            <ColorButton
+              onClick={handleConsent}
+              sx={{
+                backgroundColor: themeLayout.palette.primary.main,
+                borderRadius: "10px",
+                padding: "10px 15px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              variant="contained"
+            >
+              <Typography
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: "600",
+                  fontSize: "16px",
+                  lineHeight: "24px",
+                  color: themeLayout.palette.primary.contrastText,
+                  textAlign: "center",
+                  textTransform: "none",
+                }}
+              >
+                J’accepte
+              </Typography>
+            </ColorButton>
+          </Grid>
+        </Grid>
+      </Modal>
     </Grid>
   );
 };
