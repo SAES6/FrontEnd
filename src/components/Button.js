@@ -1,12 +1,12 @@
-import { Box, Typography } from "@mui/material";
+import {Box, Typography} from "@mui/material";
 
-const Button = ({ color, icon, label }) => {
+const Button = ({color, icon, label}) => {
     return (
         <Box sx={{
             backgroundColor: color,
             padding: "10px 15px"
         }}>
-            <i class={icon} />
+            <i class={icon}/>
             <Typography>
                 {label}
             </Typography>
