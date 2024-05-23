@@ -1,31 +1,34 @@
 import { Grid, Button, Typography, useMediaQuery } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { styled } from "@mui/material/styles";
 import { theme } from "../../theme";
 import QuestionOpen from "../../components/QuestionOpen";
 import { useEffect, useState } from "react";
-import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import QuestionSimple from "../../components/QuestionSimple";
 import QuestionEchelle from "../../components/QuestionEchelle";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentSection, setTotalSections, setProgression, addResponse } from "../../_store/_slices/questionnaire-slice";
 
 const Questions = () => {
   const themeQuestions = useTheme(theme);
   const screenSize = useMediaQuery("(min-width:1600px)");
+  const dispatch = useDispatch();
+  const { section: currentSection, totalSections, progression, userResponses } = useSelector(state => state.questionnaire);
+
   const [questions, setQuestions] = useState([]);
   const [currentQuestions, setCurrentQuestions] = useState([]);
-  const [currentSection, setCurrentSection] = useState(1);
-  // recupere l'id du questionnaire via l'url
+  const [responses, setResponses] = useState({});
   const { id } = useParams();
-  const getLocalStorageKey = (id) => `currentSection_${id}`;
 
   const loadQuestions = () => {
-    console.log(id);
     axios
       .get(`${process.env.REACT_APP_API_URL}/questionnaire/loadById?id=${id}`)
       .then((response) => {
         setQuestions(response.data);
+        const uniqueSections = [...new Set(response.data.map(question => question.page))];
+        dispatch(setTotalSections(uniqueSections.length));
       })
       .catch(() => {
         toast.error("Aucune question", {
@@ -40,41 +43,40 @@ const Questions = () => {
   };
 
   useEffect(() => {
-    const storedSection = localStorage.getItem(getLocalStorageKey(id));
-    if (storedSection) {
-      setCurrentSection(parseInt(storedSection, 10));
-    }
     loadQuestions();
   }, [id]);
 
   useEffect(() => {
-    console.log(questions);
     if (questions.length > 0) {
-      console.log("mdr2");
-      let array = [];
-      array = questions.filter((question) => question.page === currentSection);
-      array = array.sort((a, b) => a.order - b.order);
+      const array = questions.filter((question) => question.page === currentSection).sort((a, b) => a.order - b.order);
       setCurrentQuestions(array);
     }
   }, [questions, currentSection]);
 
+  const handleResponseChange = (questionId, questionType, value) => {
+    setResponses(prevResponses => ({
+      ...prevResponses,
+      [questionId]: value,
+    }));
+    dispatch(addResponse({ questionId, questionType, value }));
+    updateProgression();
+  };
+
+  const updateProgression = () => {
+    const newProgression = (currentSection / totalSections) * 100;
+    dispatch(setProgression(newProgression));
+  };
+
   const nextSection = () => {
-    console.log(questions);
     if (questions.length > 0) {
-      console.log("mdr3");
-      let array = [];
-      array = questions.filter((question) => question.page === currentSection + 1);
-      array = array.sort((a, b) => a.order - b.order);
+      const array = questions.filter((question) => question.page === currentSection + 1).sort((a, b) => a.order - b.order);
       setCurrentQuestions(array);
-      setCurrentSection(currentSection + 1)
-      localStorage.setItem(getLocalStorageKey(id), currentSection + 1);
+      const newSection = currentSection + 1;
+      dispatch(setCurrentSection(newSection));
+      updateProgression();
     }
   };
 
-  useEffect(() => {
-    console.log("mdr");
-    console.log(currentQuestions);
-  }, [currentQuestions]);
   return (
     <Grid
       sx={{
@@ -94,20 +96,23 @@ const Questions = () => {
         {currentQuestions.map((question) => {
           if (question.type === "text") {
             return (
-              <QuestionOpen questionTitle={question.title}>
+              <QuestionOpen
+                key={question.id}
+                questionTitle={question.title}
+                onResponseChange={(value) => handleResponseChange(question.id, question.type, value)}
+              >
                 {question.description}
               </QuestionOpen>
             );
           }
-          if (
-            question.type === "single_choice" ||
-            question.type === "multiple_choice"
-          ) {
+          if (question.type === "single_choice" || question.type === "multiple_choice") {
             return (
               <QuestionSimple
+                key={question.id}
                 questionTitle={question.title}
                 questionType={question.type}
                 questionChoices={question.choices}
+                onResponseChange={(value) => handleResponseChange(question.id, question.type, value)}
               >
                 {question.description}
               </QuestionSimple>
@@ -116,10 +121,12 @@ const Questions = () => {
           if (question.type === "slider") {
             return (
               <QuestionEchelle
+                key={question.id}
                 questionTitle={question.title}
                 questionSliderMin={question.slider_min}
                 questionSliderMax={question.slider_max}
                 questionSliderGap={question.slider_gap}
+                onResponseChange={(value) => handleResponseChange(question.id, question.type, value)}
               >
                 {question.description}
               </QuestionEchelle>
@@ -178,6 +185,27 @@ const Questions = () => {
         >
           Valider mes réponses
         </Button>
+      </Grid>
+      <Grid
+        sx={{
+          width: "100%",
+          minHeight: "10px",
+          position: "fixed",
+          bottom: 0,
+          backgroundColor: themeQuestions.palette.secondary.main,
+        }}
+      >
+        <Grid
+          sx={{
+            transition: "ease 0.5s",
+            width: `${progression}%`,
+            height: "10px",
+            position: "fixed",
+            borderRadius: "0 15px 15px 0",
+            backgroundColor: themeQuestions.palette.primary.main,
+            bottom: 0,
+          }}
+        />
       </Grid>
     </Grid>
   );
