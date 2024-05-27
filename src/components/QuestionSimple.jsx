@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Grid,
   Typography,
@@ -10,10 +11,31 @@ import { useTheme } from "@mui/material/styles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { theme } from "../theme";
 
-const QuestionSimple = ({ children, questionTitle, questionType, questionChoices }) => {
+const QuestionSimple = ({
+  children,
+  questionTitle,
+  questionType,
+  questionChoices,
+  onResponseChange,
+}) => {
   const themeQuestion = useTheme(theme);
   const screenSize = useMediaQuery("(min-width:1600px)");
-  console.log(questionChoices)
+  const [selectedChoices, setSelectedChoices] = useState([]);
+
+  useEffect(() => {
+    if (selectedChoices.length > 0) {
+      onResponseChange(selectedChoices);
+    }
+  }, [selectedChoices, onResponseChange]);
+
+  const handleCheckboxChange = (choiceId) => {
+    setSelectedChoices((prevSelectedChoices) => {
+      const newSelectedChoices = prevSelectedChoices.includes(choiceId)
+        ? prevSelectedChoices.filter((id) => id !== choiceId)
+        : [...prevSelectedChoices, choiceId];
+      return newSelectedChoices;
+    });
+  };
 
   return (
     <Grid
@@ -116,6 +138,7 @@ const QuestionSimple = ({ children, questionTitle, questionType, questionChoices
         <FormGroup>
           {questionChoices.map((choice) => (
             <FormControlLabel
+              key={choice.id}
               sx={{
                 "& .MuiFormControlLabel-label": {
                   fontFamily: "Poppins, sans-serif",
@@ -125,11 +148,15 @@ const QuestionSimple = ({ children, questionTitle, questionType, questionChoices
                   color: themeQuestion.palette.text.primary,
                 },
               }}
-              control={<Checkbox />}
+              control={
+                <Checkbox
+                  checked={selectedChoices.includes(choice.id)}
+                  onChange={() => handleCheckboxChange(choice.id)}
+                />
+              }
               label={choice.text}
             />
-          ))
-          }
+          ))}
         </FormGroup>
       </Grid>
     </Grid>

@@ -3,7 +3,7 @@ import { useTheme } from "@mui/material/styles";
 import { theme } from "../../theme";
 import QuestionOpen from "../../components/QuestionOpen";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import QuestionSimple from "../../components/QuestionSimple";
@@ -15,11 +15,12 @@ const Questions = () => {
   const themeQuestions = useTheme(theme);
   const screenSize = useMediaQuery("(min-width:1600px)");
   const dispatch = useDispatch();
-  const { section: currentSection, totalSections, progression, userResponses } = useSelector(state => state.questionnaire);
+  const navigate = useNavigate();
+  const { section: currentSection, totalSections, progression, responses } = useSelector(state => state.questionnaire);
 
   const [questions, setQuestions] = useState([]);
   const [currentQuestions, setCurrentQuestions] = useState([]);
-  const [responses, setResponses] = useState({});
+  const [localResponses, setLocalResponses] = useState({});
   const { id } = useParams();
 
   const loadQuestions = () => {
@@ -50,16 +51,15 @@ const Questions = () => {
     if (questions.length > 0) {
       const array = questions.filter((question) => question.page === currentSection).sort((a, b) => a.order - b.order);
       setCurrentQuestions(array);
+      console.log(responses)
     }
   }, [questions, currentSection]);
 
   const handleResponseChange = (questionId, questionType, value) => {
-    setResponses(prevResponses => ({
-      ...prevResponses,
-      [questionId]: value,
+    setLocalResponses(prev => ({
+      ...prev,
+      [questionId]: { questionId, questionType, value }
     }));
-    dispatch(addResponse({ questionId, questionType, value }));
-    updateProgression();
   };
 
   const updateProgression = () => {
@@ -68,7 +68,13 @@ const Questions = () => {
   };
 
   const nextSection = () => {
-    if (questions.length > 0) {
+    Object.values(localResponses).forEach(response => {
+      dispatch(addResponse(response));
+    });
+
+    if (currentSection >= totalSections) {
+      navigate('/accueil');
+    } else {
       const array = questions.filter((question) => question.page === currentSection + 1).sort((a, b) => a.order - b.order);
       setCurrentQuestions(array);
       const newSection = currentSection + 1;
