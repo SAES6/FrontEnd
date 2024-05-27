@@ -13,7 +13,7 @@ const ChoicesText = ({label, updateOption, index}) => {
             label={<Card sx={{
                 border: 'solid',
                 borderColor: 'blue',
-                borderRadius: '12px',
+                borderRadius: '15px',
                 p: 1,
                 width: '100%',
             }}>

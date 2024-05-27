@@ -85,13 +85,13 @@ const NewQuestion = forwardRef(({index, pageInfos, handleClose}, ref) => {
     };
 
     return (
-        <Card sx={{padding: 2, margin: 2, borderRadius: '12px',}}>
+        <Card sx={{padding: 2, margin: 2, borderRadius: '15px',}}>
             <Grid container alignItems="center" justifyContent='space-between'>
                 <Grid item container xs={12}>
                     <Grid item xs={7} sx={{
                         border: 'solid',
                         borderColor: 'blue',
-                        borderRadius: '12px',
+                        borderRadius: '15px',
                         display: 'flex',
                         alignItems: 'center'
                     }}>
@@ -107,7 +107,7 @@ const NewQuestion = forwardRef(({index, pageInfos, handleClose}, ref) => {
                                 onChange={(e) => selectChangeHandler(e.target.value)}
                                 displayEmpty
                                 inputProps={{'aria-label': 'Without label'}}
-                                sx={{border: 'solid', borderColor: 'blue', borderRadius: '12px', '& > fieldset': {border: 'none'}}}
+                                sx={{border: 'solid', borderColor: 'blue', borderRadius: '15px', '& > fieldset': {border: 'none'}}}
                             >
                                 {QType.map((typeInf, index) => (
                                     <MenuItem value={typeInf.type} key={index}>{typeInf.name}</MenuItem>
@@ -116,7 +116,7 @@ const NewQuestion = forwardRef(({index, pageInfos, handleClose}, ref) => {
                         </FormControl>
                     </Grid>
                     <Grid item xs={1} sx={{display: 'flex', justifyContent: 'flex-end'}}>
-                        <Card sx={{border: 'solid', borderColor: 'blue', borderRadius: '12px', height: 'fit-content'}}>
+                        <Card sx={{border: 'solid', borderColor: 'blue', borderRadius: '15px', height: 'fit-content'}}>
                             <IconButton onClick={handleClose}>
                                 <CloseIcon/>
                             </IconButton>
@@ -130,7 +130,7 @@ const NewQuestion = forwardRef(({index, pageInfos, handleClose}, ref) => {
                     <Grid item xs={11} sx={{pr: 3}}>
                         <TextField
                             focused={false}
-                            sx={{border: 'solid', borderColor: 'blue', borderRadius: '12px'}}
+                            sx={{border: 'solid', borderColor: 'blue', borderRadius: '15px'}}
                             size='small'
                             fullWidth
                             multiline
@@ -143,7 +143,7 @@ const NewQuestion = forwardRef(({index, pageInfos, handleClose}, ref) => {
                         />
                     </Grid>
                     <Grid item xs={1} sx={{display: 'flex', justifyContent: 'flex-end'}}>
-                        <Card sx={{border: 'solid', borderColor: 'blue', borderRadius: '12px', height: 'fit-content'}}>
+                        <Card sx={{border: 'solid', borderColor: 'blue', borderRadius: '15px', height: 'fit-content'}}>
                             <input
                                 type="file"
                                 ref={fileInputRef}

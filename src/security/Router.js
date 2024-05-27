@@ -8,7 +8,6 @@ const Home = lazy(() => import("../views/home/Home.js"));
 const SignIn = lazy(() => import("../views/signin/SingIn.js"));
 const AdminConsole = lazy(() => import("../views/admin/AdminConsole.js"));
 const Questions = lazy(() => import("../views/questions/Questions.js"));
-const CreateForm = lazy(() => import("../views/admin/CreateForm.js"));
 
 const ThemeRoutes = [
     {
@@ -29,7 +28,6 @@ const ThemeRoutes = [
                 exact: true,
                 element: <AdminConsole/>,
             },
-            {path: "/admin-console/formulaire-creation", exact: true, element: <CreateForm/>},
         ],
     },
 ];
