@@ -1,4 +1,13 @@
-import { Grid, Button, Typography, useMediaQuery } from "@mui/material";
+import {
+  Grid,
+  Button,
+  Typography,
+  useMediaQuery,
+  Modal,
+  Box,
+  IconButton,
+  Checkbox,
+} from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
 import { theme } from "../../theme";
@@ -9,6 +18,11 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import QuestionSimple from "../../components/QuestionSimple";
 import QuestionEchelle from "../../components/QuestionEchelle";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import CloseIcon from "@mui/icons-material/Close";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle"; // Example detective icon
 
 const Questions = () => {
   const themeQuestions = useTheme(theme);
@@ -16,10 +30,19 @@ const Questions = () => {
   const [questions, setQuestions] = useState([]);
   const [currentQuestions, setCurrentQuestions] = useState([]);
   const [currentSection, setCurrentSection] = useState(1);
+  const [userRole, setUserRole] = useState(null);
+  const [modalRole, setModalRole] = useState(false);
   // recupere l'id du questionnaire via l'url
   const { id } = useParams();
   const getLocalStorageKey = (id) => `currentSection_${id}`;
-
+  const ColorButton = styled(Button)(({ theme }) => ({
+    color: theme.palette.primary.contrastText,
+    backgroundColor: theme.palette.primary.main,
+    transition: "ease 0.3s",
+    "&:hover": {
+      backgroundColor: theme.palette.primary.main,
+    },
+  }));
   const loadQuestions = () => {
     console.log(id);
     axios
@@ -47,6 +70,27 @@ const Questions = () => {
     loadQuestions();
   }, [id]);
 
+  const handleSetJournalist = () => {
+    if (userRole === "journalist") {
+      setUserRole("user");
+    } else {
+      setUserRole("journalist");
+    }
+  };
+
+  const handleValidateRole = () => {
+    if (userRole === null) {
+      let finalUserRole = "user";
+      localStorage.setItem("userRole", finalUserRole);
+      setUserRole(finalUserRole);
+      setModalRole(false);
+    } else {
+      localStorage.setItem("userRole", userRole);
+      setUserRole(userRole);
+      setModalRole(false);
+    }
+  };
+
   useEffect(() => {
     console.log(questions);
     if (questions.length > 0) {
@@ -63,13 +107,27 @@ const Questions = () => {
     if (questions.length > 0) {
       console.log("mdr3");
       let array = [];
-      array = questions.filter((question) => question.page === currentSection + 1);
+      array = questions.filter(
+        (question) => question.page === currentSection + 1
+      );
       array = array.sort((a, b) => a.order - b.order);
       setCurrentQuestions(array);
-      setCurrentSection(currentSection + 1)
+      setCurrentSection(currentSection + 1);
       localStorage.setItem(getLocalStorageKey(id), currentSection + 1);
     }
   };
+
+  useEffect(() => {
+    console.log("mdr5555");
+    console.log(localStorage.getItem("userRole"));
+    if (localStorage.getItem("userRole") != null) {
+      setUserRole(localStorage.getItem("userRole"));
+      setModalRole(false);
+    } else {
+      console.log("mdr6");
+      setModalRole(true);
+    }
+  }, []);
 
   useEffect(() => {
     console.log("mdr");
@@ -179,6 +237,194 @@ const Questions = () => {
           Valider mes réponses
         </Button>
       </Grid>
+      <Modal open={modalRole}>
+        <Grid
+          container
+          direction="column"
+          alignItems="center"
+          justifyContent="center"
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "fit-content",
+            bgcolor: "background.paper",
+            borderRadius: "15px",
+            padding: "20px 25px",
+            boxShadow: 24,
+            outline: "none",
+          }}
+        >
+          <Grid
+            container
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{ mb: 3, width: "100%" }}
+          >
+            <Grid item xs={12}>
+              <Typography
+                variant="h6"
+                component="h2"
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: "600",
+                  fontSize: "24px",
+                  lineHeight: "36px",
+                  color: "#0E1419",
+                  textAlign: "center",
+                }}
+              >
+                Avant de commencer...
+              </Typography>
+            </Grid>
+          </Grid>
+          <Typography
+            sx={{
+              mt: 2,
+              padding: "10px 15px",
+              fontFamily: "Poppins, sans-serif",
+              fontWeight: "400",
+              fontSize: "16px",
+              lineHeight: "24px",
+              maxWidth: "500px",
+            }}
+          >
+            Vous allez participer à votre premier questionnaire. Nous avons
+            besoin d’en savoir plus sur votre statut.
+          </Typography>
+          <Grid
+            container
+            spacing={2}
+            alignItems="center"
+            justifyContent="center"
+            sx={{
+              mt: 3,
+              padding: "15px 20px",
+              borderRadius: "15px",
+              width: "60%",
+              minWidth: "300px",
+              position: "relative",
+              backgroundColor: themeQuestions.palette.primary.main,
+              flexWrap: "nowrap",
+            }}
+          >
+            <Grid
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: "0",
+              }}
+            >
+              <Checkbox
+                checked={userRole === "journalist"}
+                onChange={() => handleSetJournalist()}
+                icon={
+                  <CheckBoxOutlineBlankIcon
+                    sx={{
+                      color: themeQuestions.palette.primary.contrastText,
+                    }}
+                  />
+                }
+                checkedIcon={
+                  <CheckBoxIcon
+                    sx={{
+                      color: themeQuestions.palette.primary.contrastText,
+                    }}
+                  />
+                }
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: "600",
+                  fontSize: "24px",
+                  lineHeight: "36px",
+                  padding: "0",
+                  mr: 1,
+                  color: themeQuestions.palette.primary.contrastText,
+                }}
+              />
+            </Grid>
+            <Grid
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: "600",
+                  fontSize: "24px",
+                  lineHeight: "36px",
+                  color: themeQuestions.palette.primary.contrastText,
+                }}
+              >
+                Je suis journaliste
+              </Typography>
+            </Grid>
+            <Grid
+              sx={{
+                position: "absolute",
+                right: -20, // Adjust position as needed
+                alignItems: "center",
+                justifyContent: "center",
+                opacity: "0.5",
+                height: "100%",
+              }}
+            >
+              <FontAwesomeIcon
+                icon="fa-solid fa-user-secret"
+                color={themeQuestions.palette.primary.contrastText}
+                style={{ fontSize: "70px" }}
+              />
+            </Grid>
+          </Grid>
+          <Typography
+            sx={{
+              fontFamily: "Poppins, sans-serif",
+              fontWeight: "400",
+              fontSize: "16px",
+              lineHeight: "24px",
+              maxWidth: "500px",
+              textAlign: "center",
+              opacity: "0.5",
+              color: themeQuestions.palette.text.secondary,
+            }}
+          >
+            Nous comptons sur votre bonne foi !
+          </Typography>
+          <ColorButton
+            onClick={handleValidateRole}
+            sx={{
+              backgroundColor: themeQuestions.palette.primary.main,
+              mt: 3,
+              borderRadius: "10px",
+              padding: "10px 15px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            variant="contained"
+          >
+            <Typography
+              sx={{
+                fontFamily: "Poppins, sans-serif",
+                fontWeight: "600",
+                fontSize: "16px",
+                lineHeight: "24px",
+                color: themeQuestions.palette.primary.contrastText,
+                textAlign: "center",
+                textTransform: "none",
+              }}
+            >
+              Continuer
+            </Typography>
+          </ColorButton>
+        </Grid>
+      </Modal>
     </Grid>
   );
 };

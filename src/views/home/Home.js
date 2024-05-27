@@ -220,7 +220,7 @@ const Home = () => {
                       overflowWrap: "break-word",
                       textTransform: "none",
                       width: "100%",
-                      overflow: "scroll",
+                      overflowX: "auto",
                       textAlign: "left",
                     }}
                   >
@@ -238,7 +238,7 @@ const Home = () => {
                     textTransform: "none",
                     width: "100%",
                     maxHeight: "40%",
-                    overflow: "scroll",
+                    overfloX: "auto",
                     textAlign: "left",
                   }}
                 >
