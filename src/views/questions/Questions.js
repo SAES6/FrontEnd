@@ -9,19 +9,21 @@ import axios from "axios";
 import QuestionSimple from "../../components/QuestionSimple";
 import QuestionEchelle from "../../components/QuestionEchelle";
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentSection, setTotalSections, setProgression, addResponse } from "../../_store/_slices/questionnaire-slice";
+import { setQuestionnaire, setCurrentSection, setTotalSections, setProgression, addResponse } from "../../_store/_slices/questionnaire-slice";
 
 const Questions = () => {
   const themeQuestions = useTheme(theme);
   const screenSize = useMediaQuery("(min-width:1600px)");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { section: currentSection, totalSections, progression, responses } = useSelector(state => state.questionnaire);
+  const { id } = useParams();
+
+  const questionnaireState = useSelector(state => state.questionnaire.questionnaires[id] || {});
+  const { currentSection = 1, totalSections = 1, progression = 0, responses = [] } = questionnaireState;
 
   const [questions, setQuestions] = useState([]);
   const [currentQuestions, setCurrentQuestions] = useState([]);
   const [localResponses, setLocalResponses] = useState({});
-  const { id } = useParams();
 
   const loadQuestions = () => {
     axios
@@ -29,7 +31,8 @@ const Questions = () => {
       .then((response) => {
         setQuestions(response.data);
         const uniqueSections = [...new Set(response.data.map(question => question.page))];
-        dispatch(setTotalSections(uniqueSections.length));
+        dispatch(setTotalSections({ id, totalSections: uniqueSections.length }));
+        dispatch(setQuestionnaire({ id, totalSections: uniqueSections.length }));
       })
       .catch(() => {
         toast.error("Aucune question", {
@@ -45,13 +48,13 @@ const Questions = () => {
 
   useEffect(() => {
     loadQuestions();
+    console.log(questionnaireState)
   }, [id]);
 
   useEffect(() => {
     if (questions.length > 0) {
       const array = questions.filter((question) => question.page === currentSection).sort((a, b) => a.order - b.order);
       setCurrentQuestions(array);
-      console.log(responses)
     }
   }, [questions, currentSection]);
 
@@ -62,24 +65,26 @@ const Questions = () => {
     }));
   };
 
-  const updateProgression = () => {
-    const newProgression = (currentSection / totalSections) * 100;
-    dispatch(setProgression(newProgression));
+  const updateProgression = (newSection) => {
+    const newProgression = (newSection / totalSections) * 100;
+    dispatch(setProgression({ id, progression: newProgression }));
   };
 
   const nextSection = () => {
     Object.values(localResponses).forEach(response => {
-      dispatch(addResponse(response));
+      dispatch(addResponse({ questionnaireId: id, ...response }));
     });
 
     if (currentSection >= totalSections) {
+      updateProgression(currentSection);
+      const newSection = currentSection + 1;
+      dispatch(setCurrentSection({ id, section: newSection }));
       navigate('/accueil');
     } else {
-      const array = questions.filter((question) => question.page === currentSection + 1).sort((a, b) => a.order - b.order);
-      setCurrentQuestions(array);
+      updateProgression(currentSection);
       const newSection = currentSection + 1;
-      dispatch(setCurrentSection(newSection));
-      updateProgression();
+      dispatch(setCurrentSection({ id, section: newSection }));
+      setLocalResponses({});
     }
   };
 
