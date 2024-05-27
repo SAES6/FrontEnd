@@ -1,11 +1,19 @@
 import { Grid, Typography, useMediaQuery, TextField } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { theme } from "../theme";
 
-const QuestionOpen = ({ children, questionTitle }) => {
+const QuestionOpen = ({ children, questionTitle, onResponseChange }) => {
   const themeQuestion = useTheme(theme);
   const screenSize = useMediaQuery("(min-width:1600px)");
+  const [responseValue, setResponseValue] = useState("");
+
+  const handleResponseChange = (event) => {
+    const { value } = event.target;
+    setResponseValue(value);
+    onResponseChange(value);
+  };
 
   return (
     <Grid
@@ -105,6 +113,8 @@ const QuestionOpen = ({ children, questionTitle }) => {
         <TextField
           margin="normal"
           required
+          value={responseValue}
+          onChange={handleResponseChange}
           sx={{
             mt: "5px",
             width: "100%",

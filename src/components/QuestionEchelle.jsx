@@ -1,11 +1,18 @@
 import { Grid, Typography, useMediaQuery, Slider } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { theme } from "../theme";
 
-const QuestionEchelle = ({ children, questionTitle, questionSliderMin, questionSliderMax, questionSliderGap }) => {
+const QuestionEchelle = ({ children, questionTitle, questionSliderMin, questionSliderMax, questionSliderGap, onResponseChange }) => {
   const themeQuestion = useTheme(theme);
   const screenSize = useMediaQuery("(min-width:1600px)");
+  const [sliderValue, setSliderValue] = useState(questionSliderMin);
+
+  const handleSliderChange = (event, newValue) => {
+    setSliderValue(newValue);
+    onResponseChange(newValue);
+  };
 
   const generateMarks = (min, max, step) => {
     const marks = [];
@@ -118,6 +125,8 @@ const QuestionEchelle = ({ children, questionTitle, questionSliderMin, questionS
         <Slider
           aria-label="Temperature"
           valueLabelDisplay="auto"
+          value={sliderValue}
+          onChange={handleSliderChange}
           step={questionSliderGap}
           marks={marks}
           min={questionSliderMin}

@@ -9,11 +9,10 @@ import {
   Checkbox,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { styled } from "@mui/material/styles";
 import { theme } from "../../theme";
 import QuestionOpen from "../../components/QuestionOpen";
 import { useEffect, useState } from "react";
-import { Outlet, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import QuestionSimple from "../../components/QuestionSimple";
@@ -23,17 +22,31 @@ import CloseIcon from "@mui/icons-material/Close";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle"; // Example detective icon
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setCurrentSection,
+  setTotalSections,
+  setProgression,
+  addResponse,
+} from "../../_store/_slices/questionnaire-slice";
 
 const Questions = () => {
   const themeQuestions = useTheme(theme);
   const screenSize = useMediaQuery("(min-width:1600px)");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const {
+    section: currentSection,
+    totalSections,
+    progression,
+    responses,
+  } = useSelector((state) => state.questionnaire);
+
   const [questions, setQuestions] = useState([]);
   const [currentQuestions, setCurrentQuestions] = useState([]);
-  const [currentSection, setCurrentSection] = useState(1);
   const [userRole, setUserRole] = useState(null);
   const [modalRole, setModalRole] = useState(false);
   // recupere l'id du questionnaire via l'url
-  const { id } = useParams();
   const getLocalStorageKey = (id) => `currentSection_${id}`;
   const ColorButton = styled(Button)(({ theme }) => ({
     color: theme.palette.primary.contrastText,
@@ -43,12 +56,17 @@ const Questions = () => {
       backgroundColor: theme.palette.primary.main,
     },
   }));
+  const [localResponses, setLocalResponses] = useState({});
+  const { id } = useParams();
   const loadQuestions = () => {
-    console.log(id);
     axios
       .get(`${process.env.REACT_APP_API_URL}/questionnaire/loadById?id=${id}`)
       .then((response) => {
         setQuestions(response.data);
+        const uniqueSections = [
+          ...new Set(response.data.map((question) => question.page)),
+        ];
+        dispatch(setTotalSections(uniqueSections.length));
       })
       .catch(() => {
         toast.error("Aucune question", {
@@ -63,10 +81,6 @@ const Questions = () => {
   };
 
   useEffect(() => {
-    const storedSection = localStorage.getItem(getLocalStorageKey(id));
-    if (storedSection) {
-      setCurrentSection(parseInt(storedSection, 10));
-    }
     loadQuestions();
   }, [id]);
 
@@ -92,28 +106,42 @@ const Questions = () => {
   };
 
   useEffect(() => {
-    console.log(questions);
     if (questions.length > 0) {
-      console.log("mdr2");
-      let array = [];
-      array = questions.filter((question) => question.page === currentSection);
-      array = array.sort((a, b) => a.order - b.order);
+      const array = questions
+        .filter((question) => question.page === currentSection)
+        .sort((a, b) => a.order - b.order);
       setCurrentQuestions(array);
+      console.log(responses);
     }
   }, [questions, currentSection]);
 
+  const handleResponseChange = (questionId, questionType, value) => {
+    setLocalResponses((prev) => ({
+      ...prev,
+      [questionId]: { questionId, questionType, value },
+    }));
+  };
+
+  const updateProgression = () => {
+    const newProgression = (currentSection / totalSections) * 100;
+    dispatch(setProgression(newProgression));
+  };
+
   const nextSection = () => {
-    console.log(questions);
-    if (questions.length > 0) {
-      console.log("mdr3");
-      let array = [];
-      array = questions.filter(
-        (question) => question.page === currentSection + 1
-      );
-      array = array.sort((a, b) => a.order - b.order);
+    Object.values(localResponses).forEach((response) => {
+      dispatch(addResponse(response));
+    });
+
+    if (currentSection >= totalSections) {
+      navigate("/accueil");
+    } else {
+      const array = questions
+        .filter((question) => question.page === currentSection + 1)
+        .sort((a, b) => a.order - b.order);
       setCurrentQuestions(array);
-      setCurrentSection(currentSection + 1);
-      localStorage.setItem(getLocalStorageKey(id), currentSection + 1);
+      const newSection = currentSection + 1;
+      dispatch(setCurrentSection(newSection));
+      updateProgression();
     }
   };
 
@@ -133,6 +161,7 @@ const Questions = () => {
     console.log("mdr");
     console.log(currentQuestions);
   }, [currentQuestions]);
+
   return (
     <Grid
       sx={{
@@ -152,7 +181,13 @@ const Questions = () => {
         {currentQuestions.map((question) => {
           if (question.type === "text") {
             return (
-              <QuestionOpen questionTitle={question.title}>
+              <QuestionOpen
+                key={question.id}
+                questionTitle={question.title}
+                onResponseChange={(value) =>
+                  handleResponseChange(question.id, question.type, value)
+                }
+              >
                 {question.description}
               </QuestionOpen>
             );
@@ -163,9 +198,13 @@ const Questions = () => {
           ) {
             return (
               <QuestionSimple
+                key={question.id}
                 questionTitle={question.title}
                 questionType={question.type}
                 questionChoices={question.choices}
+                onResponseChange={(value) =>
+                  handleResponseChange(question.id, question.type, value)
+                }
               >
                 {question.description}
               </QuestionSimple>
@@ -174,10 +213,14 @@ const Questions = () => {
           if (question.type === "slider") {
             return (
               <QuestionEchelle
+                key={question.id}
                 questionTitle={question.title}
                 questionSliderMin={question.slider_min}
                 questionSliderMax={question.slider_max}
                 questionSliderGap={question.slider_gap}
+                onResponseChange={(value) =>
+                  handleResponseChange(question.id, question.type, value)
+                }
               >
                 {question.description}
               </QuestionEchelle>
@@ -236,6 +279,27 @@ const Questions = () => {
         >
           Valider mes réponses
         </Button>
+      </Grid>
+      <Grid
+        sx={{
+          width: "100%",
+          minHeight: "10px",
+          position: "fixed",
+          bottom: 0,
+          backgroundColor: themeQuestions.palette.secondary.main,
+        }}
+      >
+        <Grid
+          sx={{
+            transition: "ease 0.5s",
+            width: `${progression}%`,
+            height: "10px",
+            position: "fixed",
+            borderRadius: "0 15px 15px 0",
+            backgroundColor: themeQuestions.palette.primary.main,
+            bottom: 0,
+          }}
+        />
       </Grid>
       <Modal open={modalRole}>
         <Grid
