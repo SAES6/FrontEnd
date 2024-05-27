@@ -8,6 +8,7 @@ import {
   IconButton,
   Checkbox,
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { useTheme } from "@mui/material/styles";
 import { theme } from "../../theme";
 import QuestionOpen from "../../components/QuestionOpen";
