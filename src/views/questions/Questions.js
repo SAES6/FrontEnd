@@ -142,7 +142,7 @@ const Questions = () => {
       updateProgression(currentSection);
       const newSection = currentSection + 1;
       dispatch(setCurrentSection({ id, section: newSection }));
-      navigate('/accueil');
+      navigate(`/summary/${id}`);
     } else {
       updateProgression(currentSection);
       const newSection = currentSection + 1;
@@ -193,6 +193,7 @@ const Questions = () => {
                 onResponseChange={(value) =>
                   handleResponseChange(question.id, question.type, value)
                 }
+                mode={'question'}
               >
                 {question.description}
               </QuestionOpen>
@@ -211,6 +212,7 @@ const Questions = () => {
                 onResponseChange={(value) =>
                   handleResponseChange(question.id, question.type, value)
                 }
+                mode={'question'}
               >
                 {question.description}
               </QuestionSimple>
@@ -227,6 +229,7 @@ const Questions = () => {
                 onResponseChange={(value) =>
                   handleResponseChange(question.id, question.type, value)
                 }
+                mode={'question'}
               >
                 {question.description}
               </QuestionEchelle>
