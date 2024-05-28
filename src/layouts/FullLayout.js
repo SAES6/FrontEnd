@@ -117,7 +117,6 @@ const FullLayout = () => {
       direction="column"
       sx={{
         flexWrap: "nowrap",
-        filter: open ? "blur(5px)" : "none",
         height: "100%",
         alignItems: "center",
       }}
