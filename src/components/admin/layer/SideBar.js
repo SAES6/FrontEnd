@@ -1,20 +1,11 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Box, IconButton, Stack, TextField, Typography} from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import AddIcon from '@mui/icons-material/Add';
-import {v4 as uuid} from 'uuid';
-
-const initQuizzesInfos = [{
-    id: 658745,
-    name: 'Questionnaire 1',
-    dropdownOpen: false,
-    pages: [
-        {id: 6494984, pos: 1, name: 'Section 1', dropdownOpen: false},
-        {id: 65687, pos: 2, name: 'Section 2', dropdownOpen: false},
-        {id: 965441, pos: 3, name: 'Section 3', dropdownOpen: false}
-    ]
-}];
+import {useDispatch, useSelector} from "react-redux";
+import {quizActions} from "../../../_store/_slices/quiz-slice";
+import {getQuizOrPageDetails} from "../../../_store/_actions/quiz-actions";
 
 const DropDownTypography = ({text, onClick}) => (
     <Typography
@@ -34,92 +25,45 @@ const DropDownTypography = ({text, onClick}) => (
     </Typography>
 );
 
-const SideBar = ({currentSelection, setCurrentSelection}) => {
-    const [quizzesInfos, setQuizzesInfos] = useState(initQuizzesInfos);
-    const [newPageNames, setNewPageNames] = useState({});
+const SideBar = () => {
+    const currentQuizId = useSelector(state => state.quiz.currentQuizId);
+    const quizzesInfos = useSelector(state => state.quiz.quizzesInfos);
 
-    const handleNameChange = (quizId, name) => {
-        setNewPageNames(prev => ({...prev, [quizId]: name}));
+    const [newPageNames, setNewPageNames] = useState('');
+
+    const dispatch = useDispatch();
+
+    // todo useEffect for query the list of quiz
+
+    const handleNameChange = (name) => {
+        setNewPageNames(name);
     };
 
-    const newPageHandler = (quizId) => {
-        const pageName = newPageNames[quizId] || 'Nouvelle section';
-        setQuizzesInfos(prevState => {
-            return prevState.map(quizz => {
-                if (quizz.id === quizId) {
-                    const updatedQuizz = {...quizz};
-                    updatedQuizz.pages = [...quizz.pages, {id: uuid(), name: pageName, pos: quizz.pages.length + 1}];
-                    return updatedQuizz;
-                }
-                return quizz;
-            });
-        });
-        setNewPageNames(prev => ({...prev, [quizId]: ''}));
+    const newPageHandler = () => {
+        dispatch(quizActions.addPage(newPageNames || 'Nouvelle section'));
+        setNewPageNames('');
     };
 
     const newQuizHandler = () => {
-        setQuizzesInfos(prevState => [
-            ...prevState,
-            {
-                id: uuid(),
-                name: 'Questionnaire ' + (prevState.length + 1),
-                dropdownOpen: false,
-                pages: []
-            }
-        ]);
+        dispatch(quizActions.addQuiz());
     };
 
-    const dropDownOptHandler = (quizId, pageId = null) => {
-        setQuizzesInfos(prevState => prevState.map(quiz => {
-            if (quiz.id === quizId) {
-                const updatedPages = quiz.pages.map(page => {
-                    return {
-                        ...page,
-                        dropdownOpen: pageId === page.id ? !page.dropdownOpen : false
-                    };
-                });
-                return {
-                    ...quiz,
-                    dropdownOpen: pageId ? false : !quiz.dropdownOpen,
-                    pages: updatedPages
-                };
-            } else {
-                return {
-                    ...quiz,
-                    dropdownOpen: false,
-                    pages: quiz.pages.map(page => ({
-                        ...page,
-                        dropdownOpen: false
-                    }))
-                };
-            }
-        }));
-        setCurrentSelection({quizId, pageId});
+    const onClickModalHandler = (quizId, pageId = null) => {
+        dispatch(getQuizOrPageDetails(quizId, pageId));
     };
 
-    const deleteHandler = (quizId, pageId = null) => {
-        setQuizzesInfos(prevState => {
-            if (pageId) {
-                return prevState.map(quiz => {
-                    if (quiz.id === quizId) {
-                        const updatedPages = quiz.pages.filter(page => page.id !== pageId);
-                        return {...quiz, pages: updatedPages};
-                    }
-                    return quiz;
-                });
-            } else {
-                return prevState.filter(quiz => quiz.id !== quizId);
-            }
-        });
+    // todo add modal for confirmation
+    const deleteHandler = () => {
+        dispatch(quizActions.deleteQuizOrPage());
     };
 
-
+    console.log("e")
     return (
         <Box sx={{p: 1}}>
             <Typography align='center' variant='h5' sx={{mb: 2}} fontWeight='bold'>Questionnaires</Typography>
             <Stack alignItems="center" gap={1}>
 
-                {quizzesInfos.map(quiz => (
+                {quizzesInfos?.map(quiz => (
                     <React.Fragment key={quiz.id}>
                         <Box sx={{width: '100%'}}>
                             <Box justifyContent='space-between' alignItems='center'
@@ -131,7 +75,7 @@ const SideBar = ({currentSelection, setCurrentSelection}) => {
                                          color: 'black'
                                      }
                                  }}
-                                 onClick={() => dropDownOptHandler(quiz.id)}>
+                                 onClick={() => onClickModalHandler(quiz.id)}>
                                 <Typography
                                     align='left'
                                     variant='h6'
@@ -145,13 +89,13 @@ const SideBar = ({currentSelection, setCurrentSelection}) => {
                             {quiz.dropdownOpen && (
                                 <Box sx={{width: '100%'}}>
                                     <DropDownTypography text="Renommer" onClick={() => console.log('ff')}/>
-                                    <DropDownTypography text="Supprimer" onClick={() => deleteHandler(quiz.id)}/>
+                                    <DropDownTypography text="Supprimer" onClick={() => deleteHandler()}/>
                                 </Box>
                             )}
                         </Box>
-                        {currentSelection.quizId === quiz.id && (
+                        {currentQuizId === quiz.id && (
                             <Stack alignItems='flex-start' gap={1} sx={{width: '100%'}}>
-                                {quiz.pages.map(page => (
+                                {quiz.pages.slice().sort((a, b) => a.pos - b.pos).map(page => (
                                     <Box key={page.id} sx={{width: '100%'}}>
                                         <Box justifyContent='space-between' alignItems='center'
                                              sx={{
@@ -164,7 +108,7 @@ const SideBar = ({currentSelection, setCurrentSelection}) => {
                                                      color: 'black'
                                                  }
                                              }}
-                                             onClick={() => dropDownOptHandler(quiz.id, page.id)}>
+                                             onClick={() => onClickModalHandler(quiz.id, page.id)}>
                                             <Typography
                                                 align='left'
                                                 variant='h6'
@@ -180,7 +124,7 @@ const SideBar = ({currentSelection, setCurrentSelection}) => {
                                             <Box sx={{width: '100%'}}>
                                                 <DropDownTypography text="Renommer" onClick={() => console.log('ff')}/>
                                                 <DropDownTypography text="Supprimer"
-                                                                    onClick={() => deleteHandler(quiz.id, page.id)}/>
+                                                                    onClick={() => deleteHandler()}/>
                                             </Box>
                                         )}
                                     </Box>
@@ -194,15 +138,14 @@ const SideBar = ({currentSelection, setCurrentSelection}) => {
                                          borderColor: 'red'
                                      }}>
                                     <TextField
-                                        value={newPageNames[quiz.id] || ''}
-                                        onChange={(e) => handleNameChange(quiz.id, e.target.value)}
+                                        value={newPageNames || ''}
+                                        onChange={(e) => handleNameChange(e.target.value)}
                                         placeholder="Nouvelle section"
                                         variant="standard"
                                         sx={{flexGrow: 1, pr: 1, pl: 3, width: '80%'}}
                                         size="small"
                                     />
-                                    <IconButton onClick={() => newPageHandler(quiz.id)}
-                                                sx={{width: '20%'}}>
+                                    <IconButton onClick={() => newPageHandler()} sx={{width: '20%'}}>
                                         <AddIcon/>
                                     </IconButton>
                                 </Box>

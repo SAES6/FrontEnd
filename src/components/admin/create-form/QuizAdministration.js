@@ -3,11 +3,23 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import NewQuestion from "./NewQuestion";
 import {v4 as uuid} from 'uuid';
 import {Box, Button, IconButton} from "@mui/material";
+import useGET from "../../../hooks/useGET";
 
-const ModalSelector = ({loadedPageInfos}) => {
-    const [pageInfos, setPageInfos] = useState(loadedPageInfos || []);
+const QuizAdministration = ({currentSelection}) => {
+    const [response, setRequest] = useGET({url: `${currentSelection}`, data: {}, api: ''});
 
-    const questionRefs = useRef((loadedPageInfos || []).map(() => React.createRef()));
+    const [pageInfos, setPageInfos] = useState([]);
+
+    const questionRefs = useRef((pageInfos || []).map(() => React.createRef()));
+
+    useEffect(() => {
+        if (response?.status >= 200 || response?.status < 300)
+            setPageInfos(response?.data.features ? response?.data.features : []);
+    }, [response]);
+
+    useEffect(() => {
+        setRequest({url: `${currentSelection}`, data: {}, api: ''})
+    }, [currentSelection]);
 
     useEffect(() => {
         if (questionRefs.current.length !== pageInfos.length) {
@@ -63,4 +75,4 @@ const ModalSelector = ({loadedPageInfos}) => {
     );
 };
 
-export default ModalSelector;
+export default QuizAdministration;

@@ -4,15 +4,17 @@ import {persistStore, persistReducer} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import {thunk} from 'redux-thunk';
 import userSlice from "./user-slice";
+import quizSlice from "./quiz-slice";
 
 const rootReducer = combineReducers({
     user: userSlice.reducer,
-
+    quiz: quizSlice.reducer,
 });
 
 const rootPersistConfig = {
     key: 'root',
     storage: storage,
+    blacklist: ['quiz'],
 };
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
