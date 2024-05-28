@@ -1,13 +1,23 @@
-import { Grid, Button, Typography, useMediaQuery } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import {
+  Grid,
+  Button,
+  Typography,
+  useMediaQuery,
+  Modal,
+  Checkbox,
+} from '@mui/material';
+import { useTheme, styled } from '@mui/material/styles';
 import { theme } from '../../theme';
 import QuestionOpen from '../../components/QuestionOpen';
+import QuestionSimple from '../../components/QuestionSimple';
+import QuestionEchelle from '../../components/QuestionEchelle';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import QuestionSimple from '../../components/QuestionSimple';
-import QuestionEchelle from '../../components/QuestionEchelle';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   setQuestionnaire,
