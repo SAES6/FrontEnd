@@ -7,6 +7,7 @@ const FullLayout = lazy(() => import("../layouts/FullLayout.js"));
 const Home = lazy(() => import("../views/home/Home.js"));
 const SignIn = lazy(() => import("../views/signin/SingIn"));
 const AdminConsole = lazy(() => import("../views/admin-console/AdminConsole"));
+const AdminGestion = lazy(() => import("../views/admin-gestion/AdminGestion"));
 const Questions = lazy(() => import("../views/questions/Questions.js"));
 
 const ThemeRoutes = [
@@ -25,6 +26,16 @@ const ThemeRoutes = [
           <SecuredRoute
             childrenName="admin-console"
             children={<AdminConsole />}
+          ></SecuredRoute>
+        ),
+      },
+      {
+        path: "/admin-gestion",
+        exact: true,
+        element: (
+          <SecuredRoute
+            childrenName="admin-gestion"
+            children={<AdminGestion />}
           ></SecuredRoute>
         ),
       },
