@@ -1,47 +1,73 @@
 import React, {useEffect, useState} from "react";
-import {Box, IconButton, Stack, TextField, Typography} from "@mui/material";
+import {Box, Button, IconButton, Modal, Stack, TextField, Typography} from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import AddIcon from '@mui/icons-material/Add';
 import {useDispatch, useSelector} from "react-redux";
 import {quizActions} from "../../../_store/_slices/quiz-slice";
 import {getQuizOrPageDetails} from "../../../_store/_actions/quiz-actions";
+import InteractiveListItem from "./InteractiveListItem";
 
-const DropDownTypography = ({text, onClick}) => (
-    <Typography
-        sx={{
-            cursor: 'pointer',
-            pl: 2,
-            transition: 'background-color 0.3s',
-            borderRadius: '15px',
-            '&:hover': {
-                backgroundColor: 'rgba(0, 0, 0, 0.2)',
-                color: 'black'
-            }
-        }}
-        onClick={onClick}
-    >
-        {text}
-    </Typography>
-);
+const ModalConfirmation = ({isOpen, setIsOpen, deleteHandler}) => {
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        backgroundColor: 'white',
+        padding: '16px',
+        width: '20rem',
+        height: '10rem',
+        display: 'flex',
+        flexDirection: 'column',
+        borderRadius: '12px',
+        zIndex: 1001
+    };
+
+    return (
+        <Modal
+            open={isOpen}
+            onClose={() => setIsOpen(false)}
+            aria-labelledby="modal-title"
+            aria-describedby="modal-description"
+        >
+            <Box sx={style}>
+                <Typography id="modal-title" variant="h6" component="h2">
+                    Confirmer la suppression
+                </Typography>
+                <Typography id="modal-description" sx={{mt: 2}}>
+                    Si vous poursouvez, l'entrée sera définitivement supprimée.
+                </Typography>
+                <Box sx={{display: 'flex', justifyContent: 'flex-end', mt: 3}}>
+                    <Button color="primary" onClick={() => deleteHandler()}>
+                        Je confirme
+                    </Button>
+                    <Button onClick={() => setIsOpen(false)} sx={{ml: 2}}>
+                        Annuler
+                    </Button>
+                </Box>
+            </Box>
+        </Modal>
+    );
+};
 
 const SideBar = () => {
     const currentQuizId = useSelector(state => state.quiz.currentQuizId);
     const quizzesInfos = useSelector(state => state.quiz.quizzesInfos);
 
-    const [newPageNames, setNewPageNames] = useState('');
+    const [newPageName, setNewPageName] = useState('');
+    const [isOpen, setIsOpen] = useState(false);
 
     const dispatch = useDispatch();
 
     // todo useEffect for query the list of quiz
 
-    const handleNameChange = (name) => {
-        setNewPageNames(name);
+    const newNameHandle = (name) => {
+        setNewPageName(name);
     };
 
     const newPageHandler = () => {
-        dispatch(quizActions.addPage(newPageNames || 'Nouvelle section'));
-        setNewPageNames('');
+        dispatch(quizActions.addPage(newPageName || 'Nouvelle section'));
+        setNewPageName('');
     };
 
     const newQuizHandler = () => {
@@ -52,82 +78,39 @@ const SideBar = () => {
         dispatch(getQuizOrPageDetails(quizId, pageId));
     };
 
-    // todo add modal for confirmation
-    const deleteHandler = () => {
-        dispatch(quizActions.deleteQuizOrPage());
+    const beforeDelete = () => {
+        setIsOpen(true);
     };
 
-    console.log("e")
+    const deleteHandler = () => {
+        dispatch(quizActions.deleteQuizOrPage());
+        setIsOpen(false)
+    };
+
+    console.log(isOpen)
     return (
         <Box sx={{p: 1}}>
+            <ModalConfirmation isOpen={isOpen} setIsOpen={setIsOpen} deleteHandler={deleteHandler}/>
             <Typography align='center' variant='h5' sx={{mb: 2}} fontWeight='bold'>Questionnaires</Typography>
             <Stack alignItems="center" gap={1}>
 
                 {quizzesInfos?.map(quiz => (
-                    <React.Fragment key={quiz.id}>
-                        <Box sx={{width: '100%'}}>
-                            <Box justifyContent='space-between' alignItems='center'
-                                 sx={{
-                                     width: '100%', borderRadius: '15px', bgcolor: 'red', display: 'flex',
-                                     transition: 'background-color 0.3s',
-                                     '&:hover': {
-                                         backgroundColor: 'rgba(0, 0, 0, 0.2)',
-                                         color: 'black'
-                                     }
-                                 }}
-                                 onClick={() => onClickModalHandler(quiz.id)}>
-                                <Typography
-                                    align='left'
-                                    variant='h6'
-                                    sx={{pl: 2, cursor: 'pointer', width: '80%'}}>
-                                    {quiz.name}
-                                </Typography>
-                                <IconButton>
-                                    <MoreHorizIcon/>
-                                </IconButton>
-                            </Box>
-                            {quiz.dropdownOpen && (
-                                <Box sx={{width: '100%'}}>
-                                    <DropDownTypography text="Renommer" onClick={() => console.log('ff')}/>
-                                    <DropDownTypography text="Supprimer" onClick={() => deleteHandler()}/>
-                                </Box>
-                            )}
-                        </Box>
+                    <React.Fragment key={quiz.id + quiz.name}>
+                        <InteractiveListItem
+                            item={quiz}
+                            onClickHandler={() => onClickModalHandler(quiz.id)}
+                            deleteHandler={beforeDelete}
+                            moreSx={{box: {bgcolor: 'red'}, typo: {pl: 2}}}
+                        />
                         {currentQuizId === quiz.id && (
                             <Stack alignItems='flex-start' gap={1} sx={{width: '100%'}}>
                                 {quiz.pages.slice().sort((a, b) => a.pos - b.pos).map(page => (
-                                    <Box key={page.id} sx={{width: '100%'}}>
-                                        <Box justifyContent='space-between' alignItems='center'
-                                             sx={{
-                                                 width: '100%',
-                                                 display: 'flex',
-                                                 transition: 'background-color 0.3s',
-                                                 borderRadius: '15px',
-                                                 '&:hover': {
-                                                     backgroundColor: 'rgba(0, 0, 0, 0.2)',
-                                                     color: 'black'
-                                                 }
-                                             }}
-                                             onClick={() => onClickModalHandler(quiz.id, page.id)}>
-                                            <Typography
-                                                align='left'
-                                                variant='h6'
-                                                sx={{pl: 3, cursor: 'pointer', width: '80%',}}
-                                            >
-                                                {page.name}
-                                            </Typography>
-                                            <IconButton>
-                                                <MoreHorizIcon/>
-                                            </IconButton>
-                                        </Box>
-                                        {page.dropdownOpen && (
-                                            <Box sx={{width: '100%'}}>
-                                                <DropDownTypography text="Renommer" onClick={() => console.log('ff')}/>
-                                                <DropDownTypography text="Supprimer"
-                                                                    onClick={() => deleteHandler()}/>
-                                            </Box>
-                                        )}
-                                    </Box>
+                                    <InteractiveListItem
+                                        item={page}
+                                        onClickHandler={() => onClickModalHandler(quiz.id, page.id)}
+                                        deleteHandler={beforeDelete}
+                                        moreSx={{box: {}, typo: {pl: 3}}}
+                                    />
                                 ))}
                                 <Box justifyContent='space-between' alignItems='center'
                                      sx={{
@@ -138,8 +121,8 @@ const SideBar = () => {
                                          borderColor: 'red'
                                      }}>
                                     <TextField
-                                        value={newPageNames || ''}
-                                        onChange={(e) => handleNameChange(e.target.value)}
+                                        value={newPageName || ''}
+                                        onChange={(e) => newNameHandle(e.target.value)}
                                         placeholder="Nouvelle section"
                                         variant="standard"
                                         sx={{flexGrow: 1, pr: 1, pl: 3, width: '80%'}}

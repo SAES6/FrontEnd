@@ -4,9 +4,12 @@ import NewQuestion from "./NewQuestion";
 import {v4 as uuid} from 'uuid';
 import {Box, Button, IconButton} from "@mui/material";
 import useGET from "../../../hooks/useGET";
+import {useSelector} from "react-redux";
+import {selectCurrentSelection} from "../../../_store/_slices/quiz-slice";
 
-const QuizAdministration = ({currentSelection}) => {
-    const [response, setRequest] = useGET({url: `${currentSelection}`, data: {}, api: ''});
+const QuizAdministration = () => {
+    const currentSelection = useSelector(selectCurrentSelection);
+    const [response, setRequest] = useGET({url: '', data: {}, api: ''});
 
     const [pageInfos, setPageInfos] = useState([]);
 

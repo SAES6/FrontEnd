@@ -43,6 +43,7 @@ const quizSlice = createSlice({
                 dropdownOpen: true,
                 pages: []
             };
+            state.quizzesInfos = state.quizzesInfos.map(quiz => ({...quiz, dropdownOpen: false}))
             state.quizzesInfos.push(newQuiz);
             state.currentQuizInfos = newQuiz;
             state.currentQuizId = newId;
@@ -101,19 +102,39 @@ const quizSlice = createSlice({
         updatePage(state, action) {
 
         },
+        rename(state, action) {
+            if (state.currentPageId) {
+                state.quizzesInfos = state.quizzesInfos.map(quiz => {
+                    if (quiz.id === state.currentQuizId) {
+                        const updatedPages = quiz.pages.map(page => {
+                            if (page.id === state.currentPageId) {
+                                return {...page, name: action.payload};
+                            }
+                            return page;
+                        });
+                        return {...quiz, pages: updatedPages};
+                    }
+                    return quiz;
+                });
+            } else {
+                state.quizzesInfos = state.quizzesInfos.map(quiz => {
+                    if (quiz.id === state.currentQuizId) {
+                        return {...quiz, name: action.payload};
+                    }
+                    return quiz;
+                });
+            }
+        },
         reset: () => initialState,
     },
 });
 
-const selectQuizzesInfos = state => state.quiz.quizzesInfos;
+const selectCurrentPageId = state => state.quiz.currentPageId;
+const selectCurrentQuizId = state => state.quiz.currentQuizId;
 
-// Custom selector to get id and dropdownOpen from each quiz
-export const selectQuizIdAndDropdown = createSelector(
-    [selectQuizzesInfos],
-    quizzesInfos => quizzesInfos.map(quiz => ({
-        id: quiz.id,
-        dropdownOpen: quiz.dropdownOpen,
-    }))
+export const selectCurrentSelection = createSelector(
+    [selectCurrentPageId, selectCurrentQuizId],
+    (currentPageId, currentQuizId) => currentPageId || currentQuizId
 );
 
 export const quizActions = quizSlice.actions;
