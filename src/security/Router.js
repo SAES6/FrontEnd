@@ -11,27 +11,26 @@ const AdminConsole = lazy(() => import('../views/admin-console/AdminConsole'));
 const Questions = lazy(() => import('../views/questions/Questions.js'));
 
 const ThemeRoutes = [
-  {
-    path: '/',
-    element: <FullLayout />,
-    children: [
-      { path: '/', element: <Navigate to='/accueil' /> },
-      { path: '/connection', exact: true, element: <SignIn /> },
-      { path: '/accueil', exact: true, element: <Home /> },
-      { path: '/questions/:id', exact: true, element: <Questions /> },
-      { path: '/summary/:id', exact: true, element: <Summary /> },
-      {
-        path: '/admin-console',
-        exact: true,
-        element: (
-          <SecuredRoute
-            childrenName='admin-console'
-            children={<AdminConsole />}
-          ></SecuredRoute>
-        ),
-      },
-    ],
-  },
+    {
+        path: "/",
+        element: <FullLayout/>,
+        children: [
+            {path: "/", element: <Navigate to="/accueil"/>},
+            {path: "/connection", exact: true, element: <SignIn/>},
+            {path: "/accueil", exact: true, element: <Home/>},
+            {path: "/questions/:id", exact: true, element: <Questions/>},
+            {
+                path: "/admin-console",
+                exact: true,
+                element: (<SecuredRoute childrenName="admin-console" children={<AdminConsole/>}></SecuredRoute>),
+            },
+            {
+                path: "/admin-consoletest",
+                exact: true,
+                element: <AdminConsole/>,
+            },
+        ],
+    },
 ];
 
 export default ThemeRoutes;
