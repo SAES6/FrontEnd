@@ -1,7 +1,6 @@
 import { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 import SecuredRoute from '../security/SecuredRoute.js';
-import Summary from '../views/summary/Summary.jsx';
 
 const FullLayout = lazy(() => import('../layouts/FullLayout.js'));
 
