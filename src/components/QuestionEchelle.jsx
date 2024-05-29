@@ -163,6 +163,14 @@ const QuestionEchelle = ({
             marks={marks}
             min={questionSliderMin}
             max={questionSliderMax}
+            sx={{
+              '&.MuiSlider-root': {
+                pointerEvents: 'none !important',
+              },
+              '&.MuiSlider-thumb': {
+                pointerEvents: 'none !important',
+              },
+            }}
           />
         </Grid>
       )}
