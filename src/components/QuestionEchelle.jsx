@@ -11,6 +11,7 @@ const QuestionEchelle = ({
   questionSliderMax,
   questionSliderGap,
   onResponseChange,
+  userResponse,
   mode,
 }) => {
   const themeQuestion = useTheme(theme);
@@ -128,23 +129,43 @@ const QuestionEchelle = ({
           {children}
         </Typography>
       </Grid>
-      <Grid
-        className='slider'
-        sx={{
-          width: '100%',
-        }}
-      >
-        <Slider
-          aria-label='Temperature'
-          valueLabelDisplay='auto'
-          value={sliderValue}
-          onChange={handleSliderChange}
-          step={questionSliderGap}
-          marks={marks}
-          min={questionSliderMin}
-          max={questionSliderMax}
-        />
-      </Grid>
+      {mode === 'question' ? (
+        <Grid
+          className='slider'
+          sx={{
+            width: '100%',
+          }}
+        >
+          <Slider
+            aria-label='Temperature'
+            valueLabelDisplay='auto'
+            value={sliderValue}
+            onChange={handleSliderChange}
+            step={questionSliderGap}
+            marks={marks}
+            min={questionSliderMin}
+            max={questionSliderMax}
+          />
+        </Grid>
+      ) : (
+        <Grid
+          className='slider'
+          sx={{
+            width: '100%',
+          }}
+        >
+          <Slider
+            aria-label='Temperature'
+            valueLabelDisplay='auto'
+            value={userResponse}
+            onChange={handleSliderChange}
+            step={questionSliderGap}
+            marks={marks}
+            min={questionSliderMin}
+            max={questionSliderMax}
+          />
+        </Grid>
+      )}
     </Grid>
   );
 };

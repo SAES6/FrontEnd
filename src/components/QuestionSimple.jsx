@@ -17,6 +17,7 @@ const QuestionSimple = ({
   questionType,
   questionChoices,
   onResponseChange,
+  userResponse,
   mode,
 }) => {
   const themeQuestion = useTheme(theme);
@@ -24,10 +25,16 @@ const QuestionSimple = ({
   const [selectedChoices, setSelectedChoices] = useState([]);
 
   useEffect(() => {
-    if (selectedChoices.length > 0) {
+    if (mode === 'question' && selectedChoices.length > 0) {
       onResponseChange(selectedChoices);
     }
-  }, [selectedChoices, onResponseChange]);
+  }, [selectedChoices, onResponseChange, mode]);
+
+  useEffect(() => {
+    if (mode !== 'question') {
+      setSelectedChoices(userResponse);
+    }
+  }, [userResponse, mode]);
 
   const handleCheckboxChange = (choiceId) => {
     setSelectedChoices((prevSelectedChoices) => {
@@ -130,36 +137,66 @@ const QuestionSimple = ({
           {children}
         </Typography>
       </Grid>
-      <Grid
-        className='choices'
-        sx={{
-          width: '100%',
-        }}
-      >
-        <FormGroup>
-          {questionChoices.map((choice) => (
-            <FormControlLabel
-              key={choice.id}
-              sx={{
-                '& .MuiFormControlLabel-label': {
-                  fontFamily: 'Poppins, sans-serif',
-                  fontSize: '16px',
-                  fontWeight: '400',
-                  lineHeight: '24px',
-                  color: themeQuestion.palette.text.primary,
-                },
-              }}
-              control={
-                <Checkbox
-                  checked={selectedChoices.includes(choice.id)}
-                  onChange={() => handleCheckboxChange(choice.id)}
-                />
-              }
-              label={choice.text}
-            />
-          ))}
-        </FormGroup>
-      </Grid>
+      {mode === 'question' ? (
+        <Grid
+          className='choices'
+          sx={{
+            width: '100%',
+          }}
+        >
+          <FormGroup>
+            {questionChoices.map((choice) => (
+              <FormControlLabel
+                key={choice.id}
+                sx={{
+                  '& .MuiFormControlLabel-label': {
+                    fontFamily: 'Poppins, sans-serif',
+                    fontSize: '16px',
+                    fontWeight: '400',
+                    lineHeight: '24px',
+                    color: themeQuestion.palette.text.primary,
+                  },
+                }}
+                control={
+                  <Checkbox
+                    checked={selectedChoices.includes(choice.id)}
+                    onChange={() => handleCheckboxChange(choice.id)}
+                  />
+                }
+                label={choice.text}
+              />
+            ))}
+          </FormGroup>
+        </Grid>
+      ) : (
+        <Grid
+          className='choices'
+          sx={{
+            width: '100%',
+          }}
+        >
+          <FormGroup>
+            {questionChoices.map((choice) => (
+              <FormControlLabel
+                key={choice.id}
+                sx={{
+                  '& .MuiFormControlLabel-label': {
+                    fontFamily: 'Poppins, sans-serif',
+                    fontSize: '16px',
+                    fontWeight: '400',
+                    lineHeight: '24px',
+                    color: themeQuestion.palette.text.primary,
+                  },
+                }}
+                control={
+                  <Checkbox checked={userResponse.includes(choice.id)} />
+                }
+                label={choice.text}
+              />
+            ))}
+          </FormGroup>
+        </Grid>
+      )}
     </Grid>
   );
 };

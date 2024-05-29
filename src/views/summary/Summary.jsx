@@ -6,10 +6,8 @@ import QuestionSimple from '../../components/QuestionSimple';
 import QuestionEchelle from '../../components/QuestionEchelle';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import axios from 'axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useDispatch, useSelector } from 'react-redux';
+import useGET from '../../hooks/useGET';
 
 const Summary = () => {
   const themeQuestions = useTheme(theme);
@@ -17,11 +15,17 @@ const Summary = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
+  const [response, setRequest] = useGET({
+    url: `/questionnaire/loadById?id=${id}`,
+    data: {},
+    api: process.env.REACT_APP_API_URL,
+  });
 
   const questionnaireState = useSelector(
     (state) => state.questionnaire.questionnaires[id] || {}
   );
   const { responses = [] } = questionnaireState;
+  console.log(responses);
 
   const [questions, setQuestions] = useState([]);
 
@@ -34,28 +38,16 @@ const Summary = () => {
     },
   }));
 
-  const loadQuestions = () => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/questionnaire/loadById?id=${id}`)
-      .then((response) => {
-        setQuestions(response.data);
-      })
-      .catch(() => {
-        toast.error('Aucune question', {
-          position: 'top-center',
-          style: {
-            fontFamily: 'Poppins, sans-serif',
-            borderRadius: '15px',
-            textAlign: 'center',
-          },
-        });
-      });
-  };
-
   useEffect(() => {
-    loadQuestions();
-    console.log(responses);
-  }, [id]);
+    if (response?.status >= 200 || response?.status < 300) {
+      setQuestions(response?.data);
+    }
+  }, [response]);
+
+  const getResponseForQuestion = (questionId) => {
+    const response = responses.find((res) => res.questionId === questionId);
+    return response ? response.value : '';
+  };
 
   return (
     <Grid
@@ -73,55 +65,48 @@ const Summary = () => {
           padding: '40px 0 20px',
         }}
       >
-        {responses.map((question) => {
-          if (question.questionType === 'text') {
+        {questions.map((question) => {
+          if (question.type === 'text') {
             return (
               <QuestionOpen
                 key={question.questionId}
-                questionTitle={'Titre'}
+                questionTitle={question.title}
                 mode={'summary'}
-                userResponse={'La vie de oim je suis trop fort en code'}
+                userResponse={getResponseForQuestion(question.id)}
               >
-                {
-                  'Quisque porta et tortor eget suscipit. Nulla sit amet pharetra dui. Sed tristique condimentum lectus ac luctus. Cras varius sem magna, in laoreet lectus ultrices sit amet.'
-                }
+                {question.description}
               </QuestionOpen>
             );
           }
           if (
-            question.questionType === 'single_choice' ||
-            question.questionType === 'multiple_choice'
+            question.type === 'single_choice' ||
+            question.type === 'multiple_choice'
           ) {
             return (
               <QuestionSimple
                 key={question.questionId}
-                questionTitle={'Titre de la question simple'}
+                questionTitle={question.title}
                 questionType={question.questionType}
-                questionChoices={[
-                  { id: 1, text: 'choix 1' },
-                  { id: 2, text: 'choix 2' },
-                  { id: 3, text: 'choix 3' },
-                ]}
+                questionChoices={question.choices}
                 mode={'summary'}
+                userResponse={getResponseForQuestion(question.id)}
               >
-                {
-                  'Quisque porta et tortor eget suscipit. Nulla sit amet pharetra dui. Sed tristique condimentum lectus ac luctus. Cras varius sem magna, in laoreet lectus ultrices sit amet.'
-                }
+                {question.description}
               </QuestionSimple>
             );
           }
-          if (question.questionType === 'slider') {
+          if (question.type === 'slider') {
             return (
               <QuestionEchelle
                 key={question.questionId}
-                questionTitle={'Titre mashala'}
-                questionSliderMin={0}
-                questionSliderMax={10}
-                questionSliderGap={1}
-                userResponse={5}
+                questionTitle={question.title}
+                questionSliderMin={question.slider_min}
+                questionSliderMax={question.slider_max}
+                questionSliderGap={question.slider_gap}
+                userResponse={getResponseForQuestion(question.id)}
                 mode={'summary'}
               >
-                {'Lorem ipsum mala est gangx'}
+                {question.description}
               </QuestionEchelle>
             );
           }
