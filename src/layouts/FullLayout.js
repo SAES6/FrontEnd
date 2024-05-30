@@ -16,15 +16,7 @@ import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import { theme } from '../theme';
 import { toast } from 'react-toastify';
-
-const ColorButton = styled(Button)(({ theme }) => ({
-  color: theme.palette.primary.main,
-  backgroundColor: theme.palette.primary.contrastText,
-  transition: 'ease 0.3s',
-  '&:hover': {
-    backgroundColor: theme.palette.primary.contrastText,
-  },
-}));
+import ColorButton from '../components/ColorButton';
 
 const FullLayout = () => {
   const themeLayout = useTheme(theme);
@@ -176,15 +168,6 @@ const FullLayout = () => {
           </Grid>
           <Grid item>
             <ColorButton
-              sx={{
-                borderRadius: '10px',
-                padding: '10px 15px',
-                fontFamily: 'Poppins, sans-serif',
-                fontWeight: '600',
-                fontSize: '16px',
-                lineHeight: '24px',
-                textTransform: 'none',
-              }}
               variant='contained'
               startIcon={
                 <FontAwesomeIcon
