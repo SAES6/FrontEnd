@@ -27,14 +27,6 @@ const ColorButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const ColorButtonPrimary = styled(Button)(({ theme }) => ({
-  color: theme.palette.primary.contrastText,
-  backgroundColor: theme.palette.primary.main,
-  transition: "ease 0.3s",
-  "&:hover": {
-    backgroundColor: theme.palette.primary.main,
-  },
-}));
 const AdminGestion = () => {
   const screenSize = useMediaQuery("(min-width:1600px)");
   const screenHeight = useMediaQuery("(min-height:900px)");
@@ -227,6 +219,7 @@ const AdminGestion = () => {
   };
 
   useEffect(() => {
+    console.log("load");
     loadAdminsList();
   }, []);
 
@@ -289,13 +282,11 @@ const AdminGestion = () => {
     <Grid
       container
       sx={{
-        maxWidth: screenSize ? "1500px" : "1300px",
         height: "100%",
         width: "100%",
         alignItems: "start",
         justifyContent: "center",
         alignContent: "start",
-        mt: "30px",
       }}
     >
       <Grid
@@ -305,124 +296,6 @@ const AdminGestion = () => {
           alignItems: "start",
           justifyContent: "start",
           alignContent: "start",
-        }}
-      >
-        <ColorButtonPrimary
-          variant="contained"
-          sx={{
-            backgroundColor: theme.palette.secondary.main,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            alignContent: "center",
-            borderRadius: "10px",
-            padding: "10px 15px",
-            opacity: "75%",
-            mr: "10px",
-          }}
-        >
-          <FontAwesomeIcon
-            icon="fa-solid fa-list"
-            style={{
-              fontSize: "16px",
-              marginRight: "10px",
-              color: themeGestion.palette.text.primary,
-            }}
-          />
-          <Typography
-            sx={{
-              fontSize: "16px",
-              fontFamily: "Poppins, sans-serif",
-              fontWeight: "400",
-              lineHeight: "24px",
-              textAlign: "center",
-              textTransform: "none",
-              color: themeGestion.palette.text.primary,
-            }}
-          >
-            Gestion des questionnaires
-          </Typography>
-        </ColorButtonPrimary>
-        <ColorButtonPrimary
-          variant="contained"
-          sx={{
-            backgroundColor: theme.palette.secondary.main,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            alignContent: "center",
-            borderRadius: "10px",
-            padding: "10px 15px",
-            opacity: "75%",
-            mr: "10px",
-          }}
-        >
-          <FontAwesomeIcon
-            icon="fa-solid fa-chart-pie"
-            style={{
-              fontSize: "16px",
-              marginRight: "10px",
-              color: themeGestion.palette.text.primary,
-            }}
-          />
-          <Typography
-            sx={{
-              fontSize: "16px",
-              fontFamily: "Poppins, sans-serif",
-              fontWeight: "400",
-              lineHeight: "24px",
-              textAlign: "center",
-              textTransform: "none",
-              color: themeGestion.palette.text.primary,
-            }}
-          >
-            Statistiques
-          </Typography>
-        </ColorButtonPrimary>
-        <ColorButtonPrimary
-          variant="contained"
-          sx={{
-            backgroundColor: theme.palette.secondary.main,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            alignContent: "center",
-            borderRadius: "10px",
-            padding: "10px 15px",
-            mr: "10px",
-          }}
-        >
-          <FontAwesomeIcon
-            icon="fa-solid fa-user-tie"
-            style={{
-              fontSize: "16px",
-              marginRight: "10px",
-              color: themeGestion.palette.text.primary,
-            }}
-          />
-          <Typography
-            sx={{
-              fontSize: "16px",
-              fontFamily: "Poppins, sans-serif",
-              fontWeight: "500",
-              lineHeight: "24px",
-              textAlign: "center",
-              textTransform: "none",
-              color: themeGestion.palette.text.primary,
-            }}
-          >
-            Gestion admin
-          </Typography>
-        </ColorButtonPrimary>
-      </Grid>
-      <Grid
-        container
-        sx={{
-          display: "flex",
-          alignItems: "start",
-          justifyContent: "start",
-          alignContent: "start",
-          mt: "30px",
           height: "100%",
         }}
       >
