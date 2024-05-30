@@ -46,6 +46,18 @@ export const theme = createTheme({
           borderRadius: '10px',
           padding: '10px 15px',
         },
+        startIcon: {
+          marginLeft: '0px',
+          marginRight: '10px',
+        },
+        iconSizeMedium: {
+          '& > *:first-child': {
+            fontSize: 'inherit',
+          },
+        },
+        colorSecondary: {
+          fontWeight: 500,
+        },
       },
     },
   },
