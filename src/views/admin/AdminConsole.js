@@ -4,7 +4,7 @@ import { Button, Grid, useMediaQuery, Typography } from "@mui/material";
 import ListIcon from "@mui/icons-material/List";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import PersonIcon from "@mui/icons-material/Person";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import { theme } from "../../theme";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

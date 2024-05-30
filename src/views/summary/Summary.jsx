@@ -1,17 +1,17 @@
-import { Grid, Button, Typography, useMediaQuery } from '@mui/material';
-import { useTheme, styled } from '@mui/material/styles';
-import { theme } from '../../theme';
-import QuestionOpen from '../../components/QuestionOpen';
-import QuestionSimple from '../../components/QuestionSimple';
-import QuestionEchelle from '../../components/QuestionEchelle';
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import useGET from '../../hooks/useGET';
+import { Grid, Button, Typography, useMediaQuery } from "@mui/material";
+import { useTheme, styled } from "@mui/material/styles";
+import { theme } from "../../theme";
+import QuestionOpen from "../../components/QuestionOpen";
+import QuestionSimple from "../../components/QuestionSimple";
+import QuestionEchelle from "../../components/QuestionEchelle";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import useGET from "../../hooks/useGET";
 
 const Summary = () => {
   const themeQuestions = useTheme(theme);
-  const screenSize = useMediaQuery('(min-width:1600px)');
+  const screenSize = useMediaQuery("(min-width:1600px)");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -25,15 +25,13 @@ const Summary = () => {
     (state) => state.questionnaire.questionnaires[id] || {}
   );
   const { responses = [] } = questionnaireState;
-  console.log(responses);
-
   const [questions, setQuestions] = useState([]);
 
   const ColorButton = styled(Button)(({ theme }) => ({
     color: theme.palette.primary.contrastText,
     backgroundColor: theme.palette.primary.main,
-    transition: 'ease 0.3s',
-    '&:hover': {
+    transition: "ease 0.3s",
+    "&:hover": {
       backgroundColor: theme.palette.primary.main,
     },
   }));
@@ -46,32 +44,32 @@ const Summary = () => {
 
   const getResponseForQuestion = (questionId) => {
     const response = responses.find((res) => res.questionId === questionId);
-    return response ? response.value : '';
+    return response ? response.value : "";
   };
 
   return (
     <Grid
       sx={{
-        height: '100%',
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        overflow: 'auto',
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        overflow: "auto",
       }}
     >
       <Grid
         sx={{
-          padding: '40px 0 20px',
+          padding: "40px 0 20px",
         }}
       >
         {questions.map((question) => {
-          if (question.type === 'text') {
+          if (question.type === "text") {
             return (
               <QuestionOpen
                 key={question.questionId}
                 questionTitle={question.title}
-                mode={'summary'}
+                mode={"summary"}
                 userResponse={getResponseForQuestion(question.id)}
               >
                 {question.description}
@@ -79,8 +77,8 @@ const Summary = () => {
             );
           }
           if (
-            question.type === 'single_choice' ||
-            question.type === 'multiple_choice'
+            question.type === "single_choice" ||
+            question.type === "multiple_choice"
           ) {
             return (
               <QuestionSimple
@@ -88,14 +86,14 @@ const Summary = () => {
                 questionTitle={question.title}
                 questionType={question.questionType}
                 questionChoices={question.choices}
-                mode={'summary'}
+                mode={"summary"}
                 userResponse={getResponseForQuestion(question.id)}
               >
                 {question.description}
               </QuestionSimple>
             );
           }
-          if (question.type === 'slider') {
+          if (question.type === "slider") {
             return (
               <QuestionEchelle
                 key={question.questionId}
@@ -104,7 +102,7 @@ const Summary = () => {
                 questionSliderMax={question.slider_max}
                 questionSliderGap={question.slider_gap}
                 userResponse={getResponseForQuestion(question.id)}
-                mode={'summary'}
+                mode={"summary"}
               >
                 {question.description}
               </QuestionEchelle>

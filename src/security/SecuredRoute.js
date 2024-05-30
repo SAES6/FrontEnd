@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 function SecuredRoute(props) {
-  const token = localStorage.getItem("authToken");
+  const token = useSelector((state) => state.user.token);
 
   if (token) {
     return <>{props.children}</>;

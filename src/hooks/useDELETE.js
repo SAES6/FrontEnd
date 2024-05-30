@@ -3,13 +3,15 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 /**
- * Hook personaliser : Pour tous les requete post vers les apis.
+ * Hook personnalisé : Pour toutes les requêtes DELETE vers les APIs.
+ * @param {*} url  Uri de l'api
+ * @param {*} authorization Authorization headers si nécessaire
+ * @param {*} api Base URL de l'API
+ * @param {*} errorMessage Message d'erreur personnalisé
  */
-
-function usePOST({ url, data, authorization, api, errorMessage }) {
+function useDELETE({ url, authorization, api, errorMessage }) {
   const [initialRequest, setInitialRequest] = useState({
     url: url || "",
-    data: data || {},
     authorization: authorization || {},
     api: api,
     errorMessage: errorMessage,
@@ -20,16 +22,12 @@ function usePOST({ url, data, authorization, api, errorMessage }) {
   useEffect(() => {
     const callApi = async () => {
       try {
-        if (initialRequest.url !== "") {
+        if (initialRequest.url !== "" && initialRequest.url) {
           result = await axios
             .create({
               baseURL: initialRequest.api,
             })
-            .post(
-              initialRequest.url,
-              initialRequest.data,
-              initialRequest.authorization
-            );
+            .delete(initialRequest.url, initialRequest.authorization);
           setResponse(result);
         }
       } catch (error) {
@@ -51,4 +49,4 @@ function usePOST({ url, data, authorization, api, errorMessage }) {
   return [response, setInitialRequest];
 }
 
-export default usePOST;
+export default useDELETE;
