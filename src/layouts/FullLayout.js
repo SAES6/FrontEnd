@@ -55,23 +55,24 @@ const FullLayout = () => {
             await createToken();
         };
 
-        checkToken();
 
-        const token = localStorage.getItem("authToken");
-        if (token) {
-            axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-            axios
-                .get(`${process.env.REACT_APP_API_URL}/me`)
-                .then((response) => {
-                    if (response.data) {
-                        setIsAuthenticated(true);
-                    }
-                })
-                .catch(() => {
-                    localStorage.removeItem("authToken");
-                });
-        }
-    }, []);
+    await checkToken();
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/me`)
+        .then((response) => {
+          if (response.data) {
+            localStorage.setItem("admin_principal", response.data.principal);
+            setIsAuthenticated(true);
+          }
+        })
+        .catch(() => {
+          localStorage.removeItem("authToken");
+        });
+    }
+  }, []);
 
     const handleLogin = () => {
         console.log(process.env.REACT_APP_API_URL);
