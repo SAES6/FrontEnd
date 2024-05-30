@@ -5,17 +5,17 @@ import {
   useMediaQuery,
   Modal,
   IconButton,
-} from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import { styled } from "@mui/material/styles";
-import { theme } from "../../theme";
-import { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CloseIcon from "@mui/icons-material/Close";
-import { toast } from "react-toastify";
+} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
+import { theme } from '../../theme';
+import { useEffect, useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import CloseIcon from '@mui/icons-material/Close';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 import useGET from "../../hooks/useGET";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../../_store/_slices/user-slice";
 const ColorButton = styled(Button)(({ theme }) => ({
@@ -57,7 +57,7 @@ const Home = () => {
   };
 
   const goToQuestionnaire = (questionnaire) => {
-    if (localStorage.getItem("user_consent") === "true") {
+    if (localStorage.getItem('user_consent') === 'true') {
       navigate(`/questions/${questionnaire.id}`);
     } else {
       setOpenConsentPopup(true);
@@ -66,7 +66,7 @@ const Home = () => {
   };
 
   const handleConsent = () => {
-    localStorage.setItem("user_consent", "true");
+    localStorage.setItem('user_consent', 'true');
     setOpenConsentPopup(false);
     navigate(`/questions/${selectedQuestionnaire.id}`);
   };
@@ -83,22 +83,22 @@ const Home = () => {
     <Grid
       container
       sx={{
-        maxWidth: screenSize ? "1500px" : "1300px",
-        height: "100%",
-        width: "auto",
-        alignItems: "center",
-        justifyContent: "center",
-        alignContent: "center",
+        maxWidth: screenSize ? '1500px' : '1300px',
+        height: '100%',
+        width: 'auto',
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignContent: 'center',
       }}
     >
       <Grid
         container
         spacing={4}
         sx={{
-          height: "fit-content",
-          width: "100%",
-          flexDirection: "row",
-          alignItems: "flex-end",
+          height: 'fit-content',
+          width: '100%',
+          flexDirection: 'row',
+          alignItems: 'flex-end',
           mt: 0,
         }}
       >
@@ -112,21 +112,21 @@ const Home = () => {
         >
           <Typography
             sx={{
-              fontFamily: "Poppins, sans-serif",
-              fontSize: "64px",
-              fontWeight: "700",
-              lineHeight: "1.2",
-              letterSpacing: "-2px",
+              fontFamily: 'Poppins, sans-serif',
+              fontSize: '64px',
+              fontWeight: '700',
+              lineHeight: '1.2',
+              letterSpacing: '-2px',
             }}
           >
             Projet Informare Valorem
           </Typography>
           <Typography
             sx={{
-              fontFamily: "Poppins, sans-serif",
-              fontSize: "18px",
-              fontWeight: "600",
-              letterSpacing: "-1px",
+              fontFamily: 'Poppins, sans-serif',
+              fontSize: '18px',
+              fontWeight: '600',
+              letterSpacing: '-1px',
               mb: 1,
               mt: 1,
             }}
@@ -135,10 +135,10 @@ const Home = () => {
           </Typography>
           <Typography
             sx={{
-              fontFamily: "Poppins, sans-serif",
-              fontSize: "16px",
-              fontWeight: "300",
-              letterSpacing: "-1px",
+              fontFamily: 'Poppins, sans-serif',
+              fontSize: '16px',
+              fontWeight: '300',
+              letterSpacing: '-1px',
               mb: 1,
               mt: 1,
             }}
@@ -156,9 +156,9 @@ const Home = () => {
           xs={6}
           md={6}
           sx={{
-            height: "350px",
+            height: '350px',
             backgroundColor: themeLayout.palette.secondary.main,
-            borderRadius: "20px",
+            borderRadius: '20px',
           }}
         />
       </Grid>
@@ -166,80 +166,80 @@ const Home = () => {
         container
         gap={2}
         sx={{
-          mt: "50px",
-          overflow: "auto",
-          maxHeight: "300px",
-          width: "100%",
-          flexDirection: "row",
-          alignItems: "flex-end",
+          mt: '50px',
+          overflow: 'auto',
+          maxHeight: '300px',
+          width: '100%',
+          flexDirection: 'row',
+          alignItems: 'flex-end',
         }}
       >
         {questionnaires.map((questionnaire) => (
           <Grid>
-            <ColorButton
+            <Button
               onClick={() => goToQuestionnaire(questionnaire)}
               disabled={questionnaire.completed}
               sx={{
-                height: "200px",
-                maxHeight: "200px",
-                maxWidth: "285px",
-                width: "285px",
+                height: '200px',
+                maxHeight: '200px',
+                maxWidth: '285px',
+                width: '285px',
                 backgroundColor: questionnaire.completed
                   ? themeLayout.palette.secondary.main
                   : themeLayout.palette.primary.main,
 
-                borderRadius: "15px",
-                padding: "20px 25px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                alignItems: "flex-start",
-                "&:disabled": {
+                borderRadius: '15px',
+                padding: '20px 25px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+                '&:disabled': {
                   backgroundColor: themeLayout.palette.secondary.main, // Exemple de couleur lorsque le bouton est désactivé
                 },
               }}
-              variant="contained"
+              variant='contained'
             >
               <Grid
                 sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "flex-start",
-                  alignItems: "flex-start",
-                  width: "100%",
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'flex-start',
+                  alignItems: 'flex-start',
+                  width: '100%',
                 }}
               >
                 <Grid
                   sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "flex-start",
-                    alignItems: "center",
-                    width: "100%",
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'flex-start',
+                    alignItems: 'center',
+                    width: '100%',
                   }}
                 >
                   {questionnaire.completed && (
                     <FontAwesomeIcon
-                      icon="fa-solid fa-lock"
+                      icon='fa-solid fa-lock'
                       style={{
-                        fontSize: "24px",
+                        fontSize: '24px',
                         color: themeLayout.palette.primary.contrastText,
-                        marginRight: "10px",
+                        marginRight: '10px',
                       }}
                     />
                   )}
                   <Typography
                     sx={{
-                      fontFamily: "Poppins, sans-serif",
-                      fontSize: "24px",
-                      fontWeight: "600",
-                      lineHeight: "36px",
+                      fontFamily: 'Poppins, sans-serif',
+                      fontSize: '24px',
+                      fontWeight: '600',
+                      lineHeight: '36px',
                       color: themeLayout.palette.primary.contrastText,
-                      overflowWrap: "break-word",
-                      textTransform: "none",
-                      width: "100%",
-                      overflowX: "auto",
-                      textAlign: "left",
+                      overflowWrap: 'break-word',
+                      textTransform: 'none',
+                      width: '100%',
+                      overflowX: 'auto',
+                      textAlign: 'left',
                     }}
                   >
                     {questionnaire.name}
@@ -247,17 +247,17 @@ const Home = () => {
                 </Grid>
                 <Typography
                   sx={{
-                    fontFamily: "Poppins, sans-serif",
-                    fontSize: "16px",
-                    fontWeight: "400",
-                    lineHeight: "24px",
+                    fontFamily: 'Poppins, sans-serif',
+                    fontSize: '16px',
+                    fontWeight: '400',
+                    lineHeight: '24px',
                     color: themeLayout.palette.primary.contrastText,
-                    overflowWrap: "break-word",
-                    textTransform: "none",
-                    width: "100%",
-                    maxHeight: "40%",
-                    overfloX: "auto",
-                    textAlign: "left",
+                    overflowWrap: 'break-word',
+                    textTransform: 'none',
+                    width: '100%',
+                    maxHeight: '40%',
+                    overfloX: 'auto',
+                    textAlign: 'left',
                   }}
                 >
                   {questionnaire.description}
@@ -265,125 +265,125 @@ const Home = () => {
               </Grid>
               <Grid
                 sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "flex-end",
-                  alignItems: "flex-start",
-                  width: "100%",
-                  maxHeight: "20%",
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'flex-end',
+                  alignItems: 'flex-start',
+                  width: '100%',
+                  maxHeight: '20%',
                 }}
               >
                 <Grid
                   sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    width: "100%",
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    width: '100%',
                   }}
                 >
                   <FontAwesomeIcon
-                    icon="fa-solid fa-circle-question"
+                    icon='fa-solid fa-circle-question'
                     style={{
-                      fontSize: "16px",
+                      fontSize: '16px',
                       color: themeLayout.palette.primary.contrastText,
-                      opacity: "0.75",
-                      marginRight: "5px",
+                      opacity: '0.75',
+                      marginRight: '5px',
                     }}
                   />
                   <Typography
                     sx={{
-                      fontFamily: "Poppins, sans-serif",
-                      fontSize: "16px",
-                      fontWeight: "600",
-                      lineHeight: "24px",
+                      fontFamily: 'Poppins, sans-serif',
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      lineHeight: '24px',
                       color: themeLayout.palette.primary.contrastText,
-                      opacity: "0.75",
-                      textTransform: "none",
+                      opacity: '0.75',
+                      textTransform: 'none',
                     }}
                   >
                     {questionnaire.number_of_questions == 1
-                      ? "1 question"
-                      : questionnaire.number_of_questions + " questions"}
+                      ? '1 question'
+                      : questionnaire.number_of_questions + ' questions'}
                   </Typography>
                 </Grid>
                 <Grid
                   sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    width: "100%",
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    width: '100%',
                   }}
                 >
                   <FontAwesomeIcon
-                    icon="fa-solid fa-clock"
+                    icon='fa-solid fa-clock'
                     style={{
-                      fontSize: "16px",
+                      fontSize: '16px',
                       color: themeLayout.palette.primary.contrastText,
-                      opacity: "0.75",
-                      marginRight: "5px",
+                      opacity: '0.75',
+                      marginRight: '5px',
                     }}
                   />
                   <Typography
                     sx={{
-                      fontFamily: "Poppins, sans-serif",
-                      fontSize: "16px",
-                      fontWeight: "600",
-                      lineHeight: "24px",
+                      fontFamily: 'Poppins, sans-serif',
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      lineHeight: '24px',
                       color: themeLayout.palette.primary.contrastText,
-                      opacity: "0.75",
-                      textTransform: "none",
+                      opacity: '0.75',
+                      textTransform: 'none',
                     }}
                   >
-                    {questionnaire.duree + " min"}
+                    {questionnaire.duree + ' min'}
                   </Typography>
                 </Grid>
               </Grid>
-            </ColorButton>
+            </Button>
           </Grid>
         ))}
       </Grid>
       <Modal open={openConsentPopup} onClose={handleCloseConsent}>
         <Grid
           container
-          direction="column"
-          alignItems="center"
-          justifyContent="center"
+          direction='column'
+          alignItems='center'
+          justifyContent='center'
           sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: "fit-content",
-            bgcolor: "background.paper",
-            borderRadius: "15px",
-            padding: "20px 25px",
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 'fit-content',
+            bgcolor: 'background.paper',
+            borderRadius: '15px',
+            padding: '20px 25px',
             boxShadow: 24,
           }}
         >
           <Grid
             container
-            alignItems="center"
-            justifyContent="space-between"
-            sx={{ mb: 3, width: "100%" }}
+            alignItems='center'
+            justifyContent='space-between'
+            sx={{ mb: 3, width: '100%' }}
           >
             <Grid item xs={2} />
             <Grid item xs={8}>
               <Typography
-                variant="h6"
-                component="h2"
+                variant='h6'
+                component='h2'
                 sx={{
-                  fontFamily: "Poppins, sans-serif",
-                  fontWeight: "600",
-                  fontSize: "24px",
-                  lineHeight: "36px",
-                  color: "#0E1419",
-                  textAlign: "center",
+                  fontFamily: 'Poppins, sans-serif',
+                  fontWeight: '600',
+                  fontSize: '24px',
+                  lineHeight: '36px',
+                  color: '#0E1419',
+                  textAlign: 'center',
                 }}
               >
                 Un instant !
               </Typography>
             </Grid>
-            <Grid item xs={2} sx={{ textAlign: "right" }}>
+            <Grid item xs={2} sx={{ textAlign: 'right' }}>
               <IconButton onClick={handleCloseConsent}>
                 <CloseIcon />
               </IconButton>
@@ -391,18 +391,18 @@ const Home = () => {
           </Grid>
           <Grid
             container
-            alignItems="center"
-            justifyContent="center"
-            sx={{ mb: 3, width: "500px" }}
+            alignItems='center'
+            justifyContent='center'
+            sx={{ mb: 3, width: '500px' }}
           >
             <Typography
               sx={{
-                fontFamily: "Poppins, sans-serif",
-                fontWeight: "400",
-                fontSize: "16px",
-                lineHeight: "24px",
-                color: "#0E1419",
-                textAlign: "start",
+                fontFamily: 'Poppins, sans-serif',
+                fontWeight: '400',
+                fontSize: '16px',
+                lineHeight: '24px',
+                color: '#0E1419',
+                textAlign: 'start',
                 mb: 2,
               }}
             >
@@ -411,25 +411,25 @@ const Home = () => {
             </Typography>
             <Grid
               container
-              alignItems="center"
-              justifyContent="center"
+              alignItems='center'
+              justifyContent='center'
               sx={{
-                border: "1px solid",
+                border: '1px solid',
                 borderColor: themeLayout.palette.secondary.main,
-                borderRadius: "15px",
-                padding: "10px 15px",
-                maxHeight: "200px",
-                overflow: "scroll",
+                borderRadius: '15px',
+                padding: '10px 15px',
+                maxHeight: '200px',
+                overflow: 'auto',
               }}
             >
               <Typography
                 sx={{
-                  fontFamily: "Poppins, sans-serif",
-                  fontWeight: "600",
-                  fontSize: "18px",
-                  lineHeight: "24px",
-                  opacity: "0.5",
-                  textAlign: "start",
+                  fontFamily: 'Poppins, sans-serif',
+                  fontWeight: '600',
+                  fontSize: '18px',
+                  lineHeight: '24px',
+                  opacity: '0.5',
+                  textAlign: 'start',
                   mt: 1,
                 }}
               >
@@ -437,12 +437,12 @@ const Home = () => {
               </Typography>
               <Typography
                 sx={{
-                  fontFamily: "Poppins, sans-serif",
-                  fontWeight: "400",
-                  fontSize: "16px",
-                  lineHeight: "24px",
-                  opacity: "0.5",
-                  textAlign: "start",
+                  fontFamily: 'Poppins, sans-serif',
+                  fontWeight: '400',
+                  fontSize: '16px',
+                  lineHeight: '24px',
+                  opacity: '0.5',
+                  textAlign: 'start',
                 }}
               >
                 Nous vous remercions de votre intérêt à participer à notre étude
@@ -454,12 +454,12 @@ const Home = () => {
               </Typography>
               <Typography
                 sx={{
-                  fontFamily: "Poppins, sans-serif",
-                  fontWeight: "600",
-                  fontSize: "18px",
-                  lineHeight: "24px",
-                  opacity: "0.5",
-                  textAlign: "start",
+                  fontFamily: 'Poppins, sans-serif',
+                  fontWeight: '600',
+                  fontSize: '18px',
+                  lineHeight: '24px',
+                  opacity: '0.5',
+                  textAlign: 'start',
                   mt: 1,
                 }}
               >
@@ -467,12 +467,12 @@ const Home = () => {
               </Typography>
               <Typography
                 sx={{
-                  fontFamily: "Poppins, sans-serif",
-                  fontWeight: "400",
-                  fontSize: "16px",
-                  lineHeight: "24px",
-                  opacity: "0.5",
-                  textAlign: "start",
+                  fontFamily: 'Poppins, sans-serif',
+                  fontWeight: '400',
+                  fontSize: '16px',
+                  lineHeight: '24px',
+                  opacity: '0.5',
+                  textAlign: 'start',
                 }}
               >
                 Cette étude vise à comparer et comprendre comment les
@@ -484,12 +484,12 @@ const Home = () => {
               </Typography>
               <Typography
                 sx={{
-                  fontFamily: "Poppins, sans-serif",
-                  fontWeight: "600",
-                  fontSize: "18px",
-                  lineHeight: "24px",
-                  opacity: "0.5",
-                  textAlign: "start",
+                  fontFamily: 'Poppins, sans-serif',
+                  fontWeight: '600',
+                  fontSize: '18px',
+                  lineHeight: '24px',
+                  opacity: '0.5',
+                  textAlign: 'start',
                   mt: 1,
                 }}
               >
@@ -497,12 +497,12 @@ const Home = () => {
               </Typography>
               <Typography
                 sx={{
-                  fontFamily: "Poppins, sans-serif",
-                  fontWeight: "400",
-                  fontSize: "16px",
-                  lineHeight: "24px",
-                  opacity: "0.5",
-                  textAlign: "start",
+                  fontFamily: 'Poppins, sans-serif',
+                  fontWeight: '400',
+                  fontSize: '16px',
+                  lineHeight: '24px',
+                  opacity: '0.5',
+                  textAlign: 'start',
                 }}
               >
                 En tant que participant, vous serez invité à répondre à une
@@ -513,12 +513,12 @@ const Home = () => {
               </Typography>
               <Typography
                 sx={{
-                  fontFamily: "Poppins, sans-serif",
-                  fontWeight: "600",
-                  fontSize: "18px",
-                  lineHeight: "24px",
-                  opacity: "0.5",
-                  textAlign: "start",
+                  fontFamily: 'Poppins, sans-serif',
+                  fontWeight: '600',
+                  fontSize: '18px',
+                  lineHeight: '24px',
+                  opacity: '0.5',
+                  textAlign: 'start',
                   mt: 1,
                 }}
               >
@@ -526,12 +526,12 @@ const Home = () => {
               </Typography>
               <Typography
                 sx={{
-                  fontFamily: "Poppins, sans-serif",
-                  fontWeight: "400",
-                  fontSize: "16px",
-                  lineHeight: "24px",
-                  opacity: "0.5",
-                  textAlign: "start",
+                  fontFamily: 'Poppins, sans-serif',
+                  fontWeight: '400',
+                  fontSize: '16px',
+                  lineHeight: '24px',
+                  opacity: '0.5',
+                  textAlign: 'start',
                 }}
               >
                 Vos réponses seront collectées de manière anonyme et aucune
@@ -541,12 +541,12 @@ const Home = () => {
               </Typography>
               <Typography
                 sx={{
-                  fontFamily: "Poppins, sans-serif",
-                  fontWeight: "600",
-                  fontSize: "18px",
-                  lineHeight: "24px",
-                  opacity: "0.5",
-                  textAlign: "start",
+                  fontFamily: 'Poppins, sans-serif',
+                  fontWeight: '600',
+                  fontSize: '18px',
+                  lineHeight: '24px',
+                  opacity: '0.5',
+                  textAlign: 'start',
                   mt: 1,
                 }}
               >
@@ -554,12 +554,12 @@ const Home = () => {
               </Typography>
               <Typography
                 sx={{
-                  fontFamily: "Poppins, sans-serif",
-                  fontWeight: "400",
-                  fontSize: "16px",
-                  lineHeight: "24px",
-                  opacity: "0.5",
-                  textAlign: "start",
+                  fontFamily: 'Poppins, sans-serif',
+                  fontWeight: '400',
+                  fontSize: '16px',
+                  lineHeight: '24px',
+                  opacity: '0.5',
+                  textAlign: 'start',
                 }}
               >
                 Votre participation à cette étude est entièrement volontaire.
@@ -570,13 +570,13 @@ const Home = () => {
           </Grid>
           <Typography
             sx={{
-              fontFamily: "Poppins, sans-serif",
-              fontWeight: "400",
-              fontSize: "16px",
-              lineHeight: "24px",
-              textAlign: "start",
-              padding: "10px 15px",
-              width: "500px",
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: '400',
+              fontSize: '16px',
+              lineHeight: '24px',
+              textAlign: 'start',
+              padding: '10px 15px',
+              width: '500px',
               mb: 3,
             }}
           >
@@ -589,33 +589,9 @@ const Home = () => {
           </Typography>
 
           <Grid>
-            <ColorButton
-              onClick={handleConsent}
-              sx={{
-                backgroundColor: themeLayout.palette.primary.main,
-                borderRadius: "10px",
-                padding: "10px 15px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              variant="contained"
-            >
-              <Typography
-                sx={{
-                  fontFamily: "Poppins, sans-serif",
-                  fontWeight: "600",
-                  fontSize: "16px",
-                  lineHeight: "24px",
-                  color: themeLayout.palette.primary.contrastText,
-                  textAlign: "center",
-                  textTransform: "none",
-                }}
-              >
-                J’accepte
-              </Typography>
-            </ColorButton>
+            <Button onClick={handleConsent} variant='contained'>
+              J’accepte
+            </Button>
           </Grid>
         </Grid>
       </Modal>

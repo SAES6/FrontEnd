@@ -21,6 +21,21 @@ export const theme = createTheme({
       default: '#F7F9FB',
     },
   },
+  typography: {
+    fontFamily: '"Poppins", sans-serif',
+    fontSize: 16,
+    fontWeightLight: 300,
+    button: {
+      fontSize: '16px',
+      fontWeight: 600,
+      lineHeight: '24px',
+      letterSpacing: 'normal',
+      textTransform: 'none',
+    },
+  },
+  shape: {
+    borderRadius: 15,
+  },
   components: {
     MuiButton: {
       defaultProps: {
@@ -28,11 +43,20 @@ export const theme = createTheme({
       },
       styleOverrides: {
         root: {
-          fontSize: '16px',
-          letterSpacing: 'normal',
-          textTransform: 'none',
           borderRadius: '10px',
           padding: '10px 15px',
+        },
+        startIcon: {
+          marginLeft: '0px',
+          marginRight: '10px',
+        },
+        iconSizeMedium: {
+          '& > *:first-child': {
+            fontSize: 'inherit',
+          },
+        },
+        colorSecondary: {
+          fontWeight: 500,
         },
       },
     },
