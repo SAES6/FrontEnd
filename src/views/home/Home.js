@@ -107,7 +107,14 @@ const Home = () => {
           mt: 0,
         }}
       >
-        <Grid item xs={6} md={6} sx={{}}>
+        <Grid
+          item
+          xs={6}
+          md={6}
+          sx={{
+            pr: 2,
+          }}
+        >
           <Typography
             sx={{
               fontFamily: "Poppins, sans-serif",
@@ -122,15 +129,31 @@ const Home = () => {
           <Typography
             sx={{
               fontFamily: "Poppins, sans-serif",
+              fontSize: "18px",
+              fontWeight: "600",
+              letterSpacing: "-1px",
+              mb: 1,
+              mt: 1,
+            }}
+          >
+            Bienvenue sur notre Plateforme d'Étude de la Valeur de l'Information
+          </Typography>
+          <Typography
+            sx={{
+              fontFamily: "Poppins, sans-serif",
               fontSize: "16px",
               fontWeight: "300",
               letterSpacing: "-1px",
+              mb: 1,
+              mt: 1,
             }}
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
+            Dans un monde saturé d'informations, comprendre ce qui constitue une
+            "information de valeur" peut varier grandement entre les
+            professionnels de l'information et le grand public. Ce projet,
+            initié par l'IMSIC, vise à explorer ces perceptions diverses à
+            travers une série de scénarios interactifs où vous, les
+            participants, pouvez exprimer vos opinions et choix.
           </Typography>
         </Grid>
         <Grid
@@ -407,6 +430,19 @@ const Home = () => {
               <Typography
                 sx={{
                   fontFamily: "Poppins, sans-serif",
+                  fontWeight: "600",
+                  fontSize: "18px",
+                  lineHeight: "24px",
+                  opacity: "0.5",
+                  textAlign: "start",
+                  mt: 1,
+                }}
+              >
+                Projet sur la Valeur de l'Information
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
                   fontWeight: "400",
                   fontSize: "16px",
                   lineHeight: "24px",
@@ -414,23 +450,148 @@ const Home = () => {
                   textAlign: "start",
                 }}
               >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum.
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum.
+                Nous vous remercions de votre intérêt à participer à notre étude
+                sur la perception de la valeur de l'information, conduite par
+                l'Institut Méditerranéen des Sciences de l'Information et de la
+                Communication (IMSIC). Avant de débuter, veuillez lire
+                attentivement les informations suivantes et donner votre
+                consentement pour participer.
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: "600",
+                  fontSize: "18px",
+                  lineHeight: "24px",
+                  opacity: "0.5",
+                  textAlign: "start",
+                  mt: 1,
+                }}
+              >
+                Objectif de l'Étude:
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: "400",
+                  fontSize: "16px",
+                  lineHeight: "24px",
+                  opacity: "0.5",
+                  textAlign: "start",
+                }}
+              >
+                Cette étude vise à comparer et comprendre comment les
+                journalistes et le grand public évaluent la valeur de
+                l'information à travers différents scénarios présentés sur cette
+                plateforme interactive. Les résultats nous aideront à mieux
+                saisir les critères utilisés par différents groupes pour juger
+                l'importance des informations.
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: "600",
+                  fontSize: "18px",
+                  lineHeight: "24px",
+                  opacity: "0.5",
+                  textAlign: "start",
+                  mt: 1,
+                }}
+              >
+                Procédure:
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: "400",
+                  fontSize: "16px",
+                  lineHeight: "24px",
+                  opacity: "0.5",
+                  textAlign: "start",
+                }}
+              >
+                En tant que participant, vous serez invité à répondre à une
+                série de scénarios qui vous seront présentés sur notre site web.
+                Chaque scénario vous proposera plusieurs réponses possibles, et
+                vous devrez choisir celle qui reflète le mieux votre opinion sur
+                la valeur de l'information dans le contexte donné.
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: "600",
+                  fontSize: "18px",
+                  lineHeight: "24px",
+                  opacity: "0.5",
+                  textAlign: "start",
+                  mt: 1,
+                }}
+              >
+                Confidentialité et Anonymat:
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: "400",
+                  fontSize: "16px",
+                  lineHeight: "24px",
+                  opacity: "0.5",
+                  textAlign: "start",
+                }}
+              >
+                Vos réponses seront collectées de manière anonyme et aucune
+                information permettant de vous identifier ne sera enregistrée.
+                Toutes les données seront stockées de manière sécurisée et
+                utilisées uniquement à des fins de recherche.
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: "600",
+                  fontSize: "18px",
+                  lineHeight: "24px",
+                  opacity: "0.5",
+                  textAlign: "start",
+                  mt: 1,
+                }}
+              >
+                Droit de Retrait:
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: "400",
+                  fontSize: "16px",
+                  lineHeight: "24px",
+                  opacity: "0.5",
+                  textAlign: "start",
+                }}
+              >
+                Votre participation à cette étude est entièrement volontaire.
+                Vous avez le droit de vous retirer de l'étude à tout moment sans
+                aucune conséquence.
               </Typography>
             </Grid>
           </Grid>
+          <Typography
+            sx={{
+              fontFamily: "Poppins, sans-serif",
+              fontWeight: "400",
+              fontSize: "16px",
+              lineHeight: "24px",
+              textAlign: "start",
+              padding: "10px 15px",
+              width: "500px",
+              mb: 3,
+            }}
+          >
+            En cliquant sur le bouton ci-dessous et en continuant à participer à
+            cette étude, vous confirmez que vous avez lu et compris les
+            informations fournies concernant votre participation. Vous acceptez
+            de participer à cette étude sur la base du volontariat et vous êtes
+            conscient que vous pouvez retirer votre consentement et cesser la
+            participation à tout moment.
+          </Typography>
 
           <Grid>
             <ColorButton

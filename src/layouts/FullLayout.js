@@ -60,6 +60,7 @@ const FullLayout = () => {
         .get(`${process.env.REACT_APP_API_URL}/me`)
         .then((response) => {
           if (response.data) {
+            localStorage.setItem("admin_principal", response.data.principal);
             setIsAuthenticated(true);
           }
         })
