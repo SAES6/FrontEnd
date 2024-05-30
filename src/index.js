@@ -4,11 +4,14 @@ import App from './App';
 import Loader from "./layouts/Loader";
 import {HashRouter} from "react-router-dom";
 import {PersistGate} from 'redux-persist/integration/react';
-import ReactDOM from "react-dom";
+import {createRoot} from 'react-dom/client';
 import {Provider} from 'react-redux';
 import {persistor, store} from "./_store/_slices";
 
-ReactDOM.render(
+const rootElement = document.getElementById('root');
+const root = createRoot(rootElement);
+
+root.render(
     <Suspense fallback={<Loader/>}>
         <HashRouter>
             <React.StrictMode>
@@ -19,7 +22,5 @@ ReactDOM.render(
                 </Provider>
             </React.StrictMode>
         </HashRouter>
-    </Suspense>,
-
-    document.getElementById("root")
+    </Suspense>
 );
