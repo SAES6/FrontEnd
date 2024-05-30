@@ -5,31 +5,36 @@ import {
   useMediaQuery,
   Modal,
   Checkbox,
-} from '@mui/material';
-import { useTheme, styled } from '@mui/material/styles';
-import { theme } from '../../theme';
-import QuestionOpen from '../../components/QuestionOpen';
-import QuestionSimple from '../../components/QuestionSimple';
-import QuestionEchelle from '../../components/QuestionEchelle';
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import axios from 'axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import { useDispatch, useSelector } from 'react-redux';
+} from "@mui/material";
+import { useTheme, styled } from "@mui/material/styles";
+import { theme } from "../../theme";
+import QuestionOpen from "../../components/QuestionOpen";
+import QuestionSimple from "../../components/QuestionSimple";
+import QuestionEchelle from "../../components/QuestionEchelle";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setQuestionnaire,
   setCurrentSection,
   setTotalSections,
   setProgression,
   addResponse,
-} from '../../_store/_slices/questionnaire-slice';
+} from "../../_store/_slices/questionnaire-slice";
+
+import useGET from "../../hooks/useGET";
 
 const Questions = () => {
   const themeQuestions = useTheme(theme);
-  const screenSize = useMediaQuery('(min-width:1600px)');
+  const screenSize = useMediaQuery("(min-width:1600px)");
+  const [response, setInitialRequest] = useGET({
+    api: process.env.REACT_APP_API_URL,
+  });
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -50,56 +55,46 @@ const Questions = () => {
   const [modalRole, setModalRole] = useState(false);
   // recupere l'id du questionnaire via l'url
   const getLocalStorageKey = (id) => `currentSection_${id}`;
-
   const [localResponses, setLocalResponses] = useState({});
   const loadQuestions = () => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/questionnaire/loadById?id=${id}`)
-      .then((response) => {
-        setQuestions(response.data);
-        const uniqueSections = [
-          ...new Set(response.data.map((question) => question.page)),
-        ];
-        dispatch(
-          setTotalSections({ id, totalSections: uniqueSections.length })
-        );
-        dispatch(
-          setQuestionnaire({ id, totalSections: uniqueSections.length })
-        );
-      })
-      .catch(() => {
-        toast.error('Aucune question', {
-          position: 'top-center',
-          style: {
-            fontFamily: 'Poppins, sans-serif',
-            borderRadius: '15px',
-            textAlign: 'center',
-          },
-        });
-      });
+    setInitialRequest({
+      url: `/questionnaire/loadById?id=${id}`,
+      api: process.env.REACT_APP_API_URL,
+      errorMessage: "Erreur lors du chargement des questions",
+    });
   };
 
   useEffect(() => {
+    if (response && response.status >= 200 && response.status < 300) {
+      setQuestions(response.data);
+      const uniqueSections = [
+        ...new Set(response.data.map((question) => question.section.id)),
+      ];
+      dispatch(setTotalSections({ id, totalSections: uniqueSections.length }));
+      dispatch(setQuestionnaire({ id, totalSections: uniqueSections.length }));
+    }
+  }, [response]);
+
+  useEffect(() => {
     loadQuestions();
-    console.log(questionnaireState);
   }, [id]);
 
   const handleSetJournalist = () => {
-    if (userRole === 'journalist') {
-      setUserRole('user');
+    if (userRole === "journalist") {
+      setUserRole("user");
     } else {
-      setUserRole('journalist');
+      setUserRole("journalist");
     }
   };
 
   const handleValidateRole = () => {
     if (userRole === null) {
-      let finalUserRole = 'user';
-      localStorage.setItem('userRole', finalUserRole);
+      let finalUserRole = "user";
+      localStorage.setItem("userRole", finalUserRole);
       setUserRole(finalUserRole);
       setModalRole(false);
     } else {
-      localStorage.setItem('userRole', userRole);
+      localStorage.setItem("userRole", userRole);
       setUserRole(userRole);
       setModalRole(false);
     }
@@ -108,7 +103,7 @@ const Questions = () => {
   useEffect(() => {
     if (questions.length > 0) {
       const array = questions
-        .filter((question) => question.page === currentSection)
+        .filter((question) => question.section.id === currentSection)
         .sort((a, b) => a.order - b.order);
       setCurrentQuestions(array);
     }
@@ -145,40 +140,34 @@ const Questions = () => {
   };
 
   useEffect(() => {
-    console.log('mdr5555');
-    console.log(localStorage.getItem('userRole'));
-    if (localStorage.getItem('userRole') != null) {
-      setUserRole(localStorage.getItem('userRole'));
+    if (localStorage.getItem("userRole") != null) {
+      setUserRole(localStorage.getItem("userRole"));
       setModalRole(false);
     } else {
-      console.log('mdr6');
       setModalRole(true);
     }
   }, []);
 
-  useEffect(() => {
-    console.log('mdr');
-    console.log(currentQuestions);
-  }, [currentQuestions]);
+  useEffect(() => {}, [currentQuestions]);
 
   return (
     <Grid
       sx={{
-        height: '100%',
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        overflow: 'auto',
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        overflow: "auto",
       }}
     >
       <Grid
         sx={{
-          padding: '40px 0 20px',
+          padding: "40px 0 20px",
         }}
       >
         {currentQuestions.map((question) => {
-          if (question.type === 'text') {
+          if (question.type === "text") {
             return (
               <QuestionOpen
                 key={question.id}
@@ -186,15 +175,15 @@ const Questions = () => {
                 onResponseChange={(value) =>
                   handleResponseChange(question.id, question.type, value)
                 }
-                mode={'question'}
+                mode={"question"}
               >
                 {question.description}
               </QuestionOpen>
             );
           }
           if (
-            question.type === 'single_choice' ||
-            question.type === 'multiple_choice'
+            question.type === "single_choice" ||
+            question.type === "multiple_choice"
           ) {
             return (
               <QuestionSimple
@@ -205,13 +194,13 @@ const Questions = () => {
                 onResponseChange={(value) =>
                   handleResponseChange(question.id, question.type, value)
                 }
-                mode={'question'}
+                mode={"question"}
               >
                 {question.description}
               </QuestionSimple>
             );
           }
-          if (question.type === 'slider') {
+          if (question.type === "slider") {
             return (
               <QuestionEchelle
                 key={question.id}
@@ -222,7 +211,7 @@ const Questions = () => {
                 onResponseChange={(value) =>
                   handleResponseChange(question.id, question.type, value)
                 }
-                mode={'question'}
+                mode={"question"}
               >
                 {question.description}
               </QuestionEchelle>
@@ -232,17 +221,17 @@ const Questions = () => {
       </Grid>
       <Grid
         sx={{
-          padding: '20px 0 40px',
-          width: screenSize ? '1500px' : '1300px',
+          padding: "20px 0 40px",
+          width: screenSize ? "1500px" : "1300px",
         }}
       >
         <Grid>
           <Typography
             sx={{
-              fontFamily: 'Poppins, sans-serif',
-              fontSize: '16px',
-              fontWeight: '400',
-              lineHeight: '24px',
+              fontFamily: "Poppins, sans-serif",
+              fontSize: "16px",
+              fontWeight: "400",
+              lineHeight: "24px",
               color: themeQuestions.palette.text.secondary,
             }}
           >
@@ -250,10 +239,10 @@ const Questions = () => {
           </Typography>
           <Typography
             sx={{
-              fontFamily: 'Poppins, sans-serif',
-              fontSize: '24px',
-              fontWeight: '600',
-              lineHeight: '24px',
+              fontFamily: "Poppins, sans-serif",
+              fontSize: "24px",
+              fontWeight: "600",
+              lineHeight: "24px",
               color: themeQuestions.palette.primary.main,
             }}
           >
@@ -261,8 +250,8 @@ const Questions = () => {
           </Typography>
         </Grid>
         <Button
-          type='submit'
-          variant='contained'
+          type="submit"
+          variant="contained"
           sx={{
             mt: 3,
             mb: 2,
@@ -274,20 +263,20 @@ const Questions = () => {
       </Grid>
       <Grid
         sx={{
-          width: '100%',
-          minHeight: '10px',
-          position: 'fixed',
+          width: "100%",
+          minHeight: "10px",
+          position: "fixed",
           bottom: 0,
           backgroundColor: themeQuestions.palette.secondary.main,
         }}
       >
         <Grid
           sx={{
-            transition: 'ease 0.5s',
+            transition: "ease 0.5s",
             width: `${progression}%`,
-            height: '10px',
-            position: 'fixed',
-            borderRadius: '0 15px 15px 0',
+            height: "10px",
+            position: "fixed",
+            borderRadius: "0 15px 15px 0",
             backgroundColor: themeQuestions.palette.primary.main,
             bottom: 0,
           }}
@@ -296,39 +285,39 @@ const Questions = () => {
       <Modal open={modalRole}>
         <Grid
           container
-          direction='column'
-          alignItems='center'
-          justifyContent='center'
+          direction="column"
+          alignItems="center"
+          justifyContent="center"
           sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 'fit-content',
-            bgcolor: 'background.paper',
-            borderRadius: '15px',
-            padding: '20px 25px',
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "fit-content",
+            bgcolor: "background.paper",
+            borderRadius: "15px",
+            padding: "20px 25px",
             boxShadow: 24,
-            outline: 'none',
+            outline: "none",
           }}
         >
           <Grid
             container
-            alignItems='center'
-            justifyContent='space-between'
-            sx={{ mb: 3, width: '100%' }}
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{ mb: 3, width: "100%" }}
           >
             <Grid item xs={12}>
               <Typography
-                variant='h6'
-                component='h2'
+                variant="h6"
+                component="h2"
                 sx={{
-                  fontFamily: 'Poppins, sans-serif',
-                  fontWeight: '600',
-                  fontSize: '24px',
-                  lineHeight: '36px',
-                  color: '#0E1419',
-                  textAlign: 'center',
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: "600",
+                  fontSize: "24px",
+                  lineHeight: "36px",
+                  color: "#0E1419",
+                  textAlign: "center",
                 }}
               >
                 Avant de commencer...
@@ -338,12 +327,12 @@ const Questions = () => {
           <Typography
             sx={{
               mt: 2,
-              padding: '10px 15px',
-              fontFamily: 'Poppins, sans-serif',
-              fontWeight: '400',
-              fontSize: '16px',
-              lineHeight: '24px',
-              maxWidth: '500px',
+              padding: "10px 15px",
+              fontFamily: "Poppins, sans-serif",
+              fontWeight: "400",
+              fontSize: "16px",
+              lineHeight: "24px",
+              maxWidth: "500px",
             }}
           >
             Vous allez participer à votre premier questionnaire. Nous avons
@@ -352,29 +341,29 @@ const Questions = () => {
           <Grid
             container
             spacing={2}
-            alignItems='center'
-            justifyContent='center'
+            alignItems="center"
+            justifyContent="center"
             sx={{
               mt: 3,
-              padding: '15px 20px',
-              borderRadius: '15px',
-              width: '60%',
-              minWidth: '300px',
-              position: 'relative',
+              padding: "15px 20px",
+              borderRadius: "15px",
+              width: "60%",
+              minWidth: "300px",
+              position: "relative",
               backgroundColor: themeQuestions.palette.primary.main,
-              flexWrap: 'nowrap',
+              flexWrap: "nowrap",
             }}
           >
             <Grid
               sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                padding: '0',
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: "0",
               }}
             >
               <Checkbox
-                checked={userRole === 'journalist'}
+                checked={userRole === "journalist"}
                 onChange={() => handleSetJournalist()}
                 icon={
                   <CheckBoxOutlineBlankIcon
@@ -391,11 +380,11 @@ const Questions = () => {
                   />
                 }
                 sx={{
-                  fontFamily: 'Poppins, sans-serif',
-                  fontWeight: '600',
-                  fontSize: '24px',
-                  lineHeight: '36px',
-                  padding: '0',
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: "600",
+                  fontSize: "24px",
+                  lineHeight: "36px",
+                  padding: "0",
                   mr: 1,
                   color: themeQuestions.palette.primary.contrastText,
                 }}
@@ -403,17 +392,17 @@ const Questions = () => {
             </Grid>
             <Grid
               sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
               <Typography
                 sx={{
-                  fontFamily: 'Poppins, sans-serif',
-                  fontWeight: '600',
-                  fontSize: '24px',
-                  lineHeight: '36px',
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: "600",
+                  fontSize: "24px",
+                  lineHeight: "36px",
                   color: themeQuestions.palette.primary.contrastText,
                 }}
               >
@@ -422,30 +411,30 @@ const Questions = () => {
             </Grid>
             <Grid
               sx={{
-                position: 'absolute',
+                position: "absolute",
                 right: -20, // Adjust position as needed
-                alignItems: 'center',
-                justifyContent: 'center',
-                opacity: '0.5',
-                height: '100%',
+                alignItems: "center",
+                justifyContent: "center",
+                opacity: "0.5",
+                height: "100%",
               }}
             >
               <FontAwesomeIcon
-                icon='fa-solid fa-user-secret'
+                icon="fa-solid fa-user-secret"
                 color={themeQuestions.palette.primary.contrastText}
-                style={{ fontSize: '70px' }}
+                style={{ fontSize: "70px" }}
               />
             </Grid>
           </Grid>
           <Typography
             sx={{
-              fontFamily: 'Poppins, sans-serif',
-              fontWeight: '400',
-              fontSize: '16px',
-              lineHeight: '24px',
-              maxWidth: '500px',
-              textAlign: 'center',
-              opacity: '0.5',
+              fontFamily: "Poppins, sans-serif",
+              fontWeight: "400",
+              fontSize: "16px",
+              lineHeight: "24px",
+              maxWidth: "500px",
+              textAlign: "center",
+              opacity: "0.5",
               color: themeQuestions.palette.text.secondary,
             }}
           >
@@ -456,7 +445,7 @@ const Questions = () => {
             sx={{
               mt: 3,
             }}
-            variant='contained'
+            variant="contained"
           >
             Continuer
           </Button>

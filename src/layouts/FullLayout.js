@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Grid,
   Typography,
@@ -7,100 +7,124 @@ import {
   TextField,
   IconButton,
   useMediaQuery,
-} from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import { Outlet, useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import CloseIcon from '@mui/icons-material/Close';
-import { styled } from '@mui/material/styles';
-import axios from 'axios';
+} from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { ThemeProvider } from '@mui/material/styles';
-import { theme } from '../theme';
-import { toast } from 'react-toastify';
+import { Outlet, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import CloseIcon from "@mui/icons-material/Close";
+import { styled } from "@mui/material/styles";
+import axios from "axios";
+import { theme } from "../theme";
+import { toast } from "react-toastify";
+import usePOST from "../hooks/usePOST";
+import useGET from "../hooks/useGET";
+import { useDispatch, useSelector } from "react-redux";
+import { userActions } from "../_store/_slices/user-slice";
 import ColorButton from '../components/ColorButton';
 
+
 const FullLayout = () => {
+  const [response, setInitialRequest] = usePOST({
+    api: process.env.REACT_APP_API_URL,
+  });
+
+  const [responseCreateToken, setInitialRequestCreateToken] = useGET({
+    api: process.env.REACT_APP_API_URL,
+  });
+
+  const [responseMe, setInitialRequestMe] = useGET({
+    api: process.env.REACT_APP_API_URL,
+  });
+
   const themeLayout = useTheme(theme);
-  const screenSize = useMediaQuery('(min-width:1600px)');
+  const screenSize = useMediaQuery("(min-width:1600px)");
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  const createToken = async () => {
-    const tokenUser = localStorage.getItem('token_access');
-    if (!tokenUser) {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/createToken`
-        );
-        localStorage.setItem('token_access', response.data.token);
-      } catch (error) {
-        console.error('Error fetching the token:', error);
-        localStorage.removeItem('token_access');
-      }
-    }
-  };
-
-  const checkToken = async () => {
-    await createToken();
-  };
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.user.token);
+  const tokenUser = useSelector((state) => state.user.tokenUser);
 
   useEffect(() => {
-    checkToken();
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      axios
-        .get(`${process.env.REACT_APP_API_URL}/me`)
-        .then((response) => {
-          if (response.data) {
-            localStorage.setItem('admin_principal', response.data.principal);
-            setIsAuthenticated(true);
-          }
-        })
-        .catch(() => {
-          localStorage.removeItem('authToken');
-        });
+    if (response?.status >= 200 && response?.status < 300) {
+      dispatch(userActions.login(response.data.token));
+      dispatch(userActions.setAdminPrincipal(response.data.user.principal));
+      setOpen(false);
+      handleInfos();
+      navigate("/admin-console");
     }
+  }, [response]);
+
+  useEffect(() => {
+    if (
+      responseCreateToken?.status >= 200 &&
+      responseCreateToken?.status < 300
+    ) {
+      dispatch(userActions.setTokenUser(responseCreateToken.data.token));
+    } else {
+      dispatch(userActions.removeTokenUser());
+    }
+  }, [responseCreateToken]);
+
+  useEffect(() => {
+    if (responseMe?.status >= 200 && responseMe?.status < 300) {
+      dispatch(userActions.setAdminPrincipal(responseMe.data.principal));
+      setIsAuthenticated(true);
+    } else {
+      dispatch(userActions.removeAdminPrincipal());
+      dispatch(userActions.logout());
+    }
+  }, [responseMe]);
+
+  useEffect(() => {
+    const checkToken = async () => {
+      const createToken = async () => {
+        if (!tokenUser) {
+          setInitialRequestCreateToken({
+            url: "/createToken",
+            api: process.env.REACT_APP_API_URL,
+          });
+        }
+      };
+      await createToken();
+    };
+
+    checkToken();
+    handleInfos();
   }, []);
 
-  const handleLogin = () => {
-    console.log(process.env.REACT_APP_API_URL);
-    axios
-      .post(`${process.env.REACT_APP_API_URL}/login`, { email, password })
-      .then((response) => {
-        localStorage.setItem('authToken', response.data.token);
-        setIsAuthenticated(true);
-        setOpen(false);
-        toast.success('Connexion réussie', {
-          position: 'top-center',
-          style: {
-            fontFamily: 'Poppins, sans-serif',
-            borderRadius: '15px',
-            textAlign: 'center',
+  const handleInfos = async () => {
+    if (token) {
+      setInitialRequestMe({
+        url: "/me",
+        api: process.env.REACT_APP_API_URL,
+        authorization: {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-        });
-        navigate('/admin-console');
-      })
-      .catch((error) => {
-        console.error('Error logging in:', error);
-        toast.error('Identifiants incorrects', {
-          position: 'top-center',
-          style: {
-            fontFamily: 'Poppins, sans-serif',
-            borderRadius: '15px',
-            textAlign: 'center',
-          },
-        });
+        },
       });
+    }
+  };
+
+  const handleLogin = () => {
+    setInitialRequest({
+      url: "/login",
+      data: {
+        email: email,
+        password: password,
+      },
+      api: process.env.REACT_APP_API_URL,
+      errorMessage: "Erreur lors de la connexion",
+    });
   };
 
   const handleOpen = () => {
-    console.log(isAuthenticated);
-    if (isAuthenticated) {
-      navigate('/admin-console');
+    if (token) {
+      navigate("/admin-console");
     } else {
       setOpen(true);
     }

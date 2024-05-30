@@ -1,14 +1,15 @@
-import QuizAdministration from '../../components/admin/create-form/QuizAdministration';
-import SideBar from '../../components/admin/layer/SideBar.js';
-import { Button, Grid, useMediaQuery, Typography } from '@mui/material';
-import ListIcon from '@mui/icons-material/List';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import PersonIcon from '@mui/icons-material/Person';
-import { useState } from 'react';
-import { styled } from '@mui/material/styles';
-import { theme } from '../../theme';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import AdminGestion from '../admin-gestion/AdminGestion.js';
+
+import QuizAdministration from "../../components/admin/create-form/QuizAdministration";
+import SideBar from "../../components/admin/layer/SideBar.js";
+import { Button, Grid, useMediaQuery, Typography } from "@mui/material";
+import ListIcon from "@mui/icons-material/List";
+import BarChartIcon from "@mui/icons-material/BarChart";
+import PersonIcon from "@mui/icons-material/Person";
+import { useEffect, useState } from "react";
+import { styled } from "@mui/material/styles";
+import { theme } from "../../theme";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import AdminGestion from "../admin-gestion/AdminGestion.js";
 
 const ColorButtonPrimary = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.contrastText,

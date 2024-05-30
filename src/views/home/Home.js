@@ -15,38 +15,45 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CloseIcon from '@mui/icons-material/Close';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import useGET from "../../hooks/useGET";
+import { useDispatch, useSelector } from "react-redux";
+import { userActions } from "../../_store/_slices/user-slice";
+const ColorButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.primary.contrastText,
+  backgroundColor: theme.palette.primary.main,
+  transition: "ease 0.3s",
+  "&:hover": {
+    backgroundColor: theme.palette.primary.main,
+  },
+}));
 
 const Home = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const themeLayout = useTheme(theme);
-  const screenSize = useMediaQuery('(min-width:1600px)');
+  const [response, setInitialRequest] = useGET({
+    api: process.env.REACT_APP_API_URL,
+  });
+  const screenSize = useMediaQuery("(min-width:1600px)");
   const [openConsentPopup, setOpenConsentPopup] = useState(false);
 
   // load the questionnaires from the API
   const [questionnaires, setQuestionnaires] = useState([]);
   const [selectedQuestionnaire, setSelectedQuestionnaire] = useState({});
+  const userToken = useSelector((state) => state.user.tokenUser);
+
+  useEffect(() => {
+    if (response?.status >= 200 && response?.status < 300) {
+      setQuestionnaires(response.data);
+    }
+  }, [response]);
 
   const loadQuestionnaires = () => {
-    axios
-      .get(
-        `${
-          process.env.REACT_APP_API_URL
-        }/questionnaire/byToken?token=${localStorage.getItem('token_access')}`
-      )
-      .then((response) => {
-        setQuestionnaires(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error('Aucun questionnaire', {
-          position: 'top-center',
-          style: {
-            fontFamily: 'Poppins, sans-serif',
-            borderRadius: '15px',
-            textAlign: 'center',
-          },
-        });
-      });
+    setInitialRequest({
+      url: "/questionnaire/byToken?token=" + userToken,
+      errorMessage: "Aucun questionnaire",
+      api: process.env.REACT_APP_API_URL,
+    });
   };
 
   const goToQuestionnaire = (questionnaire) => {
@@ -71,10 +78,6 @@ const Home = () => {
   useEffect(() => {
     loadQuestionnaires();
   }, []);
-
-  useEffect(() => {
-    console.log(questionnaires);
-  }, [questionnaires]);
 
   return (
     <Grid

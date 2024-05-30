@@ -17,7 +17,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { CoPresent } from "@mui/icons-material";
+import useGET from "../../hooks/useGET";
+import useDELETE from "../../hooks/useDELETE";
+import usePOST from "../../hooks/usePOST";
+import usePUT from "../../hooks/usePUT";
+import { useDispatch, useSelector } from "react-redux";
+import { userActions } from "../../_store/_slices/user-slice";
 const ColorButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
   backgroundColor: theme.palette.primary.main,
@@ -30,10 +35,21 @@ const ColorButton = styled(Button)(({ theme }) => ({
 const AdminGestion = () => {
   const screenSize = useMediaQuery("(min-width:1600px)");
   const screenHeight = useMediaQuery("(min-height:900px)");
+  const [response, setRequest] = useGET({ api: process.env.REACT_APP_API_URL });
   const themeGestion = useTheme(theme);
   const [adminsList, setAdminsList] = useState([]);
   const [sortedAdmins, setSortedAdmins] = useState([]);
 
+  const [selectedEditState, setSelectedEditState] = useState();
+  const [responseEdit, setRequestEdit] = usePUT({
+    api: process.env.REACT_APP_API_URL,
+  });
+  const [responseDelete, setRequestDelete] = useDELETE({
+    api: process.env.REACT_APP_API_URL,
+  });
+  const [responseAdd, setRequestAdd] = usePOST({
+    api: process.env.REACT_APP_API_URL,
+  });
   const [editUsernameButton, setEditUsernameButton] = useState(false);
   const [editEmailButton, setEditEmailButton] = useState(false);
   const [editPasswordButton, setEditPasswordButton] = useState(false);
@@ -50,6 +66,89 @@ const AdminGestion = () => {
   const [addPasswordConfirm, setAddPasswordConfirm] = useState("");
   const [showPasswordAdd, setShowPasswordAdd] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+  const tokenAdmin = useSelector((state) => state.user.token);
+  const principalAdmin = useSelector((state) => state.user.adminPrincipal);
+  const dispatch = useDispatch();
+
+  console.log(principalAdmin, "principalAdmin");
+
+  useEffect(() => {
+    if (response?.status >= 200 && response?.status < 300) {
+      setAdminsList(response?.data ? response?.data : []);
+    } else if (response?.status === 404) {
+      navigate("/");
+    }
+  }, [response]);
+
+  useEffect(() => {
+    if (responseEdit?.status >= 200 && responseEdit?.status < 300) {
+      if (selectedEditState === "email") {
+        toast.success("Email de l'admin mis à jour", {
+          position: "top-center",
+          style: {
+            fontFamily: "Poppins, sans-serif",
+            borderRadius: "15px",
+            textAlign: "center",
+          },
+        });
+      } else if (selectedEditState === "username") {
+        toast.success("Nom de l'admin mis à jour", {
+          position: "top-center",
+          style: {
+            fontFamily: "Poppins, sans-serif",
+            borderRadius: "15px",
+            textAlign: "center",
+          },
+        });
+      } else if (selectedEditState === "password") {
+        toast.success("Mot de passe de l'admin mis à jour", {
+          position: "top-center",
+          style: {
+            fontFamily: "Poppins, sans-serif",
+            borderRadius: "15px",
+            textAlign: "center",
+          },
+        });
+      }
+      loadAdminsList();
+    }
+  }, [responseEdit]);
+
+  useEffect(() => {
+    if (responseDelete?.status >= 200 && responseDelete?.status < 300) {
+      toast.success("Admin supprimé avec succès", {
+        position: "top-center",
+        style: {
+          fontFamily: "Poppins, sans-serif",
+          borderRadius: "15px",
+          textAlign: "center",
+        },
+      });
+      if (responseDelete.data == "deconnect") {
+        dispatch(userActions.logout());
+        dispatch(userActions.removeAdminPrincipal());
+        navigate("/");
+      } else {
+        loadAdminsList();
+      }
+      setOpenDelete(false);
+    }
+  }, [responseDelete]);
+
+  useEffect(() => {
+    if (responseAdd?.status >= 200 && responseAdd?.status < 300) {
+      toast.success("Admin ajouté avec succès", {
+        position: "top-center",
+        style: {
+          fontFamily: "Poppins, sans-serif",
+          borderRadius: "15px",
+          textAlign: "center",
+        },
+      });
+      loadAdminsList();
+      setOpenAdd(false);
+    }
+  }, [responseAdd]);
 
   const handleAddAdmin = () => {
     if (addPassword !== addPasswordConfirm) {
@@ -80,130 +179,75 @@ const AdminGestion = () => {
       });
       return;
     }
-    axios.defaults.headers.common[
-      "Authorization"
-    ] = `Bearer ${localStorage.getItem("authToken")}`;
-    axios
-      .post(`${process.env.REACT_APP_API_URL}/admin/add`, {
+    setRequestAdd({
+      url: "/admin/add",
+      data: {
         username: addUsername,
         email: addEmail,
         password: addPassword,
-      })
-      .then(() => {
-        toast.success("Admin ajouté", {
-          position: "top-center",
-          style: {
-            fontFamily: "Poppins, sans-serif",
-            borderRadius: "15px",
-            textAlign: "center",
-          },
-        });
-        loadAdminsList();
-        setOpenAdd(false);
-      })
-      .catch(() => {
-        toast.error("Erreur lors de l'ajout de l'admin", {
-          position: "top-center",
-          style: {
-            fontFamily: "Poppins, sans-serif",
-            borderRadius: "15px",
-            textAlign: "center",
-          },
-        });
-      });
+      },
+      api: process.env.REACT_APP_API_URL,
+      authorization: {
+        headers: {
+          Authorization: `Bearer ` + tokenAdmin,
+        },
+      },
+      errorMessage: "Erreur lors de l'ajout de l'admin",
+    });
   };
 
   const updateEmail = (admin) => {
-    axios.defaults.headers.common[
-      "Authorization"
-    ] = `Bearer ${localStorage.getItem("authToken")}`;
-    axios
-      .put(`${process.env.REACT_APP_API_URL}/admin/updateEmail`, {
+    setSelectedEditState("email");
+    setRequestEdit({
+      url: "/admin/updateEmail",
+      data: {
         id: admin.id,
         email: admin.email,
-      })
-      .then(() => {
-        toast.success("Email de l'admin mis à jour", {
-          position: "top-center",
-          style: {
-            fontFamily: "Poppins, sans-serif",
-            borderRadius: "15px",
-            textAlign: "center",
-          },
-        });
-      })
-      .catch(() => {
-        toast.error("Erreur lors de la mise à jour de l'email", {
-          position: "top-center",
-          style: {
-            fontFamily: "Poppins, sans-serif",
-            borderRadius: "15px",
-            textAlign: "center",
-          },
-        });
-      });
+      },
+      api: process.env.REACT_APP_API_URL,
+      authorization: {
+        headers: {
+          Authorization: `Bearer ` + tokenAdmin,
+        },
+      },
+      errorMessage: "Erreur lors de la mise à jour de l'email",
+    });
   };
 
   const updateUsername = (admin) => {
-    axios.defaults.headers.common[
-      "Authorization"
-    ] = `Bearer ${localStorage.getItem("authToken")}`;
-    axios
-      .put(`${process.env.REACT_APP_API_URL}/admin/updateUsername`, {
+    setSelectedEditState("username");
+    setRequestEdit({
+      url: "/admin/updateUsername",
+      data: {
         id: admin.id,
         username: admin.username,
-      })
-      .then(() => {
-        toast.success("Nom de l'admin mis à jour", {
-          position: "top-center",
-          style: {
-            fontFamily: "Poppins, sans-serif",
-            borderRadius: "15px",
-            textAlign: "center",
-          },
-        });
-      })
-      .catch(() => {
-        toast.error("Erreur lors de la mise à jour du nom", {
-          position: "top-center",
-          style: {
-            fontFamily: "Poppins, sans-serif",
-            borderRadius: "15px",
-            textAlign: "center",
-          },
-        });
-      });
+      },
+      api: process.env.REACT_APP_API_URL,
+      authorization: {
+        headers: {
+          Authorization: `Bearer ` + tokenAdmin,
+        },
+      },
+      errorMessage: "Erreur lors de la mise à jour du nom",
+    });
   };
 
   const updatePassword = (admin) => {
-    axios.defaults.headers.common[
-      "Authorization"
-    ] = `Bearer ${localStorage.getItem("authToken")}`;
-    axios
-      .put(`${process.env.REACT_APP_API_URL}/admin/updatePassword`, {
+    setSelectedEditState("password");
+    setRequestEdit({
+      url: "/admin/updatePassword",
+      data: {
         id: admin.id,
         password: newPassword,
-      })
-      .then(() => {
-        toast.success("Mot de passe de l'admin mis à jour", {
-          position: "top-center",
-          style: {
-            fontFamily: "Poppins, sans-serif",
-            borderRadius: "15px",
-            textAlign: "center",
-          },
-        });
-      })
-      .catch(() => {
-        toast.error("Erreur lors de la mise à jour du mot de passe", {
-          position: "top-center",
-          style: {
-            fontFamily: "Poppins, sans-serif",
-            borderRadius: "15px",
-            textAlign: "center",
-          },
-        });
-      });
+      },
+      api: process.env.REACT_APP_API_URL,
+      authorization: {
+        headers: {
+          Authorization: `Bearer ` + tokenAdmin,
+        },
+      },
+      errorMessage: "Erreur lors de la mise à jour du mot de passe",
+    });
   };
 
   const handleTogglePasswordVisibility = () => {
@@ -219,7 +263,6 @@ const AdminGestion = () => {
   };
 
   useEffect(() => {
-    console.log("load");
     loadAdminsList();
   }, []);
 
@@ -245,7 +288,6 @@ const AdminGestion = () => {
   useEffect(() => {
     if (adminsList.length === 0) return;
     if (adminsList.length > 0 && adminsList[0].principal === true) return;
-    console.log("sort");
     const sortedAdmins = adminsList.sort((a, b) => {
       if (a.principal === 1) {
         return -1;
@@ -257,25 +299,18 @@ const AdminGestion = () => {
   }, [adminsList]);
 
   const loadAdminsList = () => {
-    axios.defaults.headers.common[
-      "Authorization"
-    ] = `Bearer ${localStorage.getItem("authToken")}`;
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/admins/list`)
-      .then((response) => {
-        setAdminsList(response.data);
-      })
-      .catch(() => {
-        toast.error("Aucun administrateur", {
-          position: "top-center",
-          style: {
-            fontFamily: "Poppins, sans-serif",
-            borderRadius: "15px",
-            textAlign: "center",
-          },
-        });
-        navigate("/");
-      });
+    setRequest({
+      url: `/admins/list`,
+      data: {},
+      api: process.env.REACT_APP_API_URL,
+
+      authorization: {
+        headers: {
+          Authorization: `Bearer ` + tokenAdmin,
+        },
+      },
+      errorMessage: "Aucun admin",
+    });
   };
 
   return (
@@ -318,7 +353,7 @@ const AdminGestion = () => {
                       : "transparent",
                   mr: "10px",
                   p: "20px",
-                  height: screenHeight ? "15%" : "38%",
+                  height: !screenHeight ? "15%" : "38%",
                   border: admin.principal == true ? "none" : "1px solid",
                   borderColor: themeGestion.palette.secondary.main,
                 }}
@@ -365,44 +400,45 @@ const AdminGestion = () => {
                       },
                     }}
                   />
-                  {admin.principal == false && admin.current == true && (
-                    <ColorButton
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        alignContent: "center",
-                        padding: "10px 20px",
-                        backgroundColor: "transparent",
+                  {(admin.principal == false && admin.current == true) ||
+                    (admin.principal == false && principalAdmin && (
+                      <ColorButton
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          alignContent: "center",
+                          padding: "10px 20px",
+                          backgroundColor: "transparent",
 
-                        marginLeft: "10px",
-                        borderRadius: "15px",
-                        border: "1px solid",
-                        borderColor: themeGestion.palette.secondary.main,
-                      }}
-                      onClick={() => {
-                        if (editUsernameButton) {
-                          updateUsername(admin);
-                        } else {
-                          setOpenDelete(true);
-                          setSelectedAdmin(admin);
-                        }
-                      }}
-                    >
-                      <FontAwesomeIcon
-                        icon={
-                          editUsernameButton
-                            ? "fa-solid fa-check"
-                            : "fa-solid fa-trash-can"
-                        }
-                        style={{
-                          fontSize: "24px",
-                          opacity: "50%",
-                          color: themeGestion.palette.secondary.contrastText,
+                          marginLeft: "10px",
+                          borderRadius: "15px",
+                          border: "1px solid",
+                          borderColor: themeGestion.palette.secondary.main,
                         }}
-                      />
-                    </ColorButton>
-                  )}
+                        onClick={() => {
+                          if (editUsernameButton) {
+                            updateUsername(admin);
+                          } else {
+                            setOpenDelete(true);
+                            setSelectedAdmin(admin);
+                          }
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={
+                            editUsernameButton
+                              ? "fa-solid fa-check"
+                              : "fa-solid fa-trash-can"
+                          }
+                          style={{
+                            fontSize: "24px",
+                            opacity: "50%",
+                            color: themeGestion.palette.secondary.contrastText,
+                          }}
+                        />
+                      </ColorButton>
+                    ))}
                   {admin.principal == true &&
                     editUsernameButton &&
                     admin.current == true && (
@@ -740,7 +776,7 @@ const AdminGestion = () => {
             alignItems: "center",
             justifyContent: "center",
             width: "400px",
-            height: screenHeight ? "15%" : "38%",
+            height: !screenHeight ? "15%" : "38%",
             alignContent: "center",
             borderRadius: "15px",
             backgroundColor: "transparent",
@@ -1136,41 +1172,19 @@ const AdminGestion = () => {
                 padding: "10px 15px",
               }}
               onClick={() => {
-                axios.defaults.headers.common[
-                  "Authorization"
-                ] = `Bearer ${localStorage.getItem("authToken")}`;
-                axios
-                  .delete(
-                    `${process.env.REACT_APP_API_URL}/admin/delete?id=${selectedAdmin.id}`
-                  )
-                  .then((response) => {
-                    toast.success("Admin supprimé", {
-                      position: "top-center",
-                      style: {
-                        fontFamily: "Poppins, sans-serif",
-                        borderRadius: "15px",
-                        textAlign: "center",
-                      },
-                    });
-                    if (response && response.data == "deconnect") {
-                      localStorage.removeItem("authToken");
-                      localStorage.removeItem("admin_principal");
-                      navigate("/");
-                    } else {
-                      loadAdminsList();
-                    }
-                    setOpenDelete(false);
-                  })
-                  .catch(() => {
-                    toast.error("Erreur lors de la suppression de l'admin", {
-                      position: "top-center",
-                      style: {
-                        fontFamily: "Poppins, sans-serif",
-                        borderRadius: "15px",
-                        textAlign: "center",
-                      },
-                    });
-                  });
+                setRequestDelete({
+                  url: "/admin/delete",
+                  data: {
+                    id: selectedAdmin.id,
+                  },
+                  api: process.env.REACT_APP_API_URL,
+                  authorization: {
+                    headers: {
+                      Authorization: `Bearer ` + tokenAdmin,
+                    },
+                  },
+                  errorMessage: "Erreur lors de la suppression de l'admin",
+                });
               }}
             >
               Valider

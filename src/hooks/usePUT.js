@@ -3,10 +3,14 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 /**
- * Hook personaliser : Pour tous les requete post vers les apis.
+ * Hook personnalisé : Pour toutes les requêtes PUT vers les APIs.
+ * @param {*} url  Uri de l'api
+ * @param {*} data Data body si nécessaire
+ * @param {*} authorization Authorization headers si nécessaire
+ * @param {*} api Base URL de l'API
+ * @param {*} errorMessage Message d'erreur personnalisé
  */
-
-function usePOST({ url, data, authorization, api, errorMessage }) {
+function usePUT({ url, data, authorization, api, errorMessage }) {
   const [initialRequest, setInitialRequest] = useState({
     url: url || "",
     data: data || {},
@@ -20,12 +24,12 @@ function usePOST({ url, data, authorization, api, errorMessage }) {
   useEffect(() => {
     const callApi = async () => {
       try {
-        if (initialRequest.url !== "") {
+        if (initialRequest.url !== "" && initialRequest.url) {
           result = await axios
             .create({
               baseURL: initialRequest.api,
             })
-            .post(
+            .put(
               initialRequest.url,
               initialRequest.data,
               initialRequest.authorization
@@ -51,4 +55,4 @@ function usePOST({ url, data, authorization, api, errorMessage }) {
   return [response, setInitialRequest];
 }
 
-export default usePOST;
+export default usePUT;
