@@ -50,7 +50,7 @@ const AdminConsole = () => {
             alignContent: "center",
             borderRadius: "10px",
             padding: "10px 15px",
-            opacity: "75%",
+            opacity: view.quiz ? "100%" : "75%",
             mr: "10px",
           }}
         >
@@ -87,7 +87,7 @@ const AdminConsole = () => {
             alignContent: "center",
             borderRadius: "10px",
             padding: "10px 15px",
-            opacity: "75%",
+            opacity: view.stats ? "100%" : "75%",
             mr: "10px",
           }}
         >
@@ -124,6 +124,7 @@ const AdminConsole = () => {
             alignContent: "center",
             borderRadius: "10px",
             padding: "10px 15px",
+            opacity: view.admin ? "100%" : "75%",
             mr: "10px",
           }}
         >
