@@ -50,14 +50,7 @@ const Questions = () => {
   const [modalRole, setModalRole] = useState(false);
   // recupere l'id du questionnaire via l'url
   const getLocalStorageKey = (id) => `currentSection_${id}`;
-  const ColorButton = styled(Button)(({ theme }) => ({
-    color: theme.palette.primary.contrastText,
-    backgroundColor: theme.palette.primary.main,
-    transition: 'ease 0.3s',
-    '&:hover': {
-      backgroundColor: theme.palette.primary.main,
-    },
-  }));
+
   const [localResponses, setLocalResponses] = useState({});
   const loadQuestions = () => {
     axios
@@ -275,16 +268,6 @@ const Questions = () => {
           sx={{
             mt: 3,
             mb: 2,
-            borderRadius: '15px',
-            backgroundColor: '#0D5282',
-            color: '#F7F9FB',
-            fontFamily: 'Poppins, sans-serif',
-            fontWeight: '600',
-            fontSize: '16px',
-            lineHeight: '24px',
-            padding: '10px 15px',
-            textTransform: 'none',
-            boxShadow: 'none',
           }}
           onClick={nextSection}
         >
@@ -470,34 +453,15 @@ const Questions = () => {
           >
             Nous comptons sur votre bonne foi !
           </Typography>
-          <ColorButton
+          <Button
             onClick={handleValidateRole}
             sx={{
-              backgroundColor: themeQuestions.palette.primary.main,
               mt: 3,
-              borderRadius: '10px',
-              padding: '10px 15px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
             }}
             variant='contained'
           >
-            <Typography
-              sx={{
-                fontFamily: 'Poppins, sans-serif',
-                fontWeight: '600',
-                fontSize: '16px',
-                lineHeight: '24px',
-                color: themeQuestions.palette.primary.contrastText,
-                textAlign: 'center',
-                textTransform: 'none',
-              }}
-            >
-              Continuer
-            </Typography>
-          </ColorButton>
+            Continuer
+          </Button>
         </Grid>
       </Modal>
     </Grid>
