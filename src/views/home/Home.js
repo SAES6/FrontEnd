@@ -416,7 +416,7 @@ const Home = () => {
                 borderRadius: '15px',
                 padding: '10px 15px',
                 maxHeight: '200px',
-                overflow: 'scroll',
+                overflow: 'auto',
               }}
             >
               <Typography
