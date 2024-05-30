@@ -30,16 +30,6 @@ const ThemeRoutes = [
         ),
       },
       {
-        path: "/admin-gestion",
-        exact: true,
-        element: (
-          <SecuredRoute
-            childrenName="admin-gestion"
-            children={<AdminGestion />}
-          ></SecuredRoute>
-        ),
-      },
-      {
         path: "/admin-consoletest",
         exact: true,
         element: <AdminConsole />,
