@@ -85,7 +85,7 @@ const FullLayout = () => {
       })
       .catch((error) => {
         console.error('Error logging in:', error);
-        toast.error('Identifiants incorrect', {
+        toast.error('Identifiants incorrects', {
           position: 'top-center',
           style: {
             fontFamily: 'Poppins, sans-serif',
@@ -317,16 +317,6 @@ const FullLayout = () => {
               sx={{
                 mt: 3,
                 mb: 2,
-                borderRadius: '15px',
-                backgroundColor: '#0D5282',
-                color: '#F7F9FB',
-                fontFamily: 'Poppins, sans-serif',
-                fontWeight: '600',
-                fontSize: '16px',
-                lineHeight: '24px',
-                padding: '10px 15px',
-                textTransform: 'none',
-                boxShadow: 'none',
               }}
               onClick={handleLogin}
             >
