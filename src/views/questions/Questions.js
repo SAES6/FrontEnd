@@ -182,6 +182,7 @@ const Questions = () => {
       <Grid
         sx={{
           padding: '40px 0 20px',
+          width: screenSize ? '1500px' : '1300px',
         }}
       >
         {currentQuestions.map((question) => {
@@ -190,6 +191,7 @@ const Questions = () => {
               <QuestionOpen
                 key={question.id}
                 questionTitle={question.title}
+                imgSrc={question.img_src}
                 onResponseChange={(value) =>
                   handleResponseChange(question.id, question.type, value)
                 }

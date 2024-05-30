@@ -7,6 +7,7 @@ import { theme } from '../theme';
 const QuestionOpen = ({
   children,
   questionTitle,
+  imgSrc,
   onResponseChange,
   userResponse,
   mode,
@@ -14,6 +15,7 @@ const QuestionOpen = ({
   const themeSummary = useTheme(theme);
   const screenSize = useMediaQuery('(min-width:1600px)');
   const [responseValue, setResponseValue] = useState('');
+  console.log(imgSrc);
 
   const handleResponseChange = (event) => {
     const { value } = event.target;
@@ -26,7 +28,7 @@ const QuestionOpen = ({
       className='question'
       container
       sx={{
-        width: screenSize ? '1500px' : '1300px',
+        width: '100%',
         height: 'auto',
         alignItems: 'center',
         justifyContent: 'center',
@@ -99,16 +101,20 @@ const QuestionOpen = ({
         >
           Enoncé
         </Typography>
-        <Typography
-          sx={{
-            fontFamily: 'Poppins, sans-serif',
-            fontSize: '16px',
-            fontWeight: '400',
-            lineHeight: '24px',
-          }}
-        >
-          {children}
-        </Typography>
+        <Grid sx={{ display: 'flex', flexDirection: 'row' }}>
+          <Typography
+            sx={{
+              minWidth: '50%',
+              fontFamily: 'Poppins, sans-serif',
+              fontSize: '16px',
+              fontWeight: '400',
+              lineHeight: '24px',
+            }}
+          >
+            {children}
+          </Typography>
+          {imgSrc && <img src={imgSrc} alt='image de la question' />}
+        </Grid>
       </Grid>
       {mode === 'question' ? (
         <Grid

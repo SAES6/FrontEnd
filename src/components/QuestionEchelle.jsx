@@ -42,7 +42,7 @@ const QuestionEchelle = ({
       className='question'
       container
       sx={{
-        width: screenSize ? '1500px' : '1300px',
+        width: '100%',
         height: 'auto',
         alignItems: 'center',
         justifyContent: 'center',
@@ -152,6 +152,10 @@ const QuestionEchelle = ({
           className='slider'
           sx={{
             width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '20px',
           }}
         >
           <Slider
@@ -172,6 +176,67 @@ const QuestionEchelle = ({
               },
             }}
           />
+          <Grid
+            sx={{
+              width: 'fit-content',
+              padding: '10px 15px',
+              border: 'solid 1px',
+              borderColor: themeQuestion.palette.secondary.main,
+              gap: '5px',
+              borderRadius: '15px',
+            }}
+          >
+            <Grid
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+              }}
+            >
+              <FontAwesomeIcon
+                icon='fa-solid fa-user'
+                style={{
+                  fontSize: '16px',
+                  color: themeQuestion.palette.primary.main,
+                }}
+              />
+              <Typography
+                sx={{
+                  marginLeft: '5px',
+                  fontFamily: 'Poppins, sans-serif',
+                  fontSize: '16px',
+                  fontWeight: '400',
+                  color: themeQuestion.palette.primary.main,
+                }}
+              >
+                23% des utilisateurs sont d’accord
+              </Typography>
+            </Grid>
+            <Grid
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+              }}
+            >
+              <FontAwesomeIcon
+                icon='fa-solid fa-user-secret'
+                style={{
+                  fontSize: '16px',
+                  color: themeQuestion.palette.secondary.main,
+                }}
+              />
+              <Typography
+                sx={{
+                  marginLeft: '5px',
+                  fontFamily: 'Poppins, sans-serif',
+                  fontSize: '16px',
+                  fontWeight: '400',
+                  color: themeQuestion.palette.secondary.main,
+                }}
+              >
+                15% des journalistes sont d’accord
+              </Typography>
+            </Grid>
+          </Grid>
         </Grid>
       )}
     </Grid>

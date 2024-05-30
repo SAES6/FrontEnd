@@ -50,7 +50,7 @@ const QuestionSimple = ({
       className='question'
       container
       sx={{
-        width: screenSize ? '1500px' : '1300px',
+        width: '100%',
         height: 'auto',
         alignItems: 'center',
         justifyContent: 'center',
@@ -177,22 +177,89 @@ const QuestionSimple = ({
         >
           <FormGroup>
             {questionChoices.map((choice) => (
-              <FormControlLabel
-                key={choice.id}
+              <Grid
                 sx={{
-                  '& .MuiFormControlLabel-label': {
-                    fontFamily: 'Poppins, sans-serif',
-                    fontSize: '16px',
-                    fontWeight: '400',
-                    lineHeight: '24px',
-                    color: themeQuestion.palette.text.primary,
-                  },
+                  display: 'flex',
+                  flexDirection: 'row',
                 }}
-                control={
-                  <Checkbox checked={userResponse.includes(choice.id)} />
-                }
-                label={choice.text}
-              />
+              >
+                <FormControlLabel
+                  key={choice.id}
+                  sx={{
+                    '& .MuiFormControlLabel-label': {
+                      fontFamily: 'Poppins, sans-serif',
+                      fontSize: '16px',
+                      fontWeight: '400',
+                      lineHeight: '24px',
+                      color: themeQuestion.palette.text.primary,
+                    },
+                  }}
+                  control={
+                    <Checkbox checked={userResponse.includes(choice.id)} />
+                  }
+                  label={choice.text}
+                />
+                <Grid
+                  sx={{
+                    padding: '10px 15px',
+                    border: 'solid 1px',
+                    borderColor: themeQuestion.palette.secondary.main,
+                    gap: '5px',
+                    borderRadius: '15px',
+                  }}
+                >
+                  <Grid
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon='fa-solid fa-user'
+                      style={{
+                        fontSize: '16px',
+                        color: themeQuestion.palette.primary.main,
+                      }}
+                    />
+                    <Typography
+                      sx={{
+                        marginLeft: '5px',
+                        fontFamily: 'Poppins, sans-serif',
+                        fontSize: '16px',
+                        fontWeight: '400',
+                        color: themeQuestion.palette.primary.main,
+                      }}
+                    >
+                      23% des utilisateurs sont d’accord
+                    </Typography>
+                  </Grid>
+                  <Grid
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      icon='fa-solid fa-user-secret'
+                      style={{
+                        fontSize: '16px',
+                        color: themeQuestion.palette.secondary.main,
+                      }}
+                    />
+                    <Typography
+                      sx={{
+                        marginLeft: '5px',
+                        fontFamily: 'Poppins, sans-serif',
+                        fontSize: '16px',
+                        fontWeight: '400',
+                        color: themeQuestion.palette.secondary.main,
+                      }}
+                    >
+                      15% des journalistes sont d’accord
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
             ))}
           </FormGroup>
         </Grid>
