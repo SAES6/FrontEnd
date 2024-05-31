@@ -1,100 +1,87 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, {useState, useRef, useEffect} from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import NewQuestion from "./NewQuestion";
-import { v4 as uuid } from "uuid";
-import { Box, Button, IconButton } from "@mui/material";
-import useGET from "../../../hooks/useGET";
-import { useSelector } from "react-redux";
-import { selectCurrentSelection } from "../../../_store/_slices/quiz-slice";
+import {v4 as uuid} from "uuid";
+import {Box, Button, IconButton} from "@mui/material";
+import {useSelector} from "react-redux";
 
 const QuizAdministration = () => {
-  const currentSelection = useSelector(selectCurrentSelection);
-  const [response, setRequest] = useGET({
-    api: process.env.REACT_APP_API_URL,
-  });
+    const savedSectionInfos = useSelector(state => state.quiz.currentSectionInfos);
+    const [sectionInfos, setSectionInfos] = useState([]);
+console.log(sectionInfos)
+    const questionRefs = useRef([]);
 
-  const [pageInfos, setPageInfos] = useState([]);
+    useEffect(() => {
+        if (savedSectionInfos.length > 0)
+            setSectionInfos(savedSectionInfos)
+    }, [savedSectionInfos]);
 
-  const questionRefs = useRef((pageInfos || []).map(() => React.createRef()));
+    useEffect(() => {
+        if (questionRefs.current.length !== sectionInfos.length) {
+            questionRefs.current = sectionInfos.map(
+                (info, index) => questionRefs.current[index] || React.createRef()
+            );
+        }
+    }, [sectionInfos]);
 
-  useEffect(() => {
-    if (response?.status >= 200 || response?.status < 300)
-      setPageInfos(response?.data.features ? response?.data.features : []);
-  }, [response]);
+    const gatherData = () => {
+        const allData = questionRefs.current.map((ref) => ref.current?.getData());
+    };
 
-  useEffect(() => {
-    setRequest({
-      url: `${currentSelection}`,
-      data: {},
-      api: process.env.REACT_APP_API_URL,
-    });
-  }, [currentSelection]);
+    const addNewQuestionHandler = () => {
+        setSectionInfos((prevState) => [
+            ...prevState,
+            {id: uuid(), qNumber: prevState.length},
+        ]);
+        questionRefs.current.push(React.createRef());
+    };
 
-  useEffect(() => {
-    if (questionRefs.current.length !== pageInfos.length) {
-      questionRefs.current = pageInfos.map(
-        (info, index) => questionRefs.current[index] || React.createRef()
-      );
-    }
-  }, [pageInfos]);
+    const handleClose = (qNumber) => {
+        setSectionInfos((prevState) => {
+            const newArray = [...prevState];
+            newArray.splice(qNumber, 1);
+            newArray.forEach((item, index) => (item.qNumber = index));
+            return newArray;
+        });
+    };
 
-  const gatherData = () => {
-    const allData = questionRefs.current.map((ref) => ref.current?.getData());
-  };
+    const previewHandler = () => {
+    };
 
-  const addNewQuestionHandler = () => {
-    setPageInfos((prevState) => [
-      ...prevState,
-      { id: uuid(), qNumber: prevState.length },
-    ]);
-    questionRefs.current.push(React.createRef());
-  };
-
-  const handleClose = (qNumber) => {
-    setPageInfos((prevState) => {
-      const newArray = [...prevState];
-      newArray.splice(qNumber, 1);
-      newArray.forEach((item, index) => (item.qNumber = index));
-      return newArray;
-    });
-  };
-
-  const previewHandler = () => {};
-
-  return (
-    <>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-end",
-        }}
-      >
-        <Button onClick={() => gatherData()} variant="contained">
-          Save
-        </Button>
-        <Button onClick={previewHandler} variant="contained" sx={{ ml: 3 }}>
-          Preview
-        </Button>
-      </Box>
-      {pageInfos.map((page, index) => (
-        <NewQuestion
-          key={page.id + page.qNumber}
-          ref={questionRefs.current[index]}
-          handleClose={() => handleClose(index)}
-          index={index}
-          pageInfos={page}
-        />
-      ))}
-      <Box
-        sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-      >
-        <IconButton onClick={addNewQuestionHandler}>
-          <AddCircleOutlineIcon fontSize="large" />
-        </IconButton>
-      </Box>
-    </>
-  );
+    return (
+        <>
+            <Box
+                sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                }}
+            >
+                <Button onClick={() => gatherData()} variant="contained">
+                    Save
+                </Button>
+                <Button onClick={previewHandler} variant="contained" sx={{ml: 3}}>
+                    Preview
+                </Button>
+            </Box>
+            {sectionInfos.length > 0 && sectionInfos.map((section, index) => (
+                <NewQuestion
+                    key={section.id + section.order}
+                    ref={questionRefs.current[index]}
+                    handleClose={() => handleClose(index)}
+                    index={index}
+                    sectionInfos={section}
+                />
+            ))}
+            <Box
+                sx={{display: "flex", alignItems: "center", justifyContent: "center"}}
+            >
+                <IconButton onClick={addNewQuestionHandler}>
+                    <AddCircleOutlineIcon fontSize="large"/>
+                </IconButton>
+            </Box>
+        </>
+    );
 };
 
 export default QuizAdministration;
