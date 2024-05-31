@@ -9,13 +9,15 @@ import {
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { theme } from '../theme';
+import { theme } from '../../theme';
+import Enonce from './Enonce';
 
 const QuestionSimple = ({
   children,
   questionTitle,
   questionType,
   questionChoices,
+  imgSrc,
   onResponseChange,
   userResponse,
   mode,
@@ -106,37 +108,7 @@ const QuestionSimple = ({
           </Typography>
         </Grid>
       </Grid>
-      <Grid
-        className='enonce'
-        sx={{
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <Typography
-          sx={{
-            fontFamily: 'Poppins, sans-serif',
-            fontSize: '16px',
-            fontWeight: '600',
-            lineHeight: '24px',
-            color: themeQuestion.palette.text.primary,
-          }}
-        >
-          Enoncé
-        </Typography>
-        <Typography
-          sx={{
-            fontFamily: 'Poppins, sans-serif',
-            fontSize: '16px',
-            fontWeight: '400',
-            lineHeight: '24px',
-            color: themeQuestion.palette.text.primary,
-          }}
-        >
-          {children}
-        </Typography>
-      </Grid>
+      <Enonce children={children} imgSrc={imgSrc} />
       {mode === 'question' ? (
         <Grid
           className='choices'

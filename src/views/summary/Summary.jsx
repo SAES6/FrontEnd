@@ -1,9 +1,9 @@
 import { Grid, Button, Typography, useMediaQuery } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 import { theme } from '../../theme';
-import QuestionOpen from '../../components/QuestionOpen';
-import QuestionSimple from '../../components/QuestionSimple';
-import QuestionEchelle from '../../components/QuestionEchelle';
+import QuestionOpen from '../../components/question/QuestionOpen';
+import QuestionSimple from '../../components/question/QuestionSimple';
+import QuestionEchelle from '../../components/question/QuestionEchelle';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -38,6 +38,10 @@ const Summary = () => {
   const getResponseForQuestion = (questionId) => {
     const response = responses.find((res) => res.questionId === questionId);
     return response ? response.value : '';
+  };
+
+  const handleFinishQuestionnaire = () => {
+    navigate('/');
   };
 
   return (
@@ -96,6 +100,7 @@ const Summary = () => {
                   <QuestionOpen
                     key={question.questionId}
                     questionTitle={question.title}
+                    imgSrc={question.img_src}
                     mode={'summary'}
                     userResponse={getResponseForQuestion(question.id)}
                   >
@@ -113,6 +118,7 @@ const Summary = () => {
                     questionTitle={question.title}
                     questionType={question.questionType}
                     questionChoices={question.choices}
+                    imgSrc={question.img_src}
                     mode={'summary'}
                     userResponse={getResponseForQuestion(question.id)}
                   >
@@ -128,6 +134,7 @@ const Summary = () => {
                     questionSliderMin={question.slider_min}
                     questionSliderMax={question.slider_max}
                     questionSliderGap={question.slider_gap}
+                    imgSrc={question.img_src}
                     userResponse={getResponseForQuestion(question.id)}
                     mode={'summary'}
                   >
@@ -138,18 +145,7 @@ const Summary = () => {
             })}
           </Grid>
         ))}
-        <Button
-          sx={{
-            borderRadius: '10px',
-            padding: '10px 15px',
-            fontFamily: 'Poppins, sans-serif',
-            fontWeight: '600',
-            fontSize: '16px',
-            lineHeight: '24px',
-            textTransform: 'none',
-          }}
-          variant='contained'
-        >
+        <Button onClick={handleFinishQuestionnaire} variant='contained'>
           Terminer le formulaire
         </Button>
       </Grid>

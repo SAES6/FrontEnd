@@ -2,7 +2,8 @@ import { Grid, Typography, useMediaQuery, Slider } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { theme } from '../theme';
+import { theme } from '../../theme';
+import Enonce from './Enonce';
 
 const QuestionEchelle = ({
   children,
@@ -10,6 +11,7 @@ const QuestionEchelle = ({
   questionSliderMin,
   questionSliderMax,
   questionSliderGap,
+  imgSrc,
   onResponseChange,
   userResponse,
   mode,
@@ -98,37 +100,7 @@ const QuestionEchelle = ({
           </Typography>
         </Grid>
       </Grid>
-      <Grid
-        className='enonce'
-        sx={{
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <Typography
-          sx={{
-            fontFamily: 'Poppins, sans-serif',
-            fontSize: '16px',
-            fontWeight: '600',
-            lineHeight: '24px',
-            color: themeQuestion.palette.text.primary,
-          }}
-        >
-          Enoncé
-        </Typography>
-        <Typography
-          sx={{
-            fontFamily: 'Poppins, sans-serif',
-            fontSize: '16px',
-            fontWeight: '400',
-            lineHeight: '24px',
-            color: themeQuestion.palette.text.primary,
-          }}
-        >
-          {children}
-        </Typography>
-      </Grid>
+      <Enonce children={children} imgSrc={imgSrc} />
       {mode === 'question' ? (
         <Grid
           className='slider'
@@ -208,7 +180,7 @@ const QuestionEchelle = ({
                   color: themeQuestion.palette.primary.main,
                 }}
               >
-                23% des utilisateurs sont d’accord
+                6.1 moyenne des utilisateurs
               </Typography>
             </Grid>
             <Grid
@@ -233,7 +205,7 @@ const QuestionEchelle = ({
                   color: themeQuestion.palette.secondary.main,
                 }}
               >
-                15% des journalistes sont d’accord
+                5.7 moyenne des journalistes
               </Typography>
             </Grid>
           </Grid>
