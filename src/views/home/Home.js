@@ -31,9 +31,7 @@ const Home = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const themeLayout = useTheme(theme);
-  const [response, setInitialRequest] = useGET({
-    api: process.env.REACT_APP_API_URL,
-  });
+  const [response, setInitialRequest] = useGET();
   const screenSize = useMediaQuery("(min-width:1600px)");
   const [openConsentPopup, setOpenConsentPopup] = useState(false);
 
@@ -52,7 +50,6 @@ const Home = () => {
     setInitialRequest({
       url: "/questionnaire/byToken?token=" + userToken,
       errorMessage: "Aucun questionnaire",
-      api: process.env.REACT_APP_API_URL,
     });
   };
 

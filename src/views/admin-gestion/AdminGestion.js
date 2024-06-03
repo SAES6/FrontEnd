@@ -35,21 +35,15 @@ const ColorButton = styled(Button)(({ theme }) => ({
 const AdminGestion = () => {
   const screenSize = useMediaQuery("(min-width:1600px)");
   const screenHeight = useMediaQuery("(min-height:900px)");
-  const [response, setRequest] = useGET({ api: process.env.REACT_APP_API_URL });
+  const [response, setRequest] = useGET();
   const themeGestion = useTheme(theme);
   const [adminsList, setAdminsList] = useState([]);
   const [sortedAdmins, setSortedAdmins] = useState([]);
 
   const [selectedEditState, setSelectedEditState] = useState();
-  const [responseEdit, setRequestEdit] = usePUT({
-    api: process.env.REACT_APP_API_URL,
-  });
-  const [responseDelete, setRequestDelete] = useDELETE({
-    api: process.env.REACT_APP_API_URL,
-  });
-  const [responseAdd, setRequestAdd] = usePOST({
-    api: process.env.REACT_APP_API_URL,
-  });
+  const [responseEdit, setRequestEdit] = usePUT();
+  const [responseDelete, setRequestDelete] = useDELETE();
+  const [responseAdd, setRequestAdd] = usePOST();
   const [editUsernameButton, setEditUsernameButton] = useState(false);
   const [editEmailButton, setEditEmailButton] = useState(false);
   const [editPasswordButton, setEditPasswordButton] = useState(false);
@@ -186,7 +180,6 @@ const AdminGestion = () => {
         email: addEmail,
         password: addPassword,
       },
-      api: process.env.REACT_APP_API_URL,
       authorization: {
         headers: {
           Authorization: `Bearer ` + tokenAdmin,
@@ -204,7 +197,6 @@ const AdminGestion = () => {
         id: admin.id,
         email: admin.email,
       },
-      api: process.env.REACT_APP_API_URL,
       authorization: {
         headers: {
           Authorization: `Bearer ` + tokenAdmin,
@@ -222,7 +214,6 @@ const AdminGestion = () => {
         id: admin.id,
         username: admin.username,
       },
-      api: process.env.REACT_APP_API_URL,
       authorization: {
         headers: {
           Authorization: `Bearer ` + tokenAdmin,
@@ -240,7 +231,6 @@ const AdminGestion = () => {
         id: admin.id,
         password: newPassword,
       },
-      api: process.env.REACT_APP_API_URL,
       authorization: {
         headers: {
           Authorization: `Bearer ` + tokenAdmin,
@@ -301,9 +291,6 @@ const AdminGestion = () => {
   const loadAdminsList = () => {
     setRequest({
       url: `/admins/list`,
-      data: {},
-      api: process.env.REACT_APP_API_URL,
-
       authorization: {
         headers: {
           Authorization: `Bearer ` + tokenAdmin,
@@ -1177,7 +1164,6 @@ const AdminGestion = () => {
                   data: {
                     id: selectedAdmin.id,
                   },
-                  api: process.env.REACT_APP_API_URL,
                   authorization: {
                     headers: {
                       Authorization: `Bearer ` + tokenAdmin,

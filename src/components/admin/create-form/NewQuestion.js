@@ -4,49 +4,78 @@ import ImageIcon from '@mui/icons-material/Image';
 import HideImageIcon from '@mui/icons-material/HideImage';
 import Choices from "./Choices";
 import Cursor from "./Cursor";
-import {forwardRef, useImperativeHandle, useRef, useState} from "react";
+import {forwardRef, useEffect, useImperativeHandle, useRef, useState} from "react";
 
 const Pending = () => (<></>);
 
 const COMPONENT_MAP = {
-    'Choix simple': Choices,
+    'Choix unique': Choices,
     'Choix multiple': Choices,
     'Libre': Pending,
     'Curseur': Cursor,
 };
 
-const QType = ['Choix simple', 'Choix multiple', 'Libre', 'Curseur'];
-// todo bug when switch from simple to double
+const QType = ['Choix unique', 'Choix multiple', 'Libre', 'Curseur'];
+
 const NewQuestion = forwardRef(({index, sectionInfos, handleClose}, ref) => {
     const [questionData, setQuestionData] = useState({
-        qNumber: index,
-        type: sectionInfos.type || '',
-        enonce: sectionInfos.description || '',
+        type: '',
+        enonce: '',
         image: {},
-        choices: sectionInfos.choices || []
+        choices: []
     });
     const fileInputRef = useRef(null);
 
     const Component = COMPONENT_MAP[questionData.type] || Pending;
 
+    useEffect(() => {
+        setQuestionData({
+            ...sectionInfos,
+            type: sectionInfos.type || 'Choix unique',
+            enonce: sectionInfos.description || '',
+            image: sectionInfos.image || {},
+            choices: sectionInfos.choices?.length > 0 ?
+                [...sectionInfos.choices?.map(choice => ({...choice, type: sectionInfos.type})),
+                    ...getDefaultChoices(sectionInfos.type)] : getDefaultChoices(),
+        });
+    }, [index, sectionInfos]);
+
     useImperativeHandle(ref, () => ({
         getData: () => {
-            return {...questionData};
+            return {...questionData, choices: questionData.choices.filter(choice => choice.type === questionData.type)};
         }
     }));
 
-    const selectChangeHandler = (value) => {
-        const choicesConfig = {
-            'Choix simple': [{ type: 'Choix simple', label: '', id: 0 }, { type: 'Choix simple', label: '', id: 1 }],
-            'Choix multiple': [{ type: 'Choix multiple', label: '', id: 0 }, { type: 'Choix multiple', label: '', id: 1 }],
-            'Libre': [],
-            'Curseur': { min: 0, max: 5, step: 0.5 }
+    const getDefaultChoices = (type = null) => {
+        const defaults = {
+            'Choix unique': [
+                {type: 'Choix unique', text: '', image_src: {}, id: 1},
+                {type: 'Choix unique', text: '', image_src: {}, id: 2}
+            ],
+            'Choix multiple': [
+                {type: 'Choix multiple', text: '', image_src: {}, id: 1},
+                {type: 'Choix multiple', text: '', image_src: {}, id: 2}
+            ],
+            'Curseur': [{type: 'Curseur', min: 0, max: 5, step: 0.5}]
         };
 
+        if (type)
+            return Object.entries(defaults).reduce((acc, [key, value]) => {
+                if (key !== type) {
+                    acc = acc.concat(value);
+                }
+                return acc;
+            }, []);
+        else
+            return Object.entries(defaults).reduce((acc, [_, value]) => {
+                return acc.concat(value);
+            }, []);
+    };
+
+    const selectChangeHandler = (value) => {
         setQuestionData(prevState => ({
             ...prevState,
             type: value,
-            choices: choicesConfig[value] || []
         }));
     };
 
@@ -77,10 +106,16 @@ const NewQuestion = forwardRef(({index, sectionInfos, handleClose}, ref) => {
     };
 
     const updateChoices = (newChoices) => {
-        setQuestionData(prevState => ({
-            ...prevState,
-            choices: newChoices
-        }));
+        setQuestionData(prevState => {
+            if (newChoices.length > 0 && newChoices[0].type) {
+                const filteredChoices = prevState.choices.filter(choice => choice.type !== newChoices[0].type);
+                return {
+                    ...prevState,
+                    choices: [...filteredChoices, ...newChoices]
+                };
+            }
+            return prevState;
+        });
     };
 
     return (
@@ -95,7 +130,7 @@ const NewQuestion = forwardRef(({index, sectionInfos, handleClose}, ref) => {
                         alignItems: 'center'
                     }}>
                         <Typography variant="h5" sx={{fontWeight: 'bold', pl: 2}}>
-                            Question {questionData.qNumber + 1}
+                            Question {questionData.order}
                         </Typography>
                     </Grid>
                     <Grid item xs={4} sx={{display: 'flex', justifyContent: 'flex-end', pl: 3, pr: 3}}>
@@ -106,7 +141,12 @@ const NewQuestion = forwardRef(({index, sectionInfos, handleClose}, ref) => {
                                 onChange={(e) => selectChangeHandler(e.target.value)}
                                 displayEmpty
                                 inputProps={{'aria-label': 'Without label'}}
-                                sx={{border: 'solid', borderColor: 'blue', borderRadius: '15px', '& > fieldset': {border: 'none'}}}
+                                sx={{
+                                    border: 'solid',
+                                    borderColor: 'blue',
+                                    borderRadius: '15px',
+                                    '& > fieldset': {border: 'none'}
+                                }}
                             >
                                 {QType.map((type, index) => (
                                     <MenuItem value={type} key={index}>{type}</MenuItem>
@@ -165,7 +205,9 @@ const NewQuestion = forwardRef(({index, sectionInfos, handleClose}, ref) => {
             </Grid>
             <Grid container>
                 <Grid item xs={12}>
-                    <Component choices={questionData.choices} setChoices={updateChoices} />
+                    <Component
+                        choices={questionData.choices.filter(choice => choice.type === questionData.type)}
+                        updateChoices={updateChoices}/>
                 </Grid>
             </Grid>
         </Card>

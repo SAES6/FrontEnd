@@ -25,17 +25,11 @@ import ColorButton from '../components/ColorButton';
 
 
 const FullLayout = () => {
-  const [response, setInitialRequest] = usePOST({
-    api: process.env.REACT_APP_API_URL,
-  });
+  const [response, setInitialRequest] = usePOST();
 
-  const [responseCreateToken, setInitialRequestCreateToken] = useGET({
-    api: process.env.REACT_APP_API_URL,
-  });
+  const [responseCreateToken, setInitialRequestCreateToken] = useGET();
 
-  const [responseMe, setInitialRequestMe] = useGET({
-    api: process.env.REACT_APP_API_URL,
-  });
+  const [responseMe, setInitialRequestMe] = useGET();
 
   const themeLayout = useTheme(theme);
   const screenSize = useMediaQuery("(min-width:1600px)");
@@ -86,7 +80,6 @@ const FullLayout = () => {
         if (!tokenUser) {
           setInitialRequestCreateToken({
             url: "/createToken",
-            api: process.env.REACT_APP_API_URL,
           });
         }
       };
@@ -101,7 +94,6 @@ const FullLayout = () => {
     if (token) {
       setInitialRequestMe({
         url: "/me",
-        api: process.env.REACT_APP_API_URL,
         authorization: {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -120,7 +112,6 @@ const FullLayout = () => {
               password: password,
           },
           authorization: { headers: { Authorization: 'Bearer token' } },
-          api: process.env.REACT_APP_API_URL,
           errorMessage: 'Erreur lors de la connexion'
       });
   };

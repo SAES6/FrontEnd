@@ -12,7 +12,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import AddIcon from "@mui/icons-material/Add";
 import {useDispatch, useSelector} from "react-redux";
 import {quizActions} from "../../../_store/_slices/quiz-slice";
-import {getQuizDetails, getQuizOrSectionDetails} from "../../../_store/_actions/quiz-actions";
+import {getQuizDetails, getSectionDetails} from "../../../_store/_actions/quiz-actions";
 import InteractiveListItem from "./InteractiveListItem";
 
 const ModalConfirmation = ({isOpen, setIsOpen, deleteHandler}) => {
@@ -87,7 +87,7 @@ const SideBar = () => {
 
     const onClickModalHandler = (quizId, sectionId = null) => {
         console.log(sectionId)
-        dispatch(getQuizOrSectionDetails(quizId, sectionId));
+        dispatch(getSectionDetails(quizId, sectionId));
     };
 
     const beforeDelete = () => {
@@ -116,7 +116,7 @@ const SideBar = () => {
                         />
                         {currentQuizId === quiz.id && (
                             <Stack alignItems='flex-start' gap={1} sx={{width: '100%'}}>
-                                {quiz.sections.slice().sort((a, b) => a.order - b.order).map(section => (
+                                {quiz.sections.map(section => (
                                     <InteractiveListItem
                                         key={section.id}
                                         item={section}

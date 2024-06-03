@@ -15,11 +15,7 @@ const Summary = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
-  const [response, setRequest] = useGET({
-    url: `/questionnaire/loadById?id=${id}`,
-    data: {},
-    api: process.env.REACT_APP_API_URL,
-  });
+  const [response, setRequest] = useGET();
 
   const questionnaireState = useSelector(
     (state) => state.questionnaire.questionnaires[id] || {}
@@ -35,6 +31,12 @@ const Summary = () => {
       backgroundColor: theme.palette.primary.main,
     },
   }));
+
+  useEffect(() => {
+    setRequest({
+      url: `/questionnaire/loadById?id=${id}`,
+    });
+  }, []);
 
   useEffect(() => {
     if (response?.status >= 200 || response?.status < 300) {

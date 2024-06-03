@@ -1,24 +1,19 @@
 import {useState, useEffect} from "react";
 import {callApiGet} from "../utils/callApi";
 
-function useGET({url, data, authorization, errorMessage}) {
-    const [initialRequest, setInitialRequest] = useState({
-        url: url || "",
-        data: data || {},
-        authorization: authorization || {},
-        errorMessage: errorMessage,
-    });
+function useGET() {
+    const [initialRequest, setInitialRequest] = useState(null);
     const [response, setResponse] = useState();
 
     useEffect(() => {
         const fetchApi = async () => {
-            try {
-                if (initialRequest.url !== "") {
+            if (initialRequest?.url !== "") {
+                try {
                     const result = await callApiGet(initialRequest);
                     setResponse(result);
+                } catch (error) {
+                    setResponse(error);
                 }
-            } catch (error) {
-                setResponse(error);
             }
         };
 

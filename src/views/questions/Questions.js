@@ -32,9 +32,7 @@ import useGET from "../../hooks/useGET";
 const Questions = () => {
   const themeQuestions = useTheme(theme);
   const screenSize = useMediaQuery("(min-width:1600px)");
-  const [response, setInitialRequest] = useGET({
-    api: process.env.REACT_APP_API_URL,
-  });
+  const [response, setInitialRequest] = useGET();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -59,7 +57,6 @@ const Questions = () => {
   const loadQuestions = () => {
     setInitialRequest({
       url: `/questionnaire/loadById?id=${id}`,
-      api: process.env.REACT_APP_API_URL,
       errorMessage: "Erreur lors du chargement des questions",
     });
   };
