@@ -9,27 +9,21 @@ import {forwardRef, useImperativeHandle, useRef, useState} from "react";
 const Pending = () => (<></>);
 
 const COMPONENT_MAP = {
-    type1: Choices,
-    type2: Choices,
-    type3: Pending,
-    type4: Cursor,
+    'Choix simple': Choices,
+    'Choix multiple': Choices,
+    'Libre': Pending,
+    'Curseur': Cursor,
 };
 
-const QType = [
-    {type: 'type1', name: 'Choix simple'},
-    {type: 'type2', name: 'Choix multiple'},
-    {type: 'type3', name: 'Libre'},
-    {type: 'type4', name: 'Curseur'},
-];
-
-const NewQuestion = forwardRef(({index, pageInfos, handleClose}, ref) => {
-    const [choices, setChoices] = useState();
+const QType = ['Choix simple', 'Choix multiple', 'Libre', 'Curseur'];
+// todo bug when switch from simple to double
+const NewQuestion = forwardRef(({index, sectionInfos, handleClose}, ref) => {
     const [questionData, setQuestionData] = useState({
         qNumber: index,
-        type: pageInfos.type || '',
-        enonce: pageInfos.enonce || '',
+        type: sectionInfos.type || '',
+        enonce: sectionInfos.description || '',
         image: {},
-        choices: pageInfos.choices || []
+        choices: sectionInfos.choices || []
     });
     const fileInputRef = useRef(null);
 
@@ -37,25 +31,23 @@ const NewQuestion = forwardRef(({index, pageInfos, handleClose}, ref) => {
 
     useImperativeHandle(ref, () => ({
         getData: () => {
-            return {...questionData, choices: choices};
+            return {...questionData};
         }
     }));
 
     const selectChangeHandler = (value) => {
         const choicesConfig = {
-            type1: [{type: 'text', label: '', id: 0},{type: 'text', label: '', id: 1},],
-            type2: [{type: 'text', label: '', id: 0},{type: 'text', label: '', id: 1},],
-            type3: null,
-            type4: {min: 0, max: 5, step: 0.5}
+            'Choix simple': [{ type: 'Choix simple', label: '', id: 0 }, { type: 'Choix simple', label: '', id: 1 }],
+            'Choix multiple': [{ type: 'Choix multiple', label: '', id: 0 }, { type: 'Choix multiple', label: '', id: 1 }],
+            'Libre': [],
+            'Curseur': { min: 0, max: 5, step: 0.5 }
         };
 
         setQuestionData(prevState => ({
             ...prevState,
             type: value,
-            name: QType.find(typeInfo => typeInfo.type === value)?.name,
+            choices: choicesConfig[value] || []
         }));
-
-        setChoices(choicesConfig[value] || []);
     };
 
     const imageChangeHandler = (event) => {
@@ -84,6 +76,13 @@ const NewQuestion = forwardRef(({index, pageInfos, handleClose}, ref) => {
         setQuestionData(prevState => ({...prevState, image: {}}));
     };
 
+    const updateChoices = (newChoices) => {
+        setQuestionData(prevState => ({
+            ...prevState,
+            choices: newChoices
+        }));
+    };
+
     return (
         <Card sx={{padding: 2, margin: 2, borderRadius: '15px',}}>
             <Grid container alignItems="center" justifyContent='space-between'>
@@ -109,8 +108,8 @@ const NewQuestion = forwardRef(({index, pageInfos, handleClose}, ref) => {
                                 inputProps={{'aria-label': 'Without label'}}
                                 sx={{border: 'solid', borderColor: 'blue', borderRadius: '15px', '& > fieldset': {border: 'none'}}}
                             >
-                                {QType.map((typeInf, index) => (
-                                    <MenuItem value={typeInf.type} key={index}>{typeInf.name}</MenuItem>
+                                {QType.map((type, index) => (
+                                    <MenuItem value={type} key={index}>{type}</MenuItem>
                                 ))}
                             </Select>
                         </FormControl>
@@ -166,7 +165,7 @@ const NewQuestion = forwardRef(({index, pageInfos, handleClose}, ref) => {
             </Grid>
             <Grid container>
                 <Grid item xs={12}>
-                    <Component choices={choices} setChoices={setChoices}/>
+                    <Component choices={questionData.choices} setChoices={updateChoices} />
                 </Grid>
             </Grid>
         </Card>

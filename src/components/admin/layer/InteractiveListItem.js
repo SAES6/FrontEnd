@@ -40,7 +40,7 @@ const InteractiveListItem = ({item, onClickHandler, deleteHandler, moreSx}) => {
     };
 
     return (
-        <Box sx={{width: '100%'}} key={item.id}>
+        <Box sx={{width: '100%'}}>
             <Box justifyContent="space-between" alignItems="center"
                  sx={{
                      ...moreSx.box,
