@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
-import SwipeableViews from "react-swipeable-views";
-import { autoPlay } from "react-swipeable-views-utils";
-import { Grid, Typography } from "@mui/material";
+import { useState, useEffect } from 'react';
+import SwipeableViews from 'react-swipeable-views';
+import { autoPlay } from 'react-swipeable-views-utils';
+import { Grid, Typography } from '@mui/material';
 
 const Caroussel = ({ theme }) => {
   const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
@@ -17,26 +17,26 @@ const Caroussel = ({ theme }) => {
       } else {
         setActiveStep(0);
       }
-    }, 5000);
+    }, 10000);
 
     return () => clearTimeout(timer); // Clean up the timer on component unmount or when activeStep changes
   }, [activeStep, maxSteps]);
 
   const styles = {
     container: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      marginTop: "10px",
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginTop: '10px',
     },
     dot: {
-      width: "15px",
-      height: "15px",
-      borderRadius: "50%",
+      width: '15px',
+      height: '15px',
+      borderRadius: '50%',
       backgroundColor: themeCaroussel.palette.secondary.main,
-      margin: "0 5px",
-      cursor: "pointer",
-      transition: "background-color 0.3s ease", // Transition for dot color
+      margin: '0 5px',
+      cursor: 'pointer',
+      transition: 'background-color 0.3s ease', // Transition for dot color
     },
     activeDot: {
       backgroundColor: themeCaroussel.palette.primary.main,
@@ -50,21 +50,21 @@ const Caroussel = ({ theme }) => {
   const textSteps = [
     <Grid
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "start",
-        alignItems: "start",
-        height: "100%",
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'start',
+        alignItems: 'start',
+        height: '100%',
       }}
     >
       <Typography
         sx={{
           color: themeCaroussel.palette.text.main,
-          fontSize: "24px",
-          fontFamily: "Poppins, sans-serif",
+          fontSize: '24px',
+          fontFamily: 'Poppins, sans-serif',
           fontWeight: 600,
-          lineHeight: "36px",
-          mb: "5px",
+          lineHeight: '36px',
+          mb: '5px',
         }}
       >
         Bienvenue !
@@ -72,11 +72,11 @@ const Caroussel = ({ theme }) => {
       <Typography
         sx={{
           color: themeCaroussel.palette.text.secondary,
-          fontSize: "16px",
-          fontFamily: "Poppins, sans-serif",
+          fontSize: '16px',
+          fontFamily: 'Poppins, sans-serif',
           fontWeight: 400,
-          lineHeight: "24px",
-          mb: "5px",
+          lineHeight: '24px',
+          mb: '5px',
         }}
       >
         Dans un monde saturé d'informations, comprendre ce qui constitue une
@@ -86,11 +86,11 @@ const Caroussel = ({ theme }) => {
       <Typography
         sx={{
           color: themeCaroussel.palette.text.secondary,
-          fontSize: "16px",
-          fontFamily: "Poppins, sans-serif",
+          fontSize: '16px',
+          fontFamily: 'Poppins, sans-serif',
           fontWeight: 400,
-          lineHeight: "24px",
-          mb: "5px",
+          lineHeight: '24px',
+          mb: '5px',
         }}
       >
         Ce projet, initié par l'IMSIC, vise à explorer ces perceptions diverses
@@ -100,20 +100,20 @@ const Caroussel = ({ theme }) => {
     </Grid>,
     <Grid
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "start",
-        alignItems: "start",
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'start',
+        alignItems: 'start',
       }}
     >
       <Typography
         sx={{
           color: themeCaroussel.palette.text.main,
-          fontSize: "24px",
-          fontFamily: "Poppins, sans-serif",
+          fontSize: '24px',
+          fontFamily: 'Poppins, sans-serif',
           fontWeight: 600,
-          lineHeight: "36px",
-          mb: "5px",
+          lineHeight: '36px',
+          mb: '5px',
         }}
       >
         Comment ça marche ?
@@ -121,11 +121,11 @@ const Caroussel = ({ theme }) => {
       <Typography
         sx={{
           color: themeCaroussel.palette.text.main,
-          fontSize: "16px",
-          fontFamily: "Poppins, sans-serif",
+          fontSize: '16px',
+          fontFamily: 'Poppins, sans-serif',
           fontWeight: 600,
-          lineHeight: "24px",
-          mb: "5px",
+          lineHeight: '24px',
+          mb: '5px',
         }}
       >
         Exprimez votre avis
@@ -133,11 +133,11 @@ const Caroussel = ({ theme }) => {
       <Typography
         sx={{
           color: themeCaroussel.palette.text.secondary,
-          fontSize: "16px",
-          fontFamily: "Poppins, sans-serif",
+          fontSize: '16px',
+          fontFamily: 'Poppins, sans-serif',
           fontWeight: 400,
-          lineHeight: "24px",
-          mb: "5px",
+          lineHeight: '24px',
+          mb: '5px',
         }}
       >
         Sélectionnez les options qui reflètent le mieux votre opinion sur la
@@ -146,11 +146,11 @@ const Caroussel = ({ theme }) => {
       <Typography
         sx={{
           color: themeCaroussel.palette.text.main,
-          fontSize: "16px",
-          fontFamily: "Poppins, sans-serif",
+          fontSize: '16px',
+          fontFamily: 'Poppins, sans-serif',
           fontWeight: 600,
-          lineHeight: "24px",
-          mb: "5px",
+          lineHeight: '24px',
+          mb: '5px',
         }}
       >
         Contribuez à la Recherche
@@ -158,11 +158,11 @@ const Caroussel = ({ theme }) => {
       <Typography
         sx={{
           color: themeCaroussel.palette.text.secondary,
-          fontSize: "16px",
-          fontFamily: "Poppins, sans-serif",
+          fontSize: '16px',
+          fontFamily: 'Poppins, sans-serif',
           fontWeight: 400,
-          lineHeight: "24px",
-          mb: "5px",
+          lineHeight: '24px',
+          mb: '5px',
         }}
       >
         Vos réponses anonymes aideront les chercheurs à mieux comprendre les
@@ -171,11 +171,11 @@ const Caroussel = ({ theme }) => {
       <Typography
         sx={{
           color: themeCaroussel.palette.text.main,
-          fontSize: "16px",
-          fontFamily: "Poppins, sans-serif",
+          fontSize: '16px',
+          fontFamily: 'Poppins, sans-serif',
           fontWeight: 600,
-          lineHeight: "24px",
-          mb: "5px",
+          lineHeight: '24px',
+          mb: '5px',
         }}
       >
         Explorez des Scénarios
@@ -183,11 +183,11 @@ const Caroussel = ({ theme }) => {
       <Typography
         sx={{
           color: themeCaroussel.palette.text.secondary,
-          fontSize: "16px",
-          fontFamily: "Poppins, sans-serif",
+          fontSize: '16px',
+          fontFamily: 'Poppins, sans-serif',
           fontWeight: 400,
-          lineHeight: "24px",
-          mb: "5px",
+          lineHeight: '24px',
+          mb: '5px',
         }}
       >
         Parcourez une série de dilemmes et de situations qui vous amèneront à
@@ -196,21 +196,21 @@ const Caroussel = ({ theme }) => {
     </Grid>,
     <Grid
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "start",
-        alignItems: "start",
-        mb: "5px",
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'start',
+        alignItems: 'start',
+        mb: '5px',
       }}
     >
       <Typography
         sx={{
           color: themeCaroussel.palette.text.main,
-          fontSize: "24px",
-          fontFamily: "Poppins, sans-serif",
+          fontSize: '24px',
+          fontFamily: 'Poppins, sans-serif',
           fontWeight: 600,
-          lineHeight: "36px",
-          mb: "5px",
+          lineHeight: '36px',
+          mb: '5px',
         }}
       >
         Objectif de la Plateforme
@@ -218,11 +218,11 @@ const Caroussel = ({ theme }) => {
       <Typography
         sx={{
           color: themeCaroussel.palette.text.secondary,
-          fontSize: "16px",
-          fontFamily: "Poppins, sans-serif",
+          fontSize: '16px',
+          fontFamily: 'Poppins, sans-serif',
           fontWeight: 400,
-          lineHeight: "24px",
-          mb: "5px",
+          lineHeight: '24px',
+          mb: '5px',
         }}
       >
         Cette plateforme a été conçue pour recueillir de manière anonyme vos
@@ -233,11 +233,11 @@ const Caroussel = ({ theme }) => {
       <Typography
         sx={{
           color: themeCaroussel.palette.text.secondary,
-          fontSize: "16px",
-          fontFamily: "Poppins, sans-serif",
+          fontSize: '16px',
+          fontFamily: 'Poppins, sans-serif',
           fontWeight: 400,
-          lineHeight: "24px",
-          mb: "5px",
+          lineHeight: '24px',
+          mb: '5px',
         }}
       >
         Les résultats aideront à éclairer les pratiques des professionnels de
@@ -257,14 +257,14 @@ const Caroussel = ({ theme }) => {
       }}
     >
       <SwipeableViews
-        axis={"x"}
+        axis={'x'}
         index={activeStep}
         enableMouseEvents
         interval={5000}
         springConfig={{
-          duration: "1s",
-          easeFunction: "ease-out",
-          delay: "0s",
+          duration: '1s',
+          easeFunction: 'ease-out',
+          delay: '0s',
         }}
       >
         {textSteps.map((step, index) => (
