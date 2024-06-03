@@ -1,25 +1,25 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme } from '@mui/material/styles';
 
 export const theme = createTheme({
   palette: {
     primary: {
-      main: "#0D5282",
-      contrastText: "#F7F9FB",
+      main: '#0D5282',
+      contrastText: '#F7F9FB',
     },
     secondary: {
-      main: "#A5C2D7",
-      contrastText: "#0E1419",
+      main: '#A5C2D7',
+      contrastText: '#0E1419',
     },
-    divider: "#76A4C5",
+    divider: '#76A4C5',
     text: {
-      primary: "rgb(14, 20, 25)",
-      secondary: "rgba(14, 20, 25, 0.6)",
-      disabled: "rgba(14, 20, 25, 0.38)",
-      hint: "rgb(118, 164, 197)",
+      primary: 'rgb(14, 20, 25)',
+      secondary: 'rgba(14, 20, 25, 0.6)',
+      disabled: 'rgba(14, 20, 25, 0.38)',
+      hint: 'rgb(118, 164, 197)',
     },
     background: {
-      main: "#F7F9FB",
-      default: "#F7F9FB",
+      main: '#F7F9FB',
+      default: '#F7F9FB',
     },
   },
   typography: {
@@ -27,11 +27,11 @@ export const theme = createTheme({
     fontSize: 16,
     fontWeightLight: 300,
     button: {
-      fontSize: "16px",
+      fontSize: '16px',
       fontWeight: 600,
-      lineHeight: "24px",
-      letterSpacing: "normal",
-      textTransform: "none",
+      lineHeight: '24px',
+      letterSpacing: 'normal',
+      textTransform: 'none',
     },
   },
   shape: {
@@ -44,16 +44,16 @@ export const theme = createTheme({
       },
       styleOverrides: {
         root: {
-          borderRadius: "10px",
-          padding: "10px 15px",
+          borderRadius: '10px',
+          padding: '10px 15px',
         },
         startIcon: {
-          marginLeft: "0px",
-          marginRight: "10px",
+          marginLeft: '0px',
+          marginRight: '10px',
         },
         iconSizeMedium: {
-          "& > *:first-child": {
-            fontSize: "inherit",
+          '& > *:first-child': {
+            fontSize: 'inherit',
           },
         },
         colorSecondary: {
@@ -81,5 +81,37 @@ export const theme = createTheme({
         },
       },
     },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          fontSize: '16px',
+        },
+        select: {
+          fontSize: '16px',
+          padding: '10px 15px',
+          letterSpacing: 'normal',
+        },
+      },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          fontWeight: '600',
+          fontSize: '16px',
+        },
+      },
+    },
   },
 });
+
+const graphColors = [
+  '#0D5282',
+  '#76A4C5',
+  '#A5C2D7',
+  '#276793',
+  '#82ACCA',
+  '#427BA4',
+  '#8EB3CE',
+  '#5C90B4',
+  '#99BBD3',
+];

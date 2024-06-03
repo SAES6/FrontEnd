@@ -11,9 +11,11 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import ImageIcon from '@mui/icons-material/Image';
 import HideImageIcon from '@mui/icons-material/HideImage';
+import IconSelect from '../../IconSelect';
 import Choices from './Choices';
 import Cursor from './Cursor';
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Pending = () => <></>;
 
@@ -129,18 +131,22 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
           >
             <FormControl fullWidth>
               <Select
-                value={questionData.type || ''}
-                size='small'
+                value={questionData.type}
                 onChange={(e) => selectChangeHandler(e.target.value)}
                 displayEmpty
-                inputProps={{ 'aria-label': 'Without label' }}
-                sx={{
-                  border: 'solid',
-                  borderColor: 'blue',
-                  borderRadius: '15px',
-                  '& > fieldset': { border: 'none' },
-                }}
+                renderValue={(value) =>
+                  value === '' ? (
+                    <MenuItem sx={{ color: 'text.secondary' }}>
+                      Type de question
+                    </MenuItem>
+                  ) : (
+                    <MenuItem>{value}</MenuItem>
+                  )
+                }
               >
+                <MenuItem value='' disabled sx={{ color: 'text.secondary' }}>
+                  Type de question
+                </MenuItem>
                 {QType.map((type, index) => (
                   <MenuItem value={type} key={index}>
                     {type}
