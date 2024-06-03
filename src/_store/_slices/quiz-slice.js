@@ -3,15 +3,15 @@ import {v4 as uuid} from "uuid";
 
 const initialState = {
     currentQuizId: null,
-    currentPageId: null,
+    currentSectionId: null,
     quizzesInfos: [],
     currentQuizInfos: {
         id: null,
         name: '',
         dropdownOpen: false,
-        pages: [] // {id: 6494984, pos: 1, name: 'Section 1', dropdownOpen: false}
+        sections: [] // {id: 6494984, order: 1, name: 'Section 1', dropdownOpen: false}
     },
-    currentPageInfos: {},
+    currentSectionInfos: [],
 };
 
 const quizSlice = createSlice({
@@ -20,20 +20,30 @@ const quizSlice = createSlice({
     reducers: {
         setCurrentQuizId(state, action) {
             state.currentQuizId = action.payload;
-            state.currentPageId = initialState.currentPageId;
+            state.currentSectionId = initialState.currentSectionId;
         },
-        setCurrentPageId(state, action) {
-            state.currentPageId = action.payload;
+        setCurrentSectionId(state, action) {
+            state.currentSectionId = action.payload;
         },
         setCurrentIds(state, action) {
             state.currentQuizId = action.payload.quizId;
-            state.currentPageId = action.payload.pageId;
+            state.currentSectionId = action.payload.sectionId;
         },
         setCurrentQuizInfos(state, action) {
 
         },
-        setCurrentPageInfos(state, action) {
-
+        setCurrentSectionInfos(state, action) {
+            state.currentSectionInfos = action.payload;
+            state.currentSectionId = action.payload.id;
+        },
+        setQuizzesAndCurrentSectionInfos(state, action) {
+            state.quizzesInfos = action.payload.quizzesInfos;
+            state.currentSectionInfos = action.payload.firstSectionDetails;
+            state.currentQuizId = action.payload.quizzesInfos[0].id;
+            state.currentSectionId = action.payload.firstSectionDetails.id;
+        },
+        setQuizzesInfos(state, action) {
+            state.quizzesInfos = action.payload;
         },
         addQuiz(state) {
             const newId = uuid();
@@ -41,29 +51,29 @@ const quizSlice = createSlice({
                 id: newId,
                 name: 'Questionnaire ' + (state.quizzesInfos.length + 1),
                 dropdownOpen: true,
-                pages: []
+                sections: []
             };
             state.quizzesInfos = state.quizzesInfos.map(quiz => ({...quiz, dropdownOpen: false}))
             state.quizzesInfos.push(newQuiz);
             state.currentQuizInfos = newQuiz;
             state.currentQuizId = newId;
         },
-        addPage(state, action) {
-            const newPage = {id: uuid(), name: action.payload, pos: state.currentQuizInfos.pages.length};
-            state.currentQuizInfos.pages.push(newPage);
+        addSection(state, action) {
+            const newSection = {id: uuid(), name: action.payload, order: state.currentQuizInfos.sections.length};
+            state.currentQuizInfos.sections.push(newSection);
 
             const existingQuiz = state.quizzesInfos.find(item => item.id === state.currentQuizId);
-            if (existingQuiz) existingQuiz.pages.push(newPage);
+            if (existingQuiz) existingQuiz.sections.push(newSection);
         },
-        deleteQuizOrPage(state) {
+        deleteQuizOrSection(state) {
             const quizId = state.currentQuizId;
-            const pageId = state.currentPageId;
+            const sectionId = state.currentSectionId;
 
-            if (pageId) {
+            if (sectionId) {
                 state.quizzesInfos = state.quizzesInfos.map(quiz => {
                     if (quiz.id === quizId) {
-                        const updatedPages = quiz.pages.filter(page => page.id !== pageId);
-                        return {...quiz, pages: updatedPages};
+                        const updatedSections = quiz.sections.filter(section => section.id !== sectionId);
+                        return {...quiz, sections: updatedSections};
                     }
                     return quiz;
                 });
@@ -72,47 +82,47 @@ const quizSlice = createSlice({
             }
         },
         toggleDropdown(state, action) {
-            const {quizId, pageId} = action.payload;
+            const {quizId, sectionId} = action.payload;
             state.currentQuizId = quizId;
-            state.currentPageId = pageId;
+            state.currentSectionId = sectionId;
 
             state.quizzesInfos = state.quizzesInfos.map(quiz => {
                 if (quiz.id === quizId) {
-                    const updatedPages = quiz.pages.map(page => ({
-                        ...page,
-                        dropdownOpen: pageId === page.id ? !page.dropdownOpen : false
+                    const updatedSections = quiz.sections.map(section => ({
+                        ...section,
+                        dropdownOpen: sectionId === section.id ? !section.dropdownOpen : false
                     }));
                     return {
                         ...quiz,
-                        dropdownOpen: pageId ? false : !quiz.dropdownOpen,
-                        pages: updatedPages
+                        dropdownOpen: sectionId ? false : !quiz.dropdownOpen,
+                        sections: updatedSections
                     };
                 } else {
                     return {
                         ...quiz,
                         dropdownOpen: false,
-                        pages: quiz.pages.map(page => ({
-                            ...page,
+                        sections: quiz.sections.map(section => ({
+                            ...section,
                             dropdownOpen: false
                         }))
                     };
                 }
             });
         },
-        updatePage(state, action) {
+        updateSection(state, action) {
 
         },
         rename(state, action) {
-            if (state.currentPageId) {
+            if (state.currentSectionId) {
                 state.quizzesInfos = state.quizzesInfos.map(quiz => {
                     if (quiz.id === state.currentQuizId) {
-                        const updatedPages = quiz.pages.map(page => {
-                            if (page.id === state.currentPageId) {
-                                return {...page, name: action.payload};
+                        const updatedSections = quiz.sections.map(section => {
+                            if (section.id === state.currentSectionId) {
+                                return {...section, name: action.payload};
                             }
-                            return page;
+                            return section;
                         });
-                        return {...quiz, pages: updatedPages};
+                        return {...quiz, sections: updatedSections};
                     }
                     return quiz;
                 });
@@ -129,12 +139,12 @@ const quizSlice = createSlice({
     },
 });
 
-const selectCurrentPageId = state => state.quiz.currentPageId;
+const selectCurrentSectionId = state => state.quiz.currentSectionId;
 const selectCurrentQuizId = state => state.quiz.currentQuizId;
 
 export const selectCurrentSelection = createSelector(
-    [selectCurrentPageId, selectCurrentQuizId],
-    (currentPageId, currentQuizId) => currentPageId || currentQuizId
+    [selectCurrentSectionId, selectCurrentQuizId],
+    (currentSectionId, currentQuizId) => currentSectionId || currentQuizId
 );
 
 export const quizActions = quizSlice.actions;

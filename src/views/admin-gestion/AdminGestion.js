@@ -34,7 +34,7 @@ const ColorButton = styled(Button)(({ theme }) => ({
 
 const AdminGestion = () => {
   const screenSize = useMediaQuery("(min-width:1600px)");
-  const screenHeight = useMediaQuery("(min-height:900px)");
+  const screenHeight = useMediaQuery("(min-height:800px)");
   const [response, setRequest] = useGET({ api: process.env.REACT_APP_API_URL });
   const themeGestion = useTheme(theme);
   const [adminsList, setAdminsList] = useState([]);

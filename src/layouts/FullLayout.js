@@ -48,9 +48,12 @@ const FullLayout = () => {
   const tokenUser = useSelector((state) => state.user.tokenUser);
 
   useEffect(() => {
-    if (response?.status >= 200 && response?.status < 300) {
-      dispatch(userActions.login(response.data.token));
-      dispatch(userActions.setAdminPrincipal(response.data.user.principal));
+    const responseTarget = response['login'];
+    if (responseTarget?.status >= 200 && responseTarget?.status < 300) {
+      dispatch(userActions.login(responseTarget.data.token));
+      dispatch(
+        userActions.setAdminPrincipal(responseTarget.data.user.principal)
+      );
       setOpen(false);
       handleInfos();
       navigate('/admin-console');
@@ -69,10 +72,12 @@ const FullLayout = () => {
   }, [responseCreateToken]);
 
   useEffect(() => {
+    console.log(responseMe, 'responseMe');
     if (responseMe?.status >= 200 && responseMe?.status < 300) {
+      console.log(responseMe.data.principal, 'responseMe.data.principal');
       dispatch(userActions.setAdminPrincipal(responseMe.data.principal));
       setIsAuthenticated(true);
-    } else {
+    } else if (responseMe?.status >= 400) {
       dispatch(userActions.removeAdminPrincipal());
       dispatch(userActions.logout());
     }
@@ -95,6 +100,26 @@ const FullLayout = () => {
     handleInfos();
   }, []);
 
+  const handleLogout = () => {
+    dispatch(userActions.logout());
+    dispatch(userActions.removeAdminPrincipal());
+    toast.success('Vous avez été deconnecté', {
+      position: 'top-center',
+      style: {
+        fontFamily: 'Poppins, sans-serif',
+        borderRadius: '15px',
+        textAlign: 'center',
+      },
+    });
+    // si je ne suis pas sur la page / je redirige vers la page /
+    if (
+      window.location.pathname !== '/' &&
+      window.location.pathname !== '/acceuil'
+    ) {
+      navigate('/');
+    }
+  };
+
   const handleInfos = async () => {
     if (token) {
       setInitialRequestMe({
@@ -111,11 +136,13 @@ const FullLayout = () => {
 
   const handleLogin = () => {
     setInitialRequest({
+      id: 'login',
       url: '/login',
       data: {
         email: email,
         password: password,
       },
+      authorization: { headers: { Authorization: 'Bearer token' } },
       api: process.env.REACT_APP_API_URL,
       errorMessage: 'Erreur lors de la connexion',
     });
@@ -192,6 +219,20 @@ const FullLayout = () => {
               </Typography>
             </Grid>
             <Grid item>
+              {token && (
+                <Button
+                  variant='outlined'
+                  color='background'
+                  sx={{ marginRight: '10px' }}
+                  startIcon={
+                    <FontAwesomeIcon icon='fa-fw fa-solid fa-arrow-right-from-bracket' />
+                  }
+                  onClick={handleLogout}
+                >
+                  Deconnexion
+                </Button>
+              )}
+
               <ColorButton
                 variant='contained'
                 startIcon={
