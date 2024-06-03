@@ -1,33 +1,40 @@
-import React, { useEffect, useState } from 'react';
-import { PieChart, BarChart, Gauge, gaugeClasses } from '@mui/x-charts';
-import { Grid, Typography, Box } from '@mui/material';
-import { theme } from '../../../theme';
-import { useTheme } from '@mui/material/styles';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import { useParams } from 'react-router-dom';
-import SyntheseGlobal from './SyntheseGlobal';
+import React, { useEffect, useState } from "react";
+import { PieChart, BarChart, Gauge, gaugeClasses } from "@mui/x-charts";
+import { Grid, Typography, Box } from "@mui/material";
+import { theme } from "../../../theme";
+import { useTheme } from "@mui/material/styles";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
+import SyntheseGlobal from "./SyntheseGlobal";
 
-const Synthese = () => {
+const Synthese = ({ questionnaire_id, section_id, section_order }) => {
   const themeSynthese = useTheme(theme);
   const [statsTypeUser, setStatsTypeUser] = useState([]);
   const [statsQuestion, setStatsQuestion] = useState([]);
   var id = 1;
+  const questionnaireId = questionnaire_id;
+  const sectionId = section_id;
+  const sectionOrder = section_order;
+
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUserType, setSelectedUserType] = useState(null);
+
   const loadStatsTypeUser = () => {
     axios
       .get(`${process.env.REACT_APP_API_URL}/admin/${id}`)
       .then((response) => {
-        console.log('Response data:', response.data); // Log pour tester
+        console.log("Response data:", response.data); // Log pour tester
         setStatsTypeUser(response.data.statsTypeUser);
         setStatsQuestion(response.data.statsQuestions);
       })
       .catch(() => {
-        toast.error('Aucune stats', {
-          position: 'top-center',
+        toast.error("Aucune stats", {
+          position: "top-center",
           style: {
-            fontFamily: 'Poppins, sans-serif',
-            borderRadius: '15px',
-            textAlign: 'center',
+            fontFamily: "Poppins, sans-serif",
+            borderRadius: "15px",
+            textAlign: "center",
           },
         });
       });
@@ -40,74 +47,74 @@ const Synthese = () => {
 
   return (
     <React.Fragment>
-      <SyntheseGlobal statsTypeUser={statsTypeUser} />
+      {sectionOrder === 1 && <SyntheseGlobal statsTypeUser={statsTypeUser} />}
       {statsQuestion.map(
         (question, index) =>
-          ['single_choice', 'multiple_choice'].includes(
+          ["single_choice", "multiple_choice"].includes(
             question.question.type
           ) && (
             <Grid
               key={index}
               sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
                 padding: 2,
-                backgroundColor: 'white',
+                backgroundColor: "white",
                 borderRadius: 2,
-                border: 'solid 1px #A5C2D7',
+                border: "solid 1px #A5C2D7",
                 width: 1100,
-                margin: '20px',
-                textAlign: 'center',
+                margin: "20px",
+                textAlign: "center",
               }}
             >
               <Typography
-                variant='h4'
-                component='h2'
+                variant="h4"
+                component="h2"
                 gutterBottom
                 sx={{
-                  fontFamily: 'Poppins, sans-serif',
-                  fontSize: '24px',
-                  fontWeight: '600',
-                  lineHeight: '36px',
+                  fontFamily: "Poppins, sans-serif",
+                  fontSize: "24px",
+                  fontWeight: "600",
+                  lineHeight: "36px",
                   color: themeSynthese.palette.text.primary,
                 }}
               >
-                Question {index + 1}
+                {question.question.title}
               </Typography>
 
               <Grid
                 sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  width: '100%',
-                  borderTop: 'solid 1px #A5C2D7',
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  width: "100%",
+                  borderTop: "solid 1px #A5C2D7",
                   padding: 2,
-                  backgroundColor: 'white',
-                  height: '520px', // Ajout de la hauteur
+                  backgroundColor: "white",
+                  height: "520px", // Ajout de la hauteur
                 }}
               >
-                <Typography variant='h6' sx={{ textAlign: 'left' }}>
+                <Typography variant="h6" sx={{ textAlign: "left" }}>
                   Enoncé
                 </Typography>
-                <Typography variant='p' sx={{ textAlign: 'left' }}>
-                  {question.question.title}
+                <Typography variant="p" sx={{ textAlign: "left", mt: "10px" }}>
+                  {question.question.description}
                 </Typography>
                 <Grid
                   sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-around',
-                    width: '100%',
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-around",
+                    width: "100%",
                     padding: 2,
-                    backgroundColor: 'white',
-                    height: '520px', // Ajout de la hauteur
+                    backgroundColor: "white",
+                    height: "520px", // Ajout de la hauteur
                   }}
                 >
                   <Box>
-                    <Typography variant='h6'>Journalistes</Typography>
+                    <Typography variant="h6">Journalistes</Typography>
                     <PieChart
                       series={[
                         {
@@ -128,9 +135,9 @@ const Synthese = () => {
                       sx={{
                         [`& .${question.stats.journalists
                           .map((item) => item.total)
-                          .join(', ')}`]: {
-                          fill: 'white',
-                          fontWeight: 'bold',
+                          .join(", ")}`]: {
+                          fill: "white",
+                          fontWeight: "bold",
                         },
                       }}
                       width={400}
@@ -138,7 +145,7 @@ const Synthese = () => {
                     />
                   </Box>
                   <Box>
-                    <Typography variant='h6'>Other</Typography>
+                    <Typography variant="h6">Other</Typography>
                     <PieChart
                       series={[
                         {
@@ -159,9 +166,9 @@ const Synthese = () => {
                       sx={{
                         [`& .${question.stats.others
                           .map((item) => item.total)
-                          .join(', ')}`]: {
-                          fill: 'white',
-                          fontWeight: 'bold',
+                          .join(", ")}`]: {
+                          fill: "white",
+                          fontWeight: "bold",
                         },
                       }}
                       width={400}
@@ -175,31 +182,31 @@ const Synthese = () => {
       )}
       {statsQuestion.map(
         (question, index) =>
-          ['slider'].includes(question.question.type) && (
+          ["slider"].includes(question.question.type) && (
             <Grid
               key={index}
               sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
                 padding: 2,
-                backgroundColor: 'white',
+                backgroundColor: "white",
                 borderRadius: 2,
-                border: 'solid 1px #A5C2D7',
+                border: "solid 1px #A5C2D7",
                 width: 1100,
-                margin: '20px',
-                textAlign: 'center',
+                margin: "20px",
+                textAlign: "center",
               }}
             >
               <Typography
-                variant='h4'
-                component='h2'
+                variant="h4"
+                component="h2"
                 gutterBottom
                 sx={{
-                  fontFamily: 'Poppins, sans-serif',
-                  fontSize: '24px',
-                  fontWeight: '600',
-                  lineHeight: '36px',
+                  fontFamily: "Poppins, sans-serif",
+                  fontSize: "24px",
+                  fontWeight: "600",
+                  lineHeight: "36px",
                   color: themeSynthese.palette.text.primary,
                 }}
               >
@@ -208,36 +215,36 @@ const Synthese = () => {
 
               <Grid
                 sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  width: '100%',
-                  borderTop: 'solid 1px #A5C2D7',
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  width: "100%",
+                  borderTop: "solid 1px #A5C2D7",
                   padding: 2,
-                  backgroundColor: 'white',
-                  height: '520px', // Ajout de la hauteur
+                  backgroundColor: "white",
+                  height: "520px", // Ajout de la hauteur
                 }}
               >
-                <Typography variant='h6' sx={{ textAlign: 'left' }}>
+                <Typography variant="h6" sx={{ textAlign: "left" }}>
                   Enoncé
                 </Typography>
-                <Typography variant='p' sx={{ textAlign: 'left' }}>
+                <Typography variant="p" sx={{ textAlign: "left" }}>
                   {question.question.title}
                 </Typography>
                 <Grid
                   sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-around',
-                    width: '100%',
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-around",
+                    width: "100%",
                     padding: 2,
-                    backgroundColor: 'white',
-                    height: '520px', // Ajout de la hauteur
+                    backgroundColor: "white",
+                    height: "520px", // Ajout de la hauteur
                   }}
                 >
                   <Box>
-                    <Typography variant='h6'>Moyenne Journalistes</Typography>
+                    <Typography variant="h6">Moyenne Journalistes</Typography>
                     <Gauge
                       value={question.stats.journalists.mean}
                       startAngle={-110}
@@ -246,7 +253,7 @@ const Synthese = () => {
                       sx={{
                         [`& .${gaugeClasses.valueText}`]: {
                           fontSize: 40,
-                          transform: 'translate(0px, 0px)',
+                          transform: "translate(0px, 0px)",
                         },
                       }}
                       text={({ value, valueMax }) => `${value} / ${valueMax}`}
@@ -256,7 +263,7 @@ const Synthese = () => {
                   </Box>
 
                   <Box>
-                    <Typography variant='h6'>Médiane Journalistes</Typography>
+                    <Typography variant="h6">Médiane Journalistes</Typography>
                     <Gauge
                       value={question.stats.journalists.median}
                       valueMax={question.question.slider_max}
@@ -265,7 +272,7 @@ const Synthese = () => {
                       sx={{
                         [`& .${gaugeClasses.valueText}`]: {
                           fontSize: 40,
-                          transform: 'translate(0px, 0px)',
+                          transform: "translate(0px, 0px)",
                         },
                       }}
                       text={({ value, valueMax }) => `${value} / ${valueMax}`}
@@ -274,7 +281,7 @@ const Synthese = () => {
                     />
                   </Box>
                   <Box>
-                    <Typography variant='h6'>Moyenne Other</Typography>
+                    <Typography variant="h6">Moyenne Other</Typography>
                     <Gauge
                       value={question.stats.others.mean}
                       valueMax={question.question.slider_max}
@@ -283,7 +290,7 @@ const Synthese = () => {
                       sx={{
                         [`& .${gaugeClasses.valueText}`]: {
                           fontSize: 40,
-                          transform: 'translate(0px, 0px)',
+                          transform: "translate(0px, 0px)",
                         },
                       }}
                       text={({ value, valueMax }) => `${value} / ${valueMax}`}
@@ -293,7 +300,7 @@ const Synthese = () => {
                   </Box>
 
                   <Box>
-                    <Typography variant='h6'>Médiane Other</Typography>
+                    <Typography variant="h6">Médiane Other</Typography>
                     <Gauge
                       value={question.stats.others.median}
                       valueMax={question.question.slider_max}
@@ -302,7 +309,7 @@ const Synthese = () => {
                       sx={{
                         [`& .${gaugeClasses.valueText}`]: {
                           fontSize: 40,
-                          transform: 'translate(0px, 0px)',
+                          transform: "translate(0px, 0px)",
                         },
                       }}
                       text={({ value, valueMax }) => `${value} / ${valueMax}`}
@@ -317,31 +324,31 @@ const Synthese = () => {
       )}
       {statsQuestion.map(
         (question, index) =>
-          ['text'].includes(question.question.type) && (
+          ["text"].includes(question.question.type) && (
             <Grid
               key={index}
               sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
                 padding: 2,
-                backgroundColor: 'white',
+                backgroundColor: "white",
                 borderRadius: 2,
-                border: 'solid 1px #A5C2D7',
+                border: "solid 1px #A5C2D7",
                 width: 1100,
-                margin: '20px',
-                textAlign: 'center',
+                margin: "20px",
+                textAlign: "center",
               }}
             >
               <Typography
-                variant='h4'
-                component='h2'
+                variant="h4"
+                component="h2"
                 gutterBottom
                 sx={{
-                  fontFamily: 'Poppins, sans-serif',
-                  fontSize: '24px',
-                  fontWeight: '600',
-                  lineHeight: '36px',
+                  fontFamily: "Poppins, sans-serif",
+                  fontSize: "24px",
+                  fontWeight: "600",
+                  lineHeight: "36px",
                   color: themeSynthese.palette.text.primary,
                 }}
               >
@@ -350,39 +357,39 @@ const Synthese = () => {
 
               <Grid
                 sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  width: '100%',
-                  borderTop: 'solid 1px #A5C2D7',
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  width: "100%",
+                  borderTop: "solid 1px #A5C2D7",
                   padding: 2,
-                  backgroundColor: 'white',
-                  height: '520px', // Ajout de la hauteur
+                  backgroundColor: "white",
+                  height: "520px", // Ajout de la hauteur
                 }}
               >
-                <Typography variant='h6' sx={{ textAlign: 'left' }}>
+                <Typography variant="h6" sx={{ textAlign: "left" }}>
                   Enoncé
                 </Typography>
-                <Typography variant='p' sx={{ textAlign: 'left' }}>
+                <Typography variant="p" sx={{ textAlign: "left" }}>
                   {question.question.title}
                 </Typography>
                 <Grid
                   sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-around',
-                    width: '100%',
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-around",
+                    width: "100%",
                     padding: 2,
-                    backgroundColor: 'white',
-                    height: '520px', // Ajout de la hauteur
+                    backgroundColor: "white",
+                    height: "520px", // Ajout de la hauteur
                   }}
                 >
                   <Box>
-                    <Typography variant='h6'>Journalistes</Typography>
+                    <Typography variant="h6">Journalistes</Typography>
                     {question.stats.journalists.responses.map(
                       (item) =>
-                        'User ' + item.user_token + ' : ' + item.response_text
+                        "User " + item.user_token + " : " + item.response_text
                     )}
                   </Box>
                 </Grid>
