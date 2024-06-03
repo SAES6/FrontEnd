@@ -12,14 +12,6 @@ function SecuredRoute(props) {
   if (token) {
     return <>{props.children}</>;
   } else {
-    toast.error("Vous n'êtes pas administrateur", {
-      position: "top-center",
-      style: {
-        fontFamily: "Poppins, sans-serif",
-        borderRadius: "15px",
-        textAlign: "center",
-      },
-    });
     return <Navigate to="/" />;
   }
 }
