@@ -15,46 +15,40 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
 import axios from "axios";
-const ColorButton = styled(Button)(({ theme }) => ({
-  color: theme.palette.primary.contrastText,
-  backgroundColor: theme.palette.primary.main,
-  transition: "ease 0.3s",
-  "&:hover": {
-    backgroundColor: theme.palette.primary.main,
-  },
-}));
+import useGET from "../../hooks/useGET";
+import { useDispatch, useSelector } from "react-redux";
+import { userActions } from "../../_store/_slices/user-slice";
+
+import Caroussel from "../../components/home/Caroussel";
 
 const Home = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const themeLayout = useTheme(theme);
+  const [response, setInitialRequest] = useGET({
+    api: process.env.REACT_APP_API_URL,
+  });
   const screenSize = useMediaQuery("(min-width:1600px)");
   const [openConsentPopup, setOpenConsentPopup] = useState(false);
 
   // load the questionnaires from the API
   const [questionnaires, setQuestionnaires] = useState([]);
+  const [suggestedQuestionnaire, setSuggestedQuestionnaire] = useState({}); //[1]
   const [selectedQuestionnaire, setSelectedQuestionnaire] = useState({});
+  const userToken = useSelector((state) => state.user.tokenUser);
+
+  useEffect(() => {
+    if (response?.status >= 200 && response?.status < 300) {
+      setQuestionnaires(response.data);
+    }
+  }, [response]);
 
   const loadQuestionnaires = () => {
-    axios
-      .get(
-        `${
-          process.env.REACT_APP_API_URL
-        }/questionnaire/byToken?token=${localStorage.getItem("token_access")}`
-      )
-      .then((response) => {
-        setQuestionnaires(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error("Aucun questionnaire", {
-          position: "top-center",
-          style: {
-            fontFamily: "Poppins, sans-serif",
-            borderRadius: "15px",
-            textAlign: "center",
-          },
-        });
-      });
+    setInitialRequest({
+      url: "/questionnaire/byToken?token=" + userToken,
+      errorMessage: "Aucun questionnaire",
+      api: process.env.REACT_APP_API_URL,
+    });
   };
 
   const goToQuestionnaire = (questionnaire) => {
@@ -65,6 +59,18 @@ const Home = () => {
       setSelectedQuestionnaire(questionnaire);
     }
   };
+
+  useEffect(() => {
+    if (questionnaires.length > 0) {
+      // set the suggested questionnaire to the first one that is not completed
+      let suggested = questionnaires.find((q) => !q.completed);
+      if (suggested) {
+        setSuggestedQuestionnaire(suggested);
+      } else {
+        setSuggestedQuestionnaire(questionnaires[0]);
+      }
+    }
+  }, [questionnaires]);
 
   const handleConsent = () => {
     localStorage.setItem("user_consent", "true");
@@ -80,10 +86,6 @@ const Home = () => {
     loadQuestionnaires();
   }, []);
 
-  useEffect(() => {
-    console.log(questionnaires);
-  }, [questionnaires]);
-
   return (
     <Grid
       container
@@ -98,51 +100,210 @@ const Home = () => {
     >
       <Grid
         container
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          alignContent: "center",
+          width: "100%",
+          mt: 5,
+          mb: 1,
+        }}
+      >
+        <Typography
+          sx={{
+            fontFamily: "Poppins, sans-serif",
+            fontSize: "48px",
+            fontWeight: "700",
+            lineHeight: "55,2px",
+            letterSpacing: "-5%",
+          }}
+        >
+          Projet Informare Valorem
+        </Typography>
+      </Grid>
+      <Grid
+        container
         spacing={4}
         sx={{
           height: "fit-content",
           width: "100%",
           flexDirection: "row",
-          alignItems: "flex-end",
+          alignItems: "flex-start",
           mt: 0,
         }}
       >
-        <Grid item xs={6} md={6} sx={{}}>
-          <Typography
-            sx={{
-              fontFamily: "Poppins, sans-serif",
-              fontSize: "64px",
-              fontWeight: "700",
-              lineHeight: "1.2",
-              letterSpacing: "-2px",
-            }}
-          >
-            Projet Informare Valorem
-          </Typography>
-          <Typography
-            sx={{
-              fontFamily: "Poppins, sans-serif",
-              fontSize: "16px",
-              fontWeight: "300",
-              letterSpacing: "-1px",
-            }}
-          >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
-          </Typography>
-        </Grid>
+        <Caroussel theme={themeLayout} />
         <Grid
           item
           xs={6}
           md={6}
           sx={{
+            borderRadius: "15px",
             height: "350px",
-            backgroundColor: themeLayout.palette.secondary.main,
-            borderRadius: "20px",
           }}
-        />
+        >
+          <Button
+            onClick={() => goToQuestionnaire(suggestedQuestionnaire)}
+            disabled={suggestedQuestionnaire.completed}
+            sx={{
+              backgroundColor: suggestedQuestionnaire.completed
+                ? themeLayout.palette.secondary.main
+                : themeLayout.palette.primary.main,
+              height: "100%",
+              padding: "20px 25px",
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+              "&:disabled": {
+                backgroundColor: themeLayout.palette.secondary.main, // Exemple de couleur lorsque le bouton est désactivé
+              },
+            }}
+            variant="contained"
+          >
+            <Grid
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "flex-start",
+                alignItems: "flex-start",
+                width: "100%",
+              }}
+            >
+              <Grid
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  width: "100%",
+                }}
+              >
+                {suggestedQuestionnaire.completed && (
+                  <FontAwesomeIcon
+                    icon="fa-solid fa-lock"
+                    style={{
+                      fontSize: "24px",
+                      color: themeLayout.palette.primary.contrastText,
+                      marginRight: "10px",
+                    }}
+                  />
+                )}
+                <Typography
+                  sx={{
+                    fontFamily: "Poppins, sans-serif",
+                    fontSize: "24px",
+                    fontWeight: "600",
+                    lineHeight: "36px",
+                    color: themeLayout.palette.primary.contrastText,
+                    overflowWrap: "break-word",
+                    textTransform: "none",
+                    width: "100%",
+                    overflowX: "auto",
+                    textAlign: "left",
+                  }}
+                >
+                  {suggestedQuestionnaire.name}
+                </Typography>
+              </Grid>
+              <Typography
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
+                  fontSize: "16px",
+                  fontWeight: "400",
+                  lineHeight: "24px",
+                  color: themeLayout.palette.primary.contrastText,
+                  overflowWrap: "break-word",
+                  textTransform: "none",
+                  width: "100%",
+                  maxHeight: "40%",
+                  overfloX: "auto",
+                  textAlign: "left",
+                }}
+              >
+                {suggestedQuestionnaire.description}
+              </Typography>
+            </Grid>
+            <Grid
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "flex-end",
+                alignItems: "flex-start",
+                width: "100%",
+                maxHeight: "20%",
+              }}
+            >
+              <Grid
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  width: "100%",
+                }}
+              >
+                <FontAwesomeIcon
+                  icon="fa-solid fa-circle-question"
+                  style={{
+                    fontSize: "16px",
+                    color: themeLayout.palette.primary.contrastText,
+                    opacity: "0.75",
+                    marginRight: "5px",
+                  }}
+                />
+                <Typography
+                  sx={{
+                    fontFamily: "Poppins, sans-serif",
+                    fontSize: "16px",
+                    fontWeight: "600",
+                    lineHeight: "24px",
+                    color: themeLayout.palette.primary.contrastText,
+                    opacity: "0.75",
+                    textTransform: "none",
+                  }}
+                >
+                  {suggestedQuestionnaire.number_of_questions == 1
+                    ? "1 question"
+                    : suggestedQuestionnaire.number_of_questions + " questions"}
+                </Typography>
+              </Grid>
+              <Grid
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  width: "100%",
+                }}
+              >
+                <FontAwesomeIcon
+                  icon="fa-solid fa-clock"
+                  style={{
+                    fontSize: "16px",
+                    color: themeLayout.palette.primary.contrastText,
+                    opacity: "0.75",
+                    marginRight: "5px",
+                  }}
+                />
+                <Typography
+                  sx={{
+                    fontFamily: "Poppins, sans-serif",
+                    fontSize: "16px",
+                    fontWeight: "600",
+                    lineHeight: "24px",
+                    color: themeLayout.palette.primary.contrastText,
+                    opacity: "0.75",
+                    textTransform: "none",
+                  }}
+                >
+                  {suggestedQuestionnaire.duree + " min"}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Button>
+        </Grid>
       </Grid>
       <Grid
         container
@@ -150,7 +311,7 @@ const Home = () => {
         sx={{
           mt: "50px",
           overflow: "auto",
-          maxHeight: "300px",
+          maxHeight: "350px",
           width: "100%",
           flexDirection: "row",
           alignItems: "flex-end",
@@ -158,7 +319,7 @@ const Home = () => {
       >
         {questionnaires.map((questionnaire) => (
           <Grid>
-            <ColorButton
+            <Button
               onClick={() => goToQuestionnaire(questionnaire)}
               disabled={questionnaire.completed}
               sx={{
@@ -220,7 +381,7 @@ const Home = () => {
                       overflowWrap: "break-word",
                       textTransform: "none",
                       width: "100%",
-                      overflow: "scroll",
+                      overflowX: "auto",
                       textAlign: "left",
                     }}
                   >
@@ -238,7 +399,7 @@ const Home = () => {
                     textTransform: "none",
                     width: "100%",
                     maxHeight: "40%",
-                    overflow: "scroll",
+                    overfloX: "auto",
                     textAlign: "left",
                   }}
                 >
@@ -320,7 +481,7 @@ const Home = () => {
                   </Typography>
                 </Grid>
               </Grid>
-            </ColorButton>
+            </Button>
           </Grid>
         ))}
       </Grid>
@@ -401,9 +562,22 @@ const Home = () => {
                 borderRadius: "15px",
                 padding: "10px 15px",
                 maxHeight: "200px",
-                overflow: "scroll",
+                overflow: "auto",
               }}
             >
+              <Typography
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: "600",
+                  fontSize: "18px",
+                  lineHeight: "24px",
+                  opacity: "0.5",
+                  textAlign: "start",
+                  mt: 1,
+                }}
+              >
+                Projet sur la Valeur de l'Information
+              </Typography>
               <Typography
                 sx={{
                   fontFamily: "Poppins, sans-serif",
@@ -414,52 +588,153 @@ const Home = () => {
                   textAlign: "start",
                 }}
               >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum.
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum.
+                Nous vous remercions de votre intérêt à participer à notre étude
+                sur la perception de la valeur de l'information, conduite par
+                l'Institut Méditerranéen des Sciences de l'Information et de la
+                Communication (IMSIC). Avant de débuter, veuillez lire
+                attentivement les informations suivantes et donner votre
+                consentement pour participer.
               </Typography>
-            </Grid>
-          </Grid>
-
-          <Grid>
-            <ColorButton
-              onClick={handleConsent}
-              sx={{
-                backgroundColor: themeLayout.palette.primary.main,
-                borderRadius: "10px",
-                padding: "10px 15px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-              variant="contained"
-            >
               <Typography
                 sx={{
                   fontFamily: "Poppins, sans-serif",
                   fontWeight: "600",
-                  fontSize: "16px",
+                  fontSize: "18px",
                   lineHeight: "24px",
-                  color: themeLayout.palette.primary.contrastText,
-                  textAlign: "center",
-                  textTransform: "none",
+                  opacity: "0.5",
+                  textAlign: "start",
+                  mt: 1,
                 }}
               >
-                J’accepte
+                Objectif de l'Étude:
               </Typography>
-            </ColorButton>
+              <Typography
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: "400",
+                  fontSize: "16px",
+                  lineHeight: "24px",
+                  opacity: "0.5",
+                  textAlign: "start",
+                }}
+              >
+                Cette étude vise à comparer et comprendre comment les
+                journalistes et le grand public évaluent la valeur de
+                l'information à travers différents scénarios présentés sur cette
+                plateforme interactive. Les résultats nous aideront à mieux
+                saisir les critères utilisés par différents groupes pour juger
+                l'importance des informations.
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: "600",
+                  fontSize: "18px",
+                  lineHeight: "24px",
+                  opacity: "0.5",
+                  textAlign: "start",
+                  mt: 1,
+                }}
+              >
+                Procédure:
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: "400",
+                  fontSize: "16px",
+                  lineHeight: "24px",
+                  opacity: "0.5",
+                  textAlign: "start",
+                }}
+              >
+                En tant que participant, vous serez invité à répondre à une
+                série de scénarios qui vous seront présentés sur notre site web.
+                Chaque scénario vous proposera plusieurs réponses possibles, et
+                vous devrez choisir celle qui reflète le mieux votre opinion sur
+                la valeur de l'information dans le contexte donné.
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: "600",
+                  fontSize: "18px",
+                  lineHeight: "24px",
+                  opacity: "0.5",
+                  textAlign: "start",
+                  mt: 1,
+                }}
+              >
+                Confidentialité et Anonymat:
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: "400",
+                  fontSize: "16px",
+                  lineHeight: "24px",
+                  opacity: "0.5",
+                  textAlign: "start",
+                }}
+              >
+                Vos réponses seront collectées de manière anonyme et aucune
+                information permettant de vous identifier ne sera enregistrée.
+                Toutes les données seront stockées de manière sécurisée et
+                utilisées uniquement à des fins de recherche.
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: "600",
+                  fontSize: "18px",
+                  lineHeight: "24px",
+                  opacity: "0.5",
+                  textAlign: "start",
+                  mt: 1,
+                }}
+              >
+                Droit de Retrait:
+              </Typography>
+              <Typography
+                sx={{
+                  fontFamily: "Poppins, sans-serif",
+                  fontWeight: "400",
+                  fontSize: "16px",
+                  lineHeight: "24px",
+                  opacity: "0.5",
+                  textAlign: "start",
+                }}
+              >
+                Votre participation à cette étude est entièrement volontaire.
+                Vous avez le droit de vous retirer de l'étude à tout moment sans
+                aucune conséquence.
+              </Typography>
+            </Grid>
+          </Grid>
+          <Typography
+            sx={{
+              fontFamily: "Poppins, sans-serif",
+              fontWeight: "400",
+              fontSize: "16px",
+              lineHeight: "24px",
+              textAlign: "start",
+              padding: "10px 15px",
+              width: "500px",
+              mb: 3,
+            }}
+          >
+            En cliquant sur le bouton ci-dessous et en continuant à participer à
+            cette étude, vous confirmez que vous avez lu et compris les
+            informations fournies concernant votre participation. Vous acceptez
+            de participer à cette étude sur la base du volontariat et vous êtes
+            conscient que vous pouvez retirer votre consentement et cesser la
+            participation à tout moment.
+          </Typography>
+
+          <Grid>
+            <Button onClick={handleConsent} variant="contained">
+              J’accepte
+            </Button>
           </Grid>
         </Grid>
       </Modal>

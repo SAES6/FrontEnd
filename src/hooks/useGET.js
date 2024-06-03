@@ -1,35 +1,31 @@
-import {useState, useEffect} from 'react'
-/**
- * Hook personaliser : Pour tous les requete Get vers les apis.
- * @param {*} url  Uri de l'api
- * @param {*} data Data body si necessaire
- * @param {*} type Type pour 
- */
-function useGET({url, data, authorization, api}) {
+import {useState, useEffect} from "react";
+import {callApiGet} from "../utils/callApi";
 
-    const [initialRequest, setInitialRequest] = useState({url : url, data: data, authorization: authorization, api: api});
+function useGET({url, data, authorization, errorMessage}) {
+    const [initialRequest, setInitialRequest] = useState({
+        url: url || "",
+        data: data || {},
+        authorization: authorization || {},
+        errorMessage: errorMessage,
+    });
     const [response, setResponse] = useState();
-    let result ;
 
     useEffect(() => {
-        const callApi = async ()  =>{
+        const fetchApi = async () => {
             try {
-                if (initialRequest.url !== ''){
-                    result = await initialRequest.api.get(initialRequest.url, initialRequest.authorization)
-                    setResponse(result)
+                if (initialRequest.url !== "") {
+                    const result = await callApiGet(initialRequest);
+                    setResponse(result);
                 }
             } catch (error) {
-                // add smth
-                console.log(error)
+                setResponse(error);
             }
-    
-        }
+        };
 
-        callApi();
-
-    }, [initialRequest])
+        fetchApi();
+    }, [initialRequest]);
 
     return [response, setInitialRequest];
 }
 
-export default useGET
+export default useGET;

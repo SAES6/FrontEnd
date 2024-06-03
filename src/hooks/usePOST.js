@@ -1,36 +1,45 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect} from "react";
+import {toast} from "react-toastify";
+import axios from "axios";
+
 /**
- * Hook personaliser : Pour tous les requete post vers les apis.
+ * Hook personaliser : Pour toutes les requetes POST vers les apis.
  */
-
-function usePOST({url, data, authorization, api}) {
-
-    const [initialRequest, setInitialRequest] = useState({url : url, data: data, authorization: authorization, api: api});
-    const [response, setResponse] = useState();
-    let result ;
+const usePOST = () => {
+    const [initialRequest, setInitialRequest] = useState(null);
+    const [responses, setResponses] = useState({});
 
     useEffect(() => {
-       
-        const callApi = async ()  => {
-            try {
-                if((initialRequest.url).length !== 0 && Object.keys(initialRequest.data).length === 0){
-                    result = await initialRequest.api.post(initialRequest.url, {}, initialRequest.authorization)
-                    setResponse(result)
-                }else if(initialRequest.url !== '') {
-                    result = await initialRequest.api.post(initialRequest.url, initialRequest.data, initialRequest.authorization)
-                    setResponse(result)
+        const callApi = async () => {
+            if (initialRequest) {
+                const {id, url, data, authorization, api, errorMessage} = initialRequest;
+                try {
+                    if (url !== "") {
+                        const result = await axios
+                            .create({
+                                baseURL: api,
+                            })
+                            .post(url, data, authorization);
+                        setResponses(prev => ({...prev, [id]: result}));
+                    }
+                } catch (error) {
+                    toast.error(errorMessage, {
+                        position: "top-center",
+                        style: {
+                            fontFamily: "Poppins, sans-serif",
+                            borderRadius: "15px",
+                            textAlign: "center",
+                        },
+                    });
+                    setResponses(prev => ({...prev, [id]: error.response}));
                 }
-            } catch (error) {
-                setResponse(error)
             }
-    
-        }
+        };
 
         callApi();
-
     }, [initialRequest]);
 
-    return [response, setInitialRequest];
-}
+    return [responses, setInitialRequest];
+};
 
-export default usePOST
+export default usePOST;
