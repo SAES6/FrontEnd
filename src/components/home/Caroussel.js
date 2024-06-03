@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SwipeableViews from "react-swipeable-views";
 import { autoPlay } from "react-swipeable-views-utils";
 import { Grid, Typography } from "@mui/material";
@@ -9,6 +9,18 @@ const Caroussel = ({ theme }) => {
 
   const [activeStep, setActiveStep] = useState(0);
   const maxSteps = 3;
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (activeStep < maxSteps - 1) {
+        setActiveStep((prevStep) => prevStep + 1);
+      } else {
+        setActiveStep(0);
+      }
+    }, 5000);
+
+    return () => clearTimeout(timer); // Clean up the timer on component unmount or when activeStep changes
+  }, [activeStep, maxSteps]);
 
   const styles = {
     container: {
@@ -244,15 +256,13 @@ const Caroussel = ({ theme }) => {
         pr: 2,
       }}
     >
-      <AutoPlaySwipeableViews
+      <SwipeableViews
         axis={"x"}
         index={activeStep}
-        onChangeIndex={handleStepChange}
         enableMouseEvents
         interval={5000}
-        sli
         springConfig={{
-          duration: "1.2s",
+          duration: "1s",
           easeFunction: "ease-out",
           delay: "0s",
         }}
@@ -260,7 +270,7 @@ const Caroussel = ({ theme }) => {
         {textSteps.map((step, index) => (
           <div key={index}>{step}</div>
         ))}
-      </AutoPlaySwipeableViews>
+      </SwipeableViews>
       <div style={styles.container}>
         {Array.from({ length: maxSteps }).map((_, i) => (
           <span
