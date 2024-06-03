@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Grid,
   Typography,
@@ -7,22 +7,21 @@ import {
   TextField,
   IconButton,
   useMediaQuery,
-} from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@mui/material/styles';
-import { Outlet, useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CloseIcon from "@mui/icons-material/Close";
-import { styled } from "@mui/material/styles";
-import axios from "axios";
-import { theme } from "../theme";
-import { toast } from "react-toastify";
-import usePOST from "../hooks/usePOST";
-import useGET from "../hooks/useGET";
-import { useDispatch, useSelector } from "react-redux";
-import { userActions } from "../_store/_slices/user-slice";
+import { Outlet, useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import CloseIcon from '@mui/icons-material/Close';
+import { styled } from '@mui/material/styles';
+import axios from 'axios';
+import { theme } from '../theme';
+import { toast } from 'react-toastify';
+import usePOST from '../hooks/usePOST';
+import useGET from '../hooks/useGET';
+import { useDispatch, useSelector } from 'react-redux';
+import { userActions } from '../_store/_slices/user-slice';
 import ColorButton from '../components/ColorButton';
-
 
 const FullLayout = () => {
   const [response, setInitialRequest] = usePOST({
@@ -38,11 +37,11 @@ const FullLayout = () => {
   });
 
   const themeLayout = useTheme(theme);
-  const screenSize = useMediaQuery("(min-width:1600px)");
+  const screenSize = useMediaQuery('(min-width:1600px)');
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const dispatch = useDispatch();
   const token = useSelector((state) => state.user.token);
@@ -54,7 +53,7 @@ const FullLayout = () => {
       dispatch(userActions.setAdminPrincipal(response.data.user.principal));
       setOpen(false);
       handleInfos();
-      navigate("/admin-console");
+      navigate('/admin-console');
     }
   }, [response]);
 
@@ -84,7 +83,7 @@ const FullLayout = () => {
       const createToken = async () => {
         if (!tokenUser) {
           setInitialRequestCreateToken({
-            url: "/createToken",
+            url: '/createToken',
             api: process.env.REACT_APP_API_URL,
           });
         }
@@ -99,7 +98,7 @@ const FullLayout = () => {
   const handleInfos = async () => {
     if (token) {
       setInitialRequestMe({
-        url: "/me",
+        url: '/me',
         api: process.env.REACT_APP_API_URL,
         authorization: {
           headers: {
@@ -112,19 +111,19 @@ const FullLayout = () => {
 
   const handleLogin = () => {
     setInitialRequest({
-      url: "/login",
+      url: '/login',
       data: {
         email: email,
         password: password,
       },
       api: process.env.REACT_APP_API_URL,
-      errorMessage: "Erreur lors de la connexion",
+      errorMessage: 'Erreur lors de la connexion',
     });
   };
 
   const handleOpen = () => {
     if (token) {
-      navigate("/admin-console");
+      navigate('/admin-console');
     } else {
       setOpen(true);
     }
@@ -244,7 +243,7 @@ const FullLayout = () => {
                     textAlign: 'center',
                   }}
                 >
-                  Identifiez-vous
+                  Identifiez vous
                 </Typography>
               </Grid>
               <Grid item xs={2} sx={{ textAlign: 'right' }}>
@@ -272,20 +271,6 @@ const FullLayout = () => {
                 sx={{
                   width: '400px',
                   mt: '5px',
-                  borderRadius: '15px',
-                  border: '1px solid',
-                  borderColor: themeLayout.palette.secondary.main,
-                  input: {
-                    padding: '10px 15px',
-                    border: 'none',
-                    color: themeLayout.palette.text.secondary,
-                    fontWeight: '400',
-                    fontFamily: 'Poppins, sans-serif',
-                    fontSize: '16px',
-                  },
-                  fieldset: {
-                    border: 'none',
-                  },
                 }}
                 autoComplete='email'
                 autoFocus
@@ -311,25 +296,12 @@ const FullLayout = () => {
                 sx={{
                   mt: '5px',
                   width: '400px',
-                  borderRadius: '15px',
-                  border: '1px solid',
-                  borderColor: themeLayout.palette.secondary.main,
-                  input: {
-                    padding: '10px 15px',
-                    border: 'none',
-                    fontWeight: '400',
-                    color: themeLayout.palette.text.secondary,
-                    fontFamily: 'Poppins, sans-serif',
-                    fontSize: '16px',
-                  },
-                  fieldset: {
-                    border: 'none',
-                  },
                 }}
                 type='password'
                 placeholder='Votre mot de passe'
                 autoComplete='current-password'
                 value={password}
+                disableUnderline
                 onChange={(e) => setPassword(e.target.value)}
               />
             </Grid>

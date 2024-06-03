@@ -60,5 +60,25 @@ export const theme = createTheme({
         },
       },
     },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          border: '1px solid',
+          borderColor: '#A5C2D7',
+          input: {
+            '&::placeholder': {
+              color: 'rgba(14, 20, 25, 0.5)',
+            },
+            padding: '10px 15px',
+            fontWeight: '400',
+            fontFamily: 'Poppins, sans-serif',
+            fontSize: '16px',
+          },
+          fieldset: {
+            border: 'none',
+          },
+        },
+      },
+    },
   },
 });
