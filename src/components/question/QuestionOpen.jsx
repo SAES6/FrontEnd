@@ -16,7 +16,6 @@ const QuestionOpen = ({
   const themeSummary = useTheme(theme);
   const screenSize = useMediaQuery('(min-width:1600px)');
   const [responseValue, setResponseValue] = useState('');
-  console.log(imgSrc);
 
   const handleResponseChange = (event) => {
     const { value } = event.target;

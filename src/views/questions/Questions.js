@@ -48,7 +48,7 @@ const Questions = () => {
       .then((response) => {
         setQuestions(response.data);
         const uniqueSections = [
-          ...new Set(response.data.map((question) => question.page)),
+          ...new Set(response.data.map((question) => question.section.order)),
         ];
         dispatch(
           setTotalSections({ id, totalSections: uniqueSections.length })
@@ -71,7 +71,6 @@ const Questions = () => {
 
   useEffect(() => {
     loadQuestions();
-    console.log(questionnaireState);
   }, [id]);
 
   const handleSetJournalist = () => {
@@ -98,7 +97,7 @@ const Questions = () => {
   useEffect(() => {
     if (questions.length > 0) {
       const array = questions
-        .filter((question) => question.page === currentSection)
+        .filter((question) => question.section.order === currentSection)
         .sort((a, b) => a.order - b.order);
       setCurrentQuestions(array);
     }

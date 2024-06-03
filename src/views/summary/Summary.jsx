@@ -5,7 +5,7 @@ import QuestionOpen from '../../components/question/QuestionOpen';
 import QuestionSimple from '../../components/question/QuestionSimple';
 import QuestionEchelle from '../../components/question/QuestionEchelle';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { json, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import useGET from '../../hooks/useGET';
 
@@ -32,7 +32,7 @@ const Summary = () => {
     if (response?.status >= 200 || response?.status < 300) {
       setQuestions(response?.data);
     }
-    console.log(questions);
+    console.log(responses);
   }, [response]);
 
   const getResponseForQuestion = (questionId) => {
@@ -59,7 +59,7 @@ const Summary = () => {
       <Grid>
         {Object.entries(
           questions.reduce((sections, question) => {
-            const section = question.page;
+            const section = question.section.order;
             if (!sections[section]) {
               sections[section] = [];
             }
@@ -116,7 +116,7 @@ const Summary = () => {
                   <QuestionSimple
                     key={question.questionId}
                     questionTitle={question.title}
-                    questionType={question.questionType}
+                    questionType={question.type}
                     questionChoices={question.choices}
                     imgSrc={question.img_src}
                     mode={'summary'}
