@@ -125,20 +125,6 @@ const QuestionOpen = ({
             sx={{
               mt: '5px',
               width: '100%',
-              borderRadius: '15px',
-              border: '1px solid',
-              borderColor: themeSummary.palette.secondary.main,
-              input: {
-                padding: '10px 15px',
-                border: 'none',
-                fontWeight: '400',
-                color: themeSummary.palette.text.secondary,
-                fontFamily: 'Poppins, sans-serif',
-                fontSize: '16px',
-              },
-              fieldset: {
-                border: 'none',
-              },
             }}
             type='text'
             placeholder='Saisissez votre réponse'
