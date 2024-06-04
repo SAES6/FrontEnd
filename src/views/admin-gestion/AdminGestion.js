@@ -33,8 +33,6 @@ const ColorButton = styled(Button)(({ theme }) => ({
 }));
 
 const AdminGestion = () => {
-  const screenSize = useMediaQuery("(min-width:1600px)");
-  const screenHeight = useMediaQuery("(min-height:800px)");
   const [response, setRequest] = useGET({ api: process.env.REACT_APP_API_URL });
   const themeGestion = useTheme(theme);
   const [adminsList, setAdminsList] = useState([]);
@@ -328,7 +326,7 @@ const AdminGestion = () => {
         container
         sx={{
           display: "flex",
-          alignItems: "start",
+          alignItems: "stretch",
           justifyContent: "start",
           alignContent: "start",
           height: "100%",
@@ -353,7 +351,6 @@ const AdminGestion = () => {
                       : "transparent",
                   mr: "10px",
                   p: "20px",
-                  height: !screenHeight ? "15%" : "38%",
                   border: admin.principal == true ? "none" : "1px solid",
                   borderColor: themeGestion.palette.secondary.main,
                 }}
@@ -776,7 +773,7 @@ const AdminGestion = () => {
             alignItems: "center",
             justifyContent: "center",
             width: "400px",
-            height: !screenHeight ? "15%" : "38%",
+            alignSelf: "stretch",
             alignContent: "center",
             borderRadius: "15px",
             backgroundColor: "transparent",
