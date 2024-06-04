@@ -1,42 +1,23 @@
 import {useState, useEffect} from "react";
-import {toast} from "react-toastify";
-import axios from "axios";
+import {callApiPost} from "../utils/callApi";
 
-/**
- * Hook personaliser : Pour toutes les requetes POST vers les apis.
- */
 const usePOST = () => {
     const [initialRequest, setInitialRequest] = useState(null);
     const [responses, setResponses] = useState({});
 
     useEffect(() => {
-        const callApi = async () => {
-            if (initialRequest) {
-                const {id, url, data, authorization, api, errorMessage} = initialRequest;
+        const fetchApi = async () => {
+            if (initialRequest && initialRequest?.url !== "") {
                 try {
-                    if (url !== "") {
-                        const result = await axios
-                            .create({
-                                baseURL: api,
-                            })
-                            .post(url, data, authorization);
-                        setResponses(prev => ({...prev, [id]: result}));
-                    }
-                } catch (error) {
-                    toast.error(errorMessage, {
-                        position: "top-center",
-                        style: {
-                            fontFamily: "Poppins, sans-serif",
-                            borderRadius: "15px",
-                            textAlign: "center",
-                        },
-                    });
-                    setResponses(prev => ({...prev, [id]: error.response}));
+                    const result = await callApiPost(initialRequest);
+                    setResponses(prev => ({...prev, [initialRequest.id]: result}));
+                } catch (errorResponse) {
+                    setResponses(prev => ({...prev, [initialRequest.id]: errorResponse}));
                 }
             }
         };
 
-        callApi();
+        fetchApi();
     }, [initialRequest]);
 
     return [responses, setInitialRequest];

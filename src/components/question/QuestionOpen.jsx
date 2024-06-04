@@ -2,11 +2,13 @@ import { Grid, Typography, useMediaQuery, TextField, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { theme } from '../theme';
+import { theme } from '../../theme';
+import Enonce from './Enonce';
 
 const QuestionOpen = ({
   children,
   questionTitle,
+  imgSrc,
   onResponseChange,
   userResponse,
   mode,
@@ -26,7 +28,7 @@ const QuestionOpen = ({
       className='question'
       container
       sx={{
-        width: screenSize ? '1500px' : '1300px',
+        width: '100%',
         height: 'auto',
         alignItems: 'center',
         justifyContent: 'center',
@@ -81,35 +83,7 @@ const QuestionOpen = ({
           </Typography>
         </Grid>
       </Grid>
-      <Grid
-        className='enonce'
-        sx={{
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <Typography
-          sx={{
-            fontFamily: 'Poppins, sans-serif',
-            fontSize: '16px',
-            fontWeight: '600',
-            lineHeight: '24px',
-          }}
-        >
-          Enoncé
-        </Typography>
-        <Typography
-          sx={{
-            fontFamily: 'Poppins, sans-serif',
-            fontSize: '16px',
-            fontWeight: '400',
-            lineHeight: '24px',
-          }}
-        >
-          {children}
-        </Typography>
-      </Grid>
+      <Enonce children={children} imgSrc={imgSrc} />
       {mode === 'question' ? (
         <Grid
           className='answer'

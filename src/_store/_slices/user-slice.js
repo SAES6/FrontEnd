@@ -11,10 +11,12 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     login(state, action) {
-      state.token = action.payload;
+      state.token = action.payload.token;
+      state.adminPrincipal = action.payload.admin;
     },
     logout(state) {
-      state.token = null;
+      state.token = initialState.token;
+      state.adminPrincipal = initialState.adminPrincipal;
     },
     setAdminPrincipal(state, action) {
       state.adminPrincipal = action.payload;
