@@ -2,7 +2,8 @@ import { Grid, Typography, useMediaQuery, Slider } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { theme } from '../theme';
+import { theme } from '../../theme';
+import Enonce from './Enonce';
 
 const QuestionEchelle = ({
   children,
@@ -10,6 +11,7 @@ const QuestionEchelle = ({
   questionSliderMin,
   questionSliderMax,
   questionSliderGap,
+  imgSrc,
   onResponseChange,
   userResponse,
   mode,
@@ -42,7 +44,7 @@ const QuestionEchelle = ({
       className='question'
       container
       sx={{
-        width: screenSize ? '1500px' : '1300px',
+        width: '100%',
         height: 'auto',
         alignItems: 'center',
         justifyContent: 'center',
@@ -98,37 +100,7 @@ const QuestionEchelle = ({
           </Typography>
         </Grid>
       </Grid>
-      <Grid
-        className='enonce'
-        sx={{
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <Typography
-          sx={{
-            fontFamily: 'Poppins, sans-serif',
-            fontSize: '16px',
-            fontWeight: '600',
-            lineHeight: '24px',
-            color: themeQuestion.palette.text.primary,
-          }}
-        >
-          Enoncé
-        </Typography>
-        <Typography
-          sx={{
-            fontFamily: 'Poppins, sans-serif',
-            fontSize: '16px',
-            fontWeight: '400',
-            lineHeight: '24px',
-            color: themeQuestion.palette.text.primary,
-          }}
-        >
-          {children}
-        </Typography>
-      </Grid>
+      <Enonce children={children} imgSrc={imgSrc} />
       {mode === 'question' ? (
         <Grid
           className='slider'
@@ -152,6 +124,10 @@ const QuestionEchelle = ({
           className='slider'
           sx={{
             width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '20px',
           }}
         >
           <Slider
@@ -172,6 +148,67 @@ const QuestionEchelle = ({
               },
             }}
           />
+          <Grid
+            sx={{
+              width: 'fit-content',
+              padding: '10px 15px',
+              border: 'solid 1px',
+              borderColor: themeQuestion.palette.secondary.main,
+              gap: '5px',
+              borderRadius: '15px',
+            }}
+          >
+            <Grid
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+              }}
+            >
+              <FontAwesomeIcon
+                icon='fa-solid fa-user'
+                style={{
+                  fontSize: '16px',
+                  color: themeQuestion.palette.primary.main,
+                }}
+              />
+              <Typography
+                sx={{
+                  marginLeft: '5px',
+                  fontFamily: 'Poppins, sans-serif',
+                  fontSize: '16px',
+                  fontWeight: '400',
+                  color: themeQuestion.palette.primary.main,
+                }}
+              >
+                6.1 moyenne des utilisateurs
+              </Typography>
+            </Grid>
+            <Grid
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+              }}
+            >
+              <FontAwesomeIcon
+                icon='fa-solid fa-user-secret'
+                style={{
+                  fontSize: '16px',
+                  color: themeQuestion.palette.secondary.main,
+                }}
+              />
+              <Typography
+                sx={{
+                  marginLeft: '5px',
+                  fontFamily: 'Poppins, sans-serif',
+                  fontSize: '16px',
+                  fontWeight: '400',
+                  color: themeQuestion.palette.secondary.main,
+                }}
+              >
+                5.7 moyenne des journalistes
+              </Typography>
+            </Grid>
+          </Grid>
         </Grid>
       )}
     </Grid>

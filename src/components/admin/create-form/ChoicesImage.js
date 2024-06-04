@@ -1,9 +1,15 @@
 import {FormControl, Grid, Button} from "@mui/material";
-import {useState, useRef} from "react";
+import {useState, useRef, useEffect} from "react";
 
-const ChoicesImage = ({deleteHandler, updateChoiceImage}) => {
+const ChoicesImage = ({image_url, deleteHandler, updateChoiceImage}) => {
     const [imagePreviewUrl, setImagePreviewUrl] = useState('');
     const fileInputRef = useRef(null);
+
+    useEffect(() => {
+        if (image_url) {
+            setImagePreviewUrl(image_url);
+        }
+    }, [image_url]);
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];

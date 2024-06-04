@@ -7,14 +7,11 @@ import {
   IconButton,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { styled } from "@mui/material/styles";
 import { theme } from "../../theme";
 import { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CloseIcon from "@mui/icons-material/Close";
-import { toast } from "react-toastify";
-import axios from "axios";
 import useGET from "../../hooks/useGET";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../../_store/_slices/user-slice";
@@ -22,12 +19,13 @@ import { userActions } from "../../_store/_slices/user-slice";
 import Caroussel from "../../components/home/Caroussel";
 
 const Home = () => {
+    const tokenUser = useSelector((state) => state.user.tokenUser);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const themeLayout = useTheme(theme);
-  const [response, setInitialRequest] = useGET({
-    api: process.env.REACT_APP_API_URL,
-  });
+  const [response, setInitialRequest] = useGET();
+console.log('home')
+  const [responseCreateToken, setInitialRequestCreateToken] = useGET();
   const screenSize = useMediaQuery("(min-width:1600px)");
   const [openConsentPopup, setOpenConsentPopup] = useState(false);
 
@@ -47,7 +45,6 @@ const Home = () => {
     setInitialRequest({
       url: "/questionnaire/byToken?token=" + userToken,
       errorMessage: "Aucun questionnaire",
-      api: process.env.REACT_APP_API_URL,
     });
   };
 
@@ -83,8 +80,18 @@ const Home = () => {
   };
 
   useEffect(() => {
+      if (!tokenUser)
+          setInitialRequestCreateToken({url: "/createToken",});
     loadQuestionnaires();
   }, []);
+
+    useEffect(() => {
+        if (responseCreateToken?.status >= 200 && responseCreateToken?.status < 300) {
+            dispatch(userActions.setTokenUser(responseCreateToken.data.token));
+        } else {
+            dispatch(userActions.removeTokenUser());
+        }
+    }, [responseCreateToken]);
 
   return (
     <Grid

@@ -1,24 +1,27 @@
 import React, {useState} from 'react';
 import {TextField, Slider, Box, Grid} from '@mui/material';
 
-const Cursor = ({choices, setChoices}) => {
+const Cursor = ({choices, updateChoices}) => {
+    const cursorValue = choices[0];
+console.log(choices)
     // For counter the error on the uncontrolled slider
-    const [sliderValue, setSliderValue] = useState((choices.min + choices.max) / 2);
+    const [sliderValue, setSliderValue] = useState((cursorValue.min + cursorValue.max) / 2);
 
     const handleMinChange = (event) => {
         const newMin = Number(event.target.value);
-        setChoices(prevState => ({...prevState, min: newMin}));
+        updateChoices([{...cursorValue, min: newMin}]);
         if (sliderValue < newMin) setSliderValue(newMin);
     };
 
     const handleMaxChange = (event) => {
         const newMax = Number(event.target.value);
-        setChoices(prevState => ({...prevState, max: newMax}));
+        console.log(newMax)
+        updateChoices([{...cursorValue, max: newMax}]);
         if (sliderValue > newMax) setSliderValue(newMax);
     };
 
     const handleStepChange = (event) => {
-        setChoices(prevState => ({...prevState, step: parseFloat(event.target.value)}));
+        updateChoices([{...cursorValue, step: parseFloat(event.target.value)}]);
     };
 
     const handleSliderChange = (_, newValue) => {
@@ -32,7 +35,7 @@ const Cursor = ({choices, setChoices}) => {
                     <TextField
                         label="Minimum Value"
                         type="number"
-                        value={choices.min}
+                        value={cursorValue.min}
                         onChange={handleMinChange}
                         size="small"
                         fullWidth
@@ -42,9 +45,9 @@ const Cursor = ({choices, setChoices}) => {
                 <Grid item xs={8} sx={{textAlign: 'center'}}>
                     <Slider
                         valueLabelDisplay="auto"
-                        min={choices.min}
-                        max={choices.max}
-                        step={choices.step}
+                        min={cursorValue.min}
+                        max={cursorValue.max}
+                        step={cursorValue.step}
                         value={sliderValue}
                         onChange={handleSliderChange}
                         sx={{margin: '0 auto', width: '80%'}}
@@ -54,7 +57,7 @@ const Cursor = ({choices, setChoices}) => {
                     <TextField
                         label="Maximum Value"
                         type="number"
-                        value={choices.max}
+                        value={cursorValue.max}
                         onChange={handleMaxChange}
                         fullWidth
                         size="small"
@@ -68,7 +71,7 @@ const Cursor = ({choices, setChoices}) => {
                             label="Step Value"
                             type="number"
                             inputProps={{step: 0.1, min: 0.1, max: 5.0}}
-                            value={choices.step}
+                            value={cursorValue.step}
                             onChange={handleStepChange}
                             sx={{width: '50%'}}
                             size="small"

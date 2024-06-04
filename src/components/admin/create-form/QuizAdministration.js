@@ -1,16 +1,18 @@
-import React, {useState, useRef, useEffect} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import NewQuestion from "./NewQuestion";
-import {v4 as uuid} from "uuid";
 import {Box, Button, IconButton} from "@mui/material";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {postSectionInfos} from "../../../_store/_actions/quiz-actions";
 
 const QuizAdministration = () => {
     const savedSectionInfos = useSelector(state => state.quiz.currentSectionInfos);
     const [sectionInfos, setSectionInfos] = useState([]);
-console.log(sectionInfos)
+
     const questionRefs = useRef([]);
 
+    const dispatch = useDispatch();
+console.log(savedSectionInfos)
     useEffect(() => {
         if (savedSectionInfos.length > 0)
             setSectionInfos(savedSectionInfos)
@@ -26,27 +28,31 @@ console.log(sectionInfos)
 
     const gatherData = () => {
         const allData = questionRefs.current.map((ref) => ref.current?.getData());
+        console.log(allData)
+        dispatch(postSectionInfos(allData));
     };
 
     const addNewQuestionHandler = () => {
-        setSectionInfos((prevState) => [
+        setSectionInfos(prevState => [
             ...prevState,
-            {id: uuid(), qNumber: prevState.length},
+            {id: prevState.length + 1, order: prevState.length + 1},
         ]);
         questionRefs.current.push(React.createRef());
     };
 
-    const handleClose = (qNumber) => {
-        setSectionInfos((prevState) => {
+    const handleClose = (order) => {
+        setSectionInfos(prevState => {
             const newArray = [...prevState];
-            newArray.splice(qNumber, 1);
-            newArray.forEach((item, index) => (item.qNumber = index));
-            return newArray;
+            newArray.splice(order, 1);
+
+            return newArray.map((item, index) => {
+                return {...item, order: index + 1};
+            });
         });
     };
 
-    const previewHandler = () => {
-    };
+
+    const previewHandler = () => {};
 
     return (
         <>

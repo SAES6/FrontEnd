@@ -1,7 +1,7 @@
 import {quizActions} from "../_slices/quiz-slice";
-import {callApiGet} from "../../utils/callApi";
+import {callApiGet, callApiPost} from "../../utils/callApi";
 
-export const getQuizOrSectionDetails = (quizId, sectionId) => {
+export const getSectionDetails = (quizId, sectionId) => {
     return async (dispatch, getState) => {
         const state = getState();
         const token = state.user.token;
@@ -65,6 +65,31 @@ export const getQuizDetails = () => {
                 dispatch(quizActions.setQuizzesInfos(quizzesList || []));
         } catch (e) {
             console.error(e);
+        }
+    };
+};
+
+export const postSectionInfos = (sectionInfos) => {
+    return async (dispatch, getState) => {
+        const state = getState();
+        const token = state.user.token;
+
+        const fetchFirstSectionDetails = async (sectionInfos) => {
+            const response = await callApiPost({
+                url: `questions/loadBySection?section_id=${sectionInfos.id}`,
+                data: {sectionInfos},
+                authorization: {headers: {Authorization: `Bearer ${token}`}},
+                errorMessage: "Could not fetch data!"
+            });
+
+            return response.data;
+        };
+
+        dispatch(quizActions.setCurrentSectionInfos(sectionInfos || {}));
+
+        try {
+            //await fetchFirstSectionDetails(sectionInfos);
+        } catch (e) {
         }
     };
 };
