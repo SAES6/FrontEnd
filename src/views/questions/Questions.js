@@ -14,14 +14,18 @@ import {
   setTotalSections,
   setProgression,
   addResponse,
-} from "../../_store/_slices/questionnaire-slice";
-
-import useGET from "../../hooks/useGET";
+} from '../../_store/_slices/questionnaire-slice';
+import { toast } from 'react-toastify';
+import useGET from '../../hooks/useGET';
+import usePost from '../../hooks/usePOST';
+import { postResponses } from '../../_store/_actions/questionnaire-actions';
+import { userActions } from '../../_store/_slices/user-slice';
 
 const Questions = () => {
   const themeQuestions = useTheme(theme);
-  const screenSize = useMediaQuery("(min-width:1600px)");
+  const screenSize = useMediaQuery('(min-width:1600px)');
   const [response, setInitialRequest] = useGET();
+  const [postReponse, setInitialPostRequest] = usePost();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -46,17 +50,18 @@ const Questions = () => {
   const loadQuestions = () => {
     setInitialRequest({
       url: `/questionnaire/loadById?id=${id}`,
-      errorMessage: "Erreur lors du chargement des questions",
+      errorMessage: 'Erreur lors du chargement des questions',
     });
   };
 
   useEffect(() => {
     if (response && response.status >= 200 && response.status < 300) {
       setQuestions(response.data);
+      console.log(response.data);
       const uniqueSections = [
         ...new Set(response.data.map((question) => question.section.id)),
       ];
-      dispatch(setTotalSections({ id, totalSections: uniqueSections.length }));
+      // dispatch(setTotalSections({ id, totalSections: uniqueSections.length }));
       dispatch(setQuestionnaire({ id, totalSections: uniqueSections.length }));
     }
   }, [response]);
@@ -75,16 +80,10 @@ const Questions = () => {
   };
 
   const handleValidateRole = () => {
-    if (userRole === null) {
-      let finalUserRole = 'user';
-      localStorage.setItem('userRole', finalUserRole);
-      setUserRole(finalUserRole);
-      setModalRole(false);
-    } else {
-      localStorage.setItem('userRole', userRole);
-      setUserRole(userRole);
-      setModalRole(false);
-    }
+    // localStorage.setItem('userRole', finalUserRole);
+    dispatch(userActions.setRoleUser(userRole && 'user'));
+    setUserRole(userRole && 'user');
+    setModalRole(false);
   };
 
   useEffect(() => {
@@ -109,22 +108,44 @@ const Questions = () => {
   };
 
   const nextSection = () => {
-    Object.values(localResponses).forEach((response) => {
-      dispatch(addResponse({ questionnaireId: id, ...response }));
-    });
-
     if (currentSection >= totalSections) {
       updateProgression(currentSection);
       const newSection = currentSection + 1;
-      dispatch(setCurrentSection({ id, section: newSection }));
-      navigate(`/summary/${id}`);
+      dispatch(postResponses(localResponses, id, navigate));
+      // dispatch(setCurrentSection({ id, section: newSection }));
+      // setInitialPostRequest({
+      //   id: 'insertResponse',
+      //   url: `/response/${userToken}/${userRole}`,
+      //   data: {
+      //     responses: JSON.stringify(responses),
+      //   },
+      //   errorMessage: "Erreur lors de l'ajout des réponses de l'utilisateur",
+      // });
+      // navigate(`/summary/${id}`);
     } else {
+      Object.values(localResponses).forEach((response) => {
+        dispatch(addResponse({ questionnaireId: id, ...response }));
+      });
       updateProgression(currentSection);
       const newSection = currentSection + 1;
       dispatch(setCurrentSection({ id, section: newSection }));
       setLocalResponses({});
     }
   };
+
+  useEffect(() => {
+    if (postReponse?.status >= 200 && postReponse?.status < 300) {
+      toast.success('Réponses ajoutés avec succès', {
+        position: 'top-center',
+        style: {
+          fontFamily: 'Poppins, sans-serif',
+          borderRadius: '15px',
+          textAlign: 'center',
+        },
+      });
+      navigate(`/summary/${id}`);
+    }
+  }, [postReponse]);
 
   useEffect(() => {
     if (currentSection > totalSections) {
