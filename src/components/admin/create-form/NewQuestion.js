@@ -8,6 +8,8 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { theme } from '../../../theme';
+import { useTheme } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
 import ImageIcon from '@mui/icons-material/Image';
 import HideImageIcon from '@mui/icons-material/HideImage';
@@ -20,6 +22,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Pending = () => <></>;
 
@@ -30,9 +33,16 @@ const COMPONENT_MAP = {
   Curseur: Cursor,
 };
 
-const QType = ['Choix unique', 'Choix multiple', 'Libre', 'Curseur'];
+const QType = [
+  { label: 'Choix unique', icon: 'fa-solid fa-bullseye' },
+  { label: 'Choix multiple', icon: 'fa-solid fa-list-check' },
+  { label: 'Question ouverte', icon: 'fa-solid fa-feather' },
+  { label: 'Échelle', icon: 'fa-solid fa-sliders' },
+];
 
 const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
+  const muiTheme = useTheme(theme);
+
   const [questionData, setQuestionData] = useState({
     type: '',
     enonce: '',
@@ -178,21 +188,40 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
           >
             <FormControl fullWidth>
               <Select
-                value={questionData.type || ''}
-                size='small'
-                onChange={(e) => selectChangeHandler(e.target.value)}
+                value={QType.find((q) => q.label === questionData.type) || ''}
+                onChange={(e) => {
+                  selectChangeHandler(e.target.value.label);
+                }}
                 displayEmpty
                 inputProps={{ 'aria-label': 'Without label' }}
-                sx={{
-                  border: 'solid',
-                  borderColor: 'blue',
-                  borderRadius: '15px',
-                  '& > fieldset': { border: 'none' },
-                }}
+                renderValue={(value) =>
+                  value === '' ? (
+                    <Typography
+                      sx={{ color: 'text.secondary', fontSize: '16px' }}
+                    >
+                      Type de question
+                    </Typography>
+                  ) : (
+                    <>
+                      <FontAwesomeIcon
+                        icon={`fa-fw ${value?.icon}`}
+                        fixedWidth
+                        color={muiTheme.palette.text.secondary}
+                      />
+                      {value?.label}
+                    </>
+                  )
+                }
+                sx={{ height: '100%' }}
               >
                 {QType.map((type, index) => (
                   <MenuItem value={type} key={index}>
-                    {type}
+                    <FontAwesomeIcon
+                      icon={`fa-fw ${type?.icon}`}
+                      fixedWidth
+                      color={muiTheme.palette.text.secondary}
+                    />
+                    {type?.label}
                   </MenuItem>
                 ))}
               </Select>

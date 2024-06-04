@@ -90,6 +90,10 @@ export const theme = createTheme({
           fontSize: '16px',
           padding: '10px 15px',
           letterSpacing: 'normal',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '7px',
+          fontWeight: '600',
         },
       },
     },
@@ -98,6 +102,9 @@ export const theme = createTheme({
         root: {
           fontWeight: '600',
           fontSize: '16px',
+        },
+        gutters: {
+          gap: '7px',
         },
       },
     },
