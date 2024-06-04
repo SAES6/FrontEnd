@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../../_store/_slices/user-slice";
 
 import Caroussel from "../../components/home/Caroussel";
+import {questionnaireActions} from "../../_store/_slices/questionnaire-slice";
 
 const Home = () => {
     const tokenUser = useSelector((state) => state.user.tokenUser);
@@ -72,6 +73,7 @@ console.log('home')
   const handleConsent = () => {
     localStorage.setItem("user_consent", "true");
     setOpenConsentPopup(false);
+    dispatch(questionnaireActions.setCurrentQuestionnaireId(selectedQuestionnaire.id))
     navigate(`/questions/${selectedQuestionnaire.id}`);
   };
 
