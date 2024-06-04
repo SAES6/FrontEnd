@@ -21,19 +21,17 @@ const LoginModal = ({open, setOpen}) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (response) {
-            const responseTarget = response['login'];
-            if (responseTarget?.status >= 200 && responseTarget?.status < 300) {
-                dispatch(userActions.login({
-                    token: responseTarget.data.token,
-                    admin: responseTarget.data.user.principal
-                }));
-                setOpen(false);
-                navigate("/admin-console");
-            }
+        const responseTarget = response['login'];
+        if (responseTarget?.status >= 200 && responseTarget?.status < 300) {
+            dispatch(userActions.login({
+                token: responseTarget.data.token,
+                admin: responseTarget.data.user.principal
+            }));
+            setOpen(false);
+            navigate("/admin-console");
         }
-    }, [response]);
-console.log('modal')
+    }, [response['login']]);
+    console.log('modal')
     const handleLogin = () => {
         setInitialRequest({
             id: 'login',

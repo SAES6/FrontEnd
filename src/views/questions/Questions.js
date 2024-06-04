@@ -3,8 +3,6 @@ import { Grid, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { theme } from '../../theme';
 import { useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import QuestionList from '../../components/question/QuestionList';
 import QuestionnaireNavigation from '../../components/question/QuestionnaireNavigation';
