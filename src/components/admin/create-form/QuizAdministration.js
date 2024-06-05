@@ -4,32 +4,32 @@ import NewQuestion from "./NewQuestion";
 import {Box, Button, IconButton} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {postSectionInfos} from "../../../_store/_actions/quiz-actions";
+import NewQuiz from "./NewQuiz";
 
 const QuizAdministration = () => {
     const savedSectionInfos = useSelector(state => state.quiz.currentSectionInfos);
+    const currentSectionId = useSelector(state => state.quiz.currentSectionId);
     const [sectionInfos, setSectionInfos] = useState([]);
+    const [quizInfos, setQuizInfos] = useState({name: '', duree: 0, description: ''});
 
     const questionRefs = useRef([]);
 
     const dispatch = useDispatch();
-console.log(savedSectionInfos)
+
     useEffect(() => {
-        if (savedSectionInfos.length > 0)
-            setSectionInfos(savedSectionInfos)
+        setSectionInfos(savedSectionInfos.questions)
     }, [savedSectionInfos]);
 
     useEffect(() => {
         if (questionRefs.current.length !== sectionInfos.length) {
-            questionRefs.current = sectionInfos.map(
-                (info, index) => questionRefs.current[index] || React.createRef()
-            );
+            questionRefs.current = sectionInfos.map((info, index) => questionRefs.current[index] || React.createRef());
         }
     }, [sectionInfos]);
 
     const gatherData = () => {
         const allData = questionRefs.current.map((ref) => ref.current?.getData());
-        console.log(allData)
-        dispatch(postSectionInfos(allData));
+
+        dispatch(postSectionInfos({quizInfos, questions: allData}));
     };
 
     const addNewQuestionHandler = () => {
@@ -51,7 +51,6 @@ console.log(savedSectionInfos)
         });
     };
 
-
     const previewHandler = () => {};
 
     return (
@@ -71,13 +70,17 @@ console.log(savedSectionInfos)
                 </Button>
             </Box>
             {sectionInfos.length > 0 && sectionInfos.map((section, index) => (
-                <NewQuestion
-                    key={section.id + section.order}
-                    ref={questionRefs.current[index]}
-                    handleClose={() => handleClose(index)}
-                    index={index}
-                    sectionInfos={section}
-                />
+                <React.Fragment key={section.id + section.order}>
+                    {currentSectionId === 1 &&
+                        <NewQuiz setQuizInfos={setQuizInfos} quizInfos={quizInfos}/>
+                    }
+                    <NewQuestion
+                        ref={questionRefs.current[index]}
+                        handleClose={() => handleClose(index)}
+                        index={index}
+                        sectionInfos={section}
+                    />
+                </React.Fragment>
             ))}
             <Box
                 sx={{display: "flex", alignItems: "center", justifyContent: "center"}}
