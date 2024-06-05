@@ -7,35 +7,33 @@ import {
   IconButton,
   TextField,
   InputAdornment,
-} from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import { styled } from "@mui/material/styles";
-import { theme } from "../../theme";
-import { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CloseIcon from "@mui/icons-material/Close";
-import { toast } from "react-toastify";
-import axios from "axios";
-import useGET from "../../hooks/useGET";
-import useDELETE from "../../hooks/useDELETE";
-import usePOST from "../../hooks/usePOST";
-import usePUT from "../../hooks/usePUT";
-import { useDispatch, useSelector } from "react-redux";
-import { userActions } from "../../_store/_slices/user-slice";
+} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
+import { theme } from '../../theme';
+import { useEffect, useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import CloseIcon from '@mui/icons-material/Close';
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import useGET from '../../hooks/useGET';
+import useDELETE from '../../hooks/useDELETE';
+import usePOST from '../../hooks/usePOST';
+import usePUT from '../../hooks/usePUT';
+import { useDispatch, useSelector } from 'react-redux';
+import { userActions } from '../../_store/_slices/user-slice';
 const ColorButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
   backgroundColor: theme.palette.primary.main,
-  transition: "ease 0.3s",
-  "&:hover": {
+  transition: 'ease 0.3s',
+  '&:hover': {
     backgroundColor: theme.palette.secondary.main,
   },
 }));
 
 const AdminGestion = () => {
-  const screenSize = useMediaQuery("(min-width:1600px)");
-  const screenHeight = useMediaQuery("(min-height:900px)");
-  const [response, setRequest] = useGET();
+  const [response, setRequest] = useGET({ api: process.env.REACT_APP_API_URL });
   const themeGestion = useTheme(theme);
   const [adminsList, setAdminsList] = useState([]);
   const [sortedAdmins, setSortedAdmins] = useState([]);
@@ -49,58 +47,58 @@ const AdminGestion = () => {
   const [editPasswordButton, setEditPasswordButton] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState();
-  const [newPassword, setNewPassword] = useState("");
+  const [newPassword, setNewPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
   const navigate = useNavigate();
 
-  const [addUsername, setAddUsername] = useState("");
-  const [addEmail, setAddEmail] = useState("");
-  const [addPassword, setAddPassword] = useState("");
-  const [addPasswordConfirm, setAddPasswordConfirm] = useState("");
+  const [addUsername, setAddUsername] = useState('');
+  const [addEmail, setAddEmail] = useState('');
+  const [addPassword, setAddPassword] = useState('');
+  const [addPasswordConfirm, setAddPasswordConfirm] = useState('');
   const [showPasswordAdd, setShowPasswordAdd] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
   const tokenAdmin = useSelector((state) => state.user.token);
   const principalAdmin = useSelector((state) => state.user.adminPrincipal);
   const dispatch = useDispatch();
 
-  console.log(principalAdmin, "principalAdmin");
+  console.log(principalAdmin, 'principalAdmin');
 
   useEffect(() => {
     if (response?.status >= 200 && response?.status < 300) {
       setAdminsList(response?.data ? response?.data : []);
     } else if (response?.status === 404) {
-      navigate("/");
+      navigate('/');
     }
   }, [response]);
 
   useEffect(() => {
     if (responseEdit?.status >= 200 && responseEdit?.status < 300) {
-      if (selectedEditState === "email") {
+      if (selectedEditState === 'email') {
         toast.success("Email de l'admin mis à jour", {
-          position: "top-center",
+          position: 'top-center',
           style: {
-            fontFamily: "Poppins, sans-serif",
-            borderRadius: "15px",
-            textAlign: "center",
+            fontFamily: 'Poppins, sans-serif',
+            borderRadius: '15px',
+            textAlign: 'center',
           },
         });
-      } else if (selectedEditState === "username") {
+      } else if (selectedEditState === 'username') {
         toast.success("Nom de l'admin mis à jour", {
-          position: "top-center",
+          position: 'top-center',
           style: {
-            fontFamily: "Poppins, sans-serif",
-            borderRadius: "15px",
-            textAlign: "center",
+            fontFamily: 'Poppins, sans-serif',
+            borderRadius: '15px',
+            textAlign: 'center',
           },
         });
-      } else if (selectedEditState === "password") {
+      } else if (selectedEditState === 'password') {
         toast.success("Mot de passe de l'admin mis à jour", {
-          position: "top-center",
+          position: 'top-center',
           style: {
-            fontFamily: "Poppins, sans-serif",
-            borderRadius: "15px",
-            textAlign: "center",
+            fontFamily: 'Poppins, sans-serif',
+            borderRadius: '15px',
+            textAlign: 'center',
           },
         });
       }
@@ -110,18 +108,18 @@ const AdminGestion = () => {
 
   useEffect(() => {
     if (responseDelete?.status >= 200 && responseDelete?.status < 300) {
-      toast.success("Admin supprimé avec succès", {
-        position: "top-center",
+      toast.success('Admin supprimé avec succès', {
+        position: 'top-center',
         style: {
-          fontFamily: "Poppins, sans-serif",
-          borderRadius: "15px",
-          textAlign: "center",
+          fontFamily: 'Poppins, sans-serif',
+          borderRadius: '15px',
+          textAlign: 'center',
         },
       });
-      if (responseDelete.data == "deconnect") {
+      if (responseDelete.data == 'deconnect') {
         dispatch(userActions.logout());
         dispatch(userActions.removeAdminPrincipal());
-        navigate("/");
+        navigate('/');
       } else {
         loadAdminsList();
       }
@@ -131,12 +129,12 @@ const AdminGestion = () => {
 
   useEffect(() => {
     if (responseAdd?.status >= 200 && responseAdd?.status < 300) {
-      toast.success("Admin ajouté avec succès", {
-        position: "top-center",
+      toast.success('Admin ajouté avec succès', {
+        position: 'top-center',
         style: {
-          fontFamily: "Poppins, sans-serif",
-          borderRadius: "15px",
-          textAlign: "center",
+          fontFamily: 'Poppins, sans-serif',
+          borderRadius: '15px',
+          textAlign: 'center',
         },
       });
       loadAdminsList();
@@ -146,35 +144,35 @@ const AdminGestion = () => {
 
   const handleAddAdmin = () => {
     if (addPassword !== addPasswordConfirm) {
-      toast.error("Les mots de passe ne correspondent pas", {
-        position: "top-center",
+      toast.error('Les mots de passe ne correspondent pas', {
+        position: 'top-center',
         style: {
-          fontFamily: "Poppins, sans-serif",
-          borderRadius: "15px",
-          textAlign: "center",
+          fontFamily: 'Poppins, sans-serif',
+          borderRadius: '15px',
+          textAlign: 'center',
         },
       });
       return;
     }
     if (
-      addUsername === "" ||
-      addEmail === "" ||
-      addPassword === "" ||
-      addPasswordConfirm === ""
+      addUsername === '' ||
+      addEmail === '' ||
+      addPassword === '' ||
+      addPasswordConfirm === ''
     ) {
-      toast.error("Veuillez remplir tous les champs", {
-        position: "top-center",
+      toast.error('Veuillez remplir tous les champs', {
+        position: 'top-center',
 
         style: {
-          fontFamily: "Poppins, sans-serif",
-          borderRadius: "15px",
-          textAlign: "center",
+          fontFamily: 'Poppins, sans-serif',
+          borderRadius: '15px',
+          textAlign: 'center',
         },
       });
       return;
     }
     setRequestAdd({
-      url: "/admin/add",
+      url: '/admin/add',
       data: {
         username: addUsername,
         email: addEmail,
@@ -190,9 +188,9 @@ const AdminGestion = () => {
   };
 
   const updateEmail = (admin) => {
-    setSelectedEditState("email");
+    setSelectedEditState('email');
     setRequestEdit({
-      url: "/admin/updateEmail",
+      url: '/admin/updateEmail',
       data: {
         id: admin.id,
         email: admin.email,
@@ -207,9 +205,9 @@ const AdminGestion = () => {
   };
 
   const updateUsername = (admin) => {
-    setSelectedEditState("username");
+    setSelectedEditState('username');
     setRequestEdit({
-      url: "/admin/updateUsername",
+      url: '/admin/updateUsername',
       data: {
         id: admin.id,
         username: admin.username,
@@ -219,14 +217,14 @@ const AdminGestion = () => {
           Authorization: `Bearer ` + tokenAdmin,
         },
       },
-      errorMessage: "Erreur lors de la mise à jour du nom",
+      errorMessage: 'Erreur lors de la mise à jour du nom',
     });
   };
 
   const updatePassword = (admin) => {
-    setSelectedEditState("password");
+    setSelectedEditState('password');
     setRequestEdit({
-      url: "/admin/updatePassword",
+      url: '/admin/updatePassword',
       data: {
         id: admin.id,
         password: newPassword,
@@ -236,7 +234,7 @@ const AdminGestion = () => {
           Authorization: `Bearer ` + tokenAdmin,
         },
       },
-      errorMessage: "Erreur lors de la mise à jour du mot de passe",
+      errorMessage: 'Erreur lors de la mise à jour du mot de passe',
     });
   };
 
@@ -296,7 +294,7 @@ const AdminGestion = () => {
           Authorization: `Bearer ` + tokenAdmin,
         },
       },
-      errorMessage: "Aucun admin",
+      errorMessage: 'Aucun admin',
     });
   };
 
@@ -304,18 +302,18 @@ const AdminGestion = () => {
     <Grid
       container
       sx={{
-        height: "100%",
-        width: "100%",
-        alignItems: "start",
-        justifyContent: "center",
-        alignContent: "start",
+        height: '100%',
+        width: '100%',
+        alignItems: 'start',
+        justifyContent: 'center',
+        alignContent: 'start',
       }}
     >
       <Grid
         container
         sx={{
           display: "flex",
-          alignItems: "start",
+          alignItems: "stretch",
           justifyContent: "start",
           alignContent: "start",
           height: "100%",
@@ -328,31 +326,30 @@ const AdminGestion = () => {
                 container
                 key={index}
                 sx={{
-                  display: "flex",
-                  alignItems: "start",
-                  justifyContent: "start",
-                  alignContent: "start",
-                  width: "400px",
-                  borderRadius: "15px",
+                  display: 'flex',
+                  alignItems: 'start',
+                  justifyContent: 'start',
+                  alignContent: 'start',
+                  width: '400px',
+                  borderRadius: '15px',
                   backgroundColor:
                     admin.principal == true
                       ? themeGestion.palette.primary.main
                       : "transparent",
                   mr: "10px",
                   p: "20px",
-                  height: !screenHeight ? "15%" : "38%",
                   border: admin.principal == true ? "none" : "1px solid",
                   borderColor: themeGestion.palette.secondary.main,
                 }}
               >
                 <Grid
                   sx={{
-                    display: "flex",
-                    width: "100%",
+                    display: 'flex',
+                    width: '100%',
                   }}
                 >
                   <TextField
-                    id="outlined-basic"
+                    id='outlined-basic'
                     value={admin.username}
                     disabled={admin.current == true ? false : true}
                     onChange={(e) => {
@@ -367,23 +364,14 @@ const AdminGestion = () => {
                       handleBlur();
                     }}
                     sx={{
-                      width: "100%",
-                      borderRadius: "15px",
-                      border: "1px solid",
-                      borderColor: themeGestion.palette.secondary.main,
+                      width: '100%',
                       input: {
-                        padding: "10px 15px",
-                        border: "none",
                         color:
                           admin.principal == true
                             ? themeGestion.palette.primary.contrastText
                             : themeGestion.palette.secondary.contrastText,
-                        fontWeight: "600",
-                        fontFamily: "Poppins, sans-serif",
-                        fontSize: "24px",
-                      },
-                      fieldset: {
-                        border: "none",
+                        fontSize: '24px !important',
+                        fontWeight: '600',
                       },
                     }}
                   />
@@ -391,16 +379,16 @@ const AdminGestion = () => {
                     (admin.principal == false && principalAdmin && (
                       <ColorButton
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          alignContent: "center",
-                          padding: "10px 20px",
-                          backgroundColor: "transparent",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          alignContent: 'center',
+                          padding: '10px 20px',
+                          backgroundColor: 'transparent',
 
-                          marginLeft: "10px",
-                          borderRadius: "15px",
-                          border: "1px solid",
+                          marginLeft: '10px',
+                          borderRadius: '15px',
+                          border: '1px solid',
                           borderColor: themeGestion.palette.secondary.main,
                         }}
                         onClick={() => {
@@ -415,12 +403,12 @@ const AdminGestion = () => {
                         <FontAwesomeIcon
                           icon={
                             editUsernameButton
-                              ? "fa-solid fa-check"
-                              : "fa-solid fa-trash-can"
+                              ? 'fa-solid fa-check'
+                              : 'fa-solid fa-trash-can'
                           }
                           style={{
-                            fontSize: "24px",
-                            opacity: "50%",
+                            fontSize: '24px',
+                            opacity: '50%',
                             color: themeGestion.palette.secondary.contrastText,
                           }}
                         />
@@ -431,16 +419,16 @@ const AdminGestion = () => {
                     admin.current == true && (
                       <ColorButton
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          alignContent: "center",
-                          padding: "10px 20px",
-                          backgroundColor: "transparent",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          alignContent: 'center',
+                          padding: '10px 20px',
+                          backgroundColor: 'transparent',
 
-                          marginLeft: "10px",
-                          borderRadius: "15px",
-                          border: "1px solid",
+                          marginLeft: '10px',
+                          borderRadius: '15px',
+                          border: '1px solid',
                           borderColor: themeGestion.palette.secondary.main,
                         }}
                         onClick={() => {
@@ -450,10 +438,10 @@ const AdminGestion = () => {
                         }}
                       >
                         <FontAwesomeIcon
-                          icon={"fa-solid fa-check"}
+                          icon={'fa-solid fa-check'}
                           style={{
-                            fontSize: "24px",
-                            opacity: "100%",
+                            fontSize: '24px',
+                            opacity: '100%',
                             color: themeGestion.palette.primary.contrastText,
                           }}
                         />
@@ -462,25 +450,25 @@ const AdminGestion = () => {
                 </Grid>
                 <Typography
                   sx={{
-                    fontSize: "16px",
-                    fontFamily: "Poppins, sans-serif",
-                    fontWeight: "600",
-                    lineHeight: "24px",
-                    textAlign: "center",
-                    textTransform: "none",
+                    fontSize: '16px',
+                    fontFamily: 'Poppins, sans-serif',
+                    fontWeight: '600',
+                    lineHeight: '24px',
+                    textAlign: 'center',
+                    textTransform: 'none',
                     color:
                       admin.principal == true
                         ? themeGestion.palette.primary.contrastText
                         : themeGestion.palette.secondary.contrastText,
-                    mt: "10px",
+                    mt: '10px',
                   }}
                 >
                   Email
                 </Typography>
                 <Grid
                   sx={{
-                    display: "flex",
-                    width: "100%",
+                    display: 'flex',
+                    width: '100%',
                   }}
                 >
                   <TextField
@@ -500,24 +488,13 @@ const AdminGestion = () => {
                       setSortedAdmins(newAdminsList);
                     }}
                     sx={{
-                      width: "100%",
-                      borderRadius: "15px",
-                      border: "1px solid",
-                      mt: "10px",
-                      borderColor: themeGestion.palette.secondary.main,
+                      width: '100%',
+                      mt: '10px',
                       input: {
-                        padding: "10px 15px",
-                        border: "none",
                         color:
                           admin.principal == true
                             ? themeGestion.palette.primary.contrastText
                             : themeGestion.palette.secondary.contrastText,
-                        fontWeight: "400",
-                        fontFamily: "Poppins, sans-serif",
-                        fontSize: "16px",
-                      },
-                      fieldset: {
-                        border: "none",
                       },
                     }}
                   ></TextField>
@@ -526,17 +503,17 @@ const AdminGestion = () => {
                     admin.current == true && (
                       <ColorButton
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          alignContent: "center",
-                          padding: "10px 20px",
-                          backgroundColor: "transparent",
-                          mt: "10px",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          alignContent: 'center',
+                          padding: '10px 20px',
+                          backgroundColor: 'transparent',
+                          mt: '10px',
 
-                          marginLeft: "10px",
-                          borderRadius: "15px",
-                          border: "1px solid",
+                          marginLeft: '10px',
+                          borderRadius: '15px',
+                          border: '1px solid',
                           borderColor: themeGestion.palette.secondary.main,
                         }}
                         onClick={() => {
@@ -546,10 +523,10 @@ const AdminGestion = () => {
                         }}
                       >
                         <FontAwesomeIcon
-                          icon={"fa-solid fa-check"}
+                          icon={'fa-solid fa-check'}
                           style={{
-                            fontSize: "24px",
-                            opacity: "50%",
+                            fontSize: '24px',
+                            opacity: '50%',
                             color: themeGestion.palette.secondary.contrastText,
                           }}
                         />
@@ -560,17 +537,17 @@ const AdminGestion = () => {
                     admin.current == true && (
                       <ColorButton
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          alignContent: "center",
-                          padding: "10px 20px",
-                          backgroundColor: "transparent",
-                          mt: "10px",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          alignContent: 'center',
+                          padding: '10px 20px',
+                          backgroundColor: 'transparent',
+                          mt: '10px',
 
-                          marginLeft: "10px",
-                          borderRadius: "15px",
-                          border: "1px solid",
+                          marginLeft: '10px',
+                          borderRadius: '15px',
+                          border: '1px solid',
                           borderColor: themeGestion.palette.secondary.main,
                         }}
                         onClick={() => {
@@ -580,10 +557,10 @@ const AdminGestion = () => {
                         }}
                       >
                         <FontAwesomeIcon
-                          icon={"fa-solid fa-check"}
+                          icon={'fa-solid fa-check'}
                           style={{
-                            fontSize: "24px",
-                            opacity: "100%",
+                            fontSize: '24px',
+                            opacity: '100%',
                             color: themeGestion.palette.primary.contrastText,
                           }}
                         />
@@ -592,36 +569,36 @@ const AdminGestion = () => {
                 </Grid>
                 <Typography
                   sx={{
-                    fontSize: "16px",
-                    fontFamily: "Poppins, sans-serif",
-                    fontWeight: "600",
-                    lineHeight: "24px",
-                    textAlign: "center",
-                    textTransform: "none",
+                    fontSize: '16px',
+                    fontFamily: 'Poppins, sans-serif',
+                    fontWeight: '600',
+                    lineHeight: '24px',
+                    textAlign: 'center',
+                    textTransform: 'none',
                     color:
                       admin.principal == true
                         ? themeGestion.palette.primary.contrastText
                         : themeGestion.palette.secondary.contrastText,
-                    mt: "10px",
+                    mt: '10px',
                   }}
                 >
                   {admin.current == true
-                    ? "Nouveau mot de passe"
-                    : "Mot de passe"}
+                    ? 'Nouveau mot de passe'
+                    : 'Mot de passe'}
                 </Typography>
                 <Grid
                   sx={{
-                    display: "flex",
-                    width: "100%",
+                    display: 'flex',
+                    width: '100%',
                   }}
                 >
                   <TextField
-                    value={admin.current == true ? newPassword : "my-secret-pw"}
+                    value={admin.current == true ? newPassword : 'my-secret-pw'}
                     disabled={admin.current == true ? false : true}
                     placeholder={
-                      admin.current == true ? "Saisir un mot de passe" : ""
+                      admin.current == true ? 'Saisir un mot de passe' : ''
                     }
-                    type={showPassword ? "text" : "password"}
+                    type={showPassword ? 'text' : 'password'}
                     onChange={(e) => {
                       setNewPassword(e.target.value);
                     }}
@@ -634,31 +611,20 @@ const AdminGestion = () => {
                       handleBlurPassword();
                     }}
                     sx={{
-                      width: "100%",
-                      borderRadius: "15px",
-                      border: "1px solid",
-                      mt: "10px",
-                      borderColor: themeGestion.palette.secondary.main,
+                      width: '100%',
+                      mt: '10px',
                       input: {
-                        padding: "10px 15px",
-                        border: "none",
                         color:
                           admin.principal == true
                             ? themeGestion.palette.primary.contrastText
                             : themeGestion.palette.secondary.contrastText,
-                        fontWeight: "400",
-                        fontFamily: "Poppins, sans-serif",
-                        fontSize: "16px",
-                      },
-                      fieldset: {
-                        border: "none",
                       },
                     }}
                     InputProps={
-                      admin.current == true && newPassword !== ""
+                      admin.current == true && newPassword !== ''
                         ? {
                             endAdornment: (
-                              <InputAdornment position="end">
+                              <InputAdornment position='end'>
                                 <IconButton
                                   onClick={handleTogglePasswordVisibility}
                                   sx={{
@@ -669,13 +635,13 @@ const AdminGestion = () => {
                                 >
                                   {showPassword ? (
                                     <FontAwesomeIcon
-                                      icon="fa-solid fa-eye-slash"
-                                      style={{ fontSize: "16px" }}
+                                      icon='fa-solid fa-eye-slash'
+                                      style={{ fontSize: '16px' }}
                                     />
                                   ) : (
                                     <FontAwesomeIcon
-                                      icon="fa-solid fa-eye"
-                                      style={{ fontSize: "16px" }}
+                                      icon='fa-solid fa-eye'
+                                      style={{ fontSize: '16px' }}
                                     />
                                   )}
                                 </IconButton>
@@ -690,17 +656,17 @@ const AdminGestion = () => {
                     admin.current == true && (
                       <ColorButton
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          alignContent: "center",
-                          padding: "10px 20px",
-                          backgroundColor: "transparent",
-                          mt: "10px",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          alignContent: 'center',
+                          padding: '10px 20px',
+                          backgroundColor: 'transparent',
+                          mt: '10px',
 
-                          marginLeft: "10px",
-                          borderRadius: "15px",
-                          border: "1px solid",
+                          marginLeft: '10px',
+                          borderRadius: '15px',
+                          border: '1px solid',
                           borderColor: themeGestion.palette.secondary.main,
                         }}
                         onClick={() => {
@@ -710,10 +676,10 @@ const AdminGestion = () => {
                         }}
                       >
                         <FontAwesomeIcon
-                          icon={"fa-solid fa-check"}
+                          icon={'fa-solid fa-check'}
                           style={{
-                            fontSize: "24px",
-                            opacity: "50%",
+                            fontSize: '24px',
+                            opacity: '50%',
                             color: themeGestion.palette.secondary.contrastText,
                           }}
                         />
@@ -724,17 +690,17 @@ const AdminGestion = () => {
                     admin.current == true && (
                       <ColorButton
                         sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          alignContent: "center",
-                          padding: "10px 20px",
-                          backgroundColor: "transparent",
-                          mt: "10px",
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          alignContent: 'center',
+                          padding: '10px 20px',
+                          backgroundColor: 'transparent',
+                          mt: '10px',
 
-                          marginLeft: "10px",
-                          borderRadius: "15px",
-                          border: "1px solid",
+                          marginLeft: '10px',
+                          borderRadius: '15px',
+                          border: '1px solid',
                           borderColor: themeGestion.palette.secondary.main,
                         }}
                         onClick={() => {
@@ -744,10 +710,10 @@ const AdminGestion = () => {
                         }}
                       >
                         <FontAwesomeIcon
-                          icon={"fa-solid fa-check"}
+                          icon={'fa-solid fa-check'}
                           style={{
-                            fontSize: "24px",
-                            opacity: "100%",
+                            fontSize: '24px',
+                            opacity: '100%',
                             color: themeGestion.palette.primary.contrastText,
                           }}
                         />
@@ -763,12 +729,13 @@ const AdminGestion = () => {
             alignItems: "center",
             justifyContent: "center",
             width: "400px",
-            height: !screenHeight ? "15%" : "38%",
+            alignSelf: "stretch",
             alignContent: "center",
             borderRadius: "15px",
             backgroundColor: "transparent",
             p: "20px",
             border: "2px dashed",
+
             borderColor: themeGestion.palette.secondary.main,
           }}
         >
@@ -777,22 +744,22 @@ const AdminGestion = () => {
               setOpenAdd(true);
             }}
             sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              alignContent: "center",
-              padding: "20px",
-              backgroundColor: "transparent",
-              borderRadius: "15px",
-              border: "1px solid",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              alignContent: 'center',
+              padding: '20px',
+              backgroundColor: 'transparent',
+              borderRadius: '15px',
+              border: '1px solid',
               borderColor: themeGestion.palette.secondary.main,
             }}
           >
             <FontAwesomeIcon
-              icon="fa-solid fa-plus"
+              icon='fa-solid fa-plus'
               style={{
-                fontSize: "24px",
-                opacity: "50%",
+                fontSize: '24px',
+                opacity: '50%',
                 color: themeGestion.palette.secondary.contrastText,
               }}
             />
@@ -802,155 +769,113 @@ const AdminGestion = () => {
       <Modal open={openAdd} onClose={handleCloseAdd}>
         <Grid
           container
-          direction="column"
-          alignItems="center"
-          justifyContent="center"
+          direction='column'
+          alignItems='center'
+          justifyContent='center'
           sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: "fit-content",
-            bgcolor: "background.paper",
-            borderRadius: "15px",
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 'fit-content',
+            bgcolor: 'background.paper',
+            borderRadius: '15px',
             boxShadow: 24,
             p: 4,
           }}
         >
           <Grid
             container
-            alignItems="center"
-            justifyContent="space-between"
-            sx={{ mb: 3, width: "100%" }}
+            alignItems='center'
+            justifyContent='space-between'
+            sx={{ mb: 3, width: '100%' }}
           >
             <Grid item xs={2} />
             <Grid item xs={8}>
               <Typography
-                variant="h6"
-                component="h2"
+                variant='h6'
+                component='h2'
                 sx={{
-                  fontFamily: "Poppins, sans-serif",
-                  fontWeight: "600",
-                  fontSize: "24px",
-                  lineHeight: "36px",
-                  color: "#0E1419",
-                  textAlign: "center",
+                  fontFamily: 'Poppins, sans-serif',
+                  fontWeight: '600',
+                  fontSize: '24px',
+                  lineHeight: '36px',
+                  color: '#0E1419',
+                  textAlign: 'center',
                 }}
               >
                 Ajouter un admin
               </Typography>
             </Grid>
-            <Grid item xs={2} sx={{ textAlign: "right" }}>
+            <Grid item xs={2} sx={{ textAlign: 'right' }}>
               <IconButton onClick={handleCloseAdd}>
                 <CloseIcon />
               </IconButton>
             </Grid>
           </Grid>
-          <Grid item sx={{ mb: 2, display: "flex", flexDirection: "column" }}>
+          <Grid item sx={{ mb: 2, display: 'flex', flexDirection: 'column' }}>
             <Typography
-              variant="body1"
+              variant='body1'
               sx={{
-                fontFamily: "Poppins, sans-serif",
-                fontWeight: "600",
-                fontSize: "16px",
-                lineHeight: "24px",
+                fontFamily: 'Poppins, sans-serif',
+                fontWeight: '600',
+                fontSize: '16px',
+                lineHeight: '24px',
               }}
             >
               Identifiant
             </Typography>
             <TextField
-              margin="normal"
+              margin='normal'
               required
               placeholder="Entrez un nom d'utilisateur"
               sx={{
-                width: "400px",
-                mt: "5px",
-                borderRadius: "15px",
-                border: "1px solid",
-                borderColor: themeGestion.palette.secondary.main,
-                input: {
-                  padding: "10px 15px",
-                  border: "none",
-                  color: themeGestion.palette.text.secondary,
-                  fontWeight: "400",
-                  fontFamily: "Poppins, sans-serif",
-                  fontSize: "16px",
-                },
-                fieldset: {
-                  border: "none",
-                },
+                width: '400px',
+                mt: '5px',
               }}
               autoFocus
               value={addUsername}
               onChange={(e) => setAddUsername(e.target.value)}
             />
             <TextField
-              margin="normal"
+              margin='normal'
               required
-              placeholder="Entrez une adresse email"
+              placeholder='Entrez une adresse email'
               sx={{
-                width: "400px",
-                mt: "5px",
-                borderRadius: "15px",
-                border: "1px solid",
-                borderColor: themeGestion.palette.secondary.main,
-                input: {
-                  padding: "10px 15px",
-                  border: "none",
-                  color: themeGestion.palette.text.secondary,
-                  fontWeight: "400",
-                  fontFamily: "Poppins, sans-serif",
-                  fontSize: "16px",
-                },
-                fieldset: {
-                  border: "none",
-                },
+                width: '400px',
+                mt: '5px',
               }}
               autoFocus
               value={addEmail}
               onChange={(e) => setAddEmail(e.target.value)}
             />
           </Grid>
-          <Grid item sx={{ mb: 3, display: "flex", flexDirection: "column" }}>
+          <Grid item sx={{ mb: 3, display: 'flex', flexDirection: 'column' }}>
             <Typography
-              variant="body1"
+              variant='body1'
               sx={{
-                fontFamily: "Poppins, sans-serif",
-                fontWeight: "600",
-                fontSize: "16px",
-                lineHeight: "24px",
+                fontFamily: 'Poppins, sans-serif',
+                fontWeight: '600',
+                fontSize: '16px',
+                lineHeight: '24px',
               }}
             >
               Mot de passe
             </Typography>
             <TextField
-              margin="normal"
+              margin='normal'
               required
               sx={{
-                mt: "5px",
-                width: "400px",
-                borderRadius: "15px",
-                border: "1px solid",
-                borderColor: themeGestion.palette.secondary.main,
-                input: {
-                  padding: "10px 15px",
-                  border: "none",
-                  fontWeight: "400",
-                  color: themeGestion.palette.text.secondary,
-                  fontFamily: "Poppins, sans-serif",
-                  fontSize: "16px",
-                },
-                fieldset: {
-                  border: "none",
-                },
+                mt: '5px',
+                width: '400px',
               }}
-              type={showPasswordAdd ? "text" : "password"}
-              placeholder="Entrez un mot de passe"
+              type={showPasswordAdd ? 'text' : 'password'}
+              placeholder='Entrez un mot de passe'
               value={addPassword}
               onChange={(e) => setAddPassword(e.target.value)}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end">
+                  <InputAdornment position='end'>
                     <IconButton
                       onClick={() => {
                         setShowPasswordAdd(!showPasswordAdd);
@@ -961,13 +886,13 @@ const AdminGestion = () => {
                     >
                       {showPasswordAdd ? (
                         <FontAwesomeIcon
-                          icon="fa-solid fa-eye-slash"
-                          style={{ fontSize: "16px" }}
+                          icon='fa-solid fa-eye-slash'
+                          style={{ fontSize: '16px' }}
                         />
                       ) : (
                         <FontAwesomeIcon
-                          icon="fa-solid fa-eye"
-                          style={{ fontSize: "16px" }}
+                          icon='fa-solid fa-eye'
+                          style={{ fontSize: '16px' }}
                         />
                       )}
                     </IconButton>
@@ -976,33 +901,19 @@ const AdminGestion = () => {
               }}
             />
             <TextField
-              margin="normal"
+              margin='normal'
               required
               sx={{
-                mt: "5px",
-                width: "400px",
-                borderRadius: "15px",
-                border: "1px solid",
-                borderColor: themeGestion.palette.secondary.main,
-                input: {
-                  padding: "10px 15px",
-                  border: "none",
-                  fontWeight: "400",
-                  color: themeGestion.palette.text.secondary,
-                  fontFamily: "Poppins, sans-serif",
-                  fontSize: "16px",
-                },
-                fieldset: {
-                  border: "none",
-                },
+                mt: '5px',
+                width: '400px',
               }}
-              type={showPasswordConfirm ? "text" : "password"}
-              placeholder="Confirmez le mot de passe"
+              type={showPasswordConfirm ? 'text' : 'password'}
+              placeholder='Confirmez le mot de passe'
               value={addPasswordConfirm}
               onChange={(e) => setAddPasswordConfirm(e.target.value)}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end">
+                  <InputAdornment position='end'>
                     <IconButton
                       onClick={() => {
                         setShowPasswordConfirm(!showPasswordConfirm);
@@ -1013,13 +924,13 @@ const AdminGestion = () => {
                     >
                       {showPasswordConfirm ? (
                         <FontAwesomeIcon
-                          icon="fa-solid fa-eye-slash"
-                          style={{ fontSize: "16px" }}
+                          icon='fa-solid fa-eye-slash'
+                          style={{ fontSize: '16px' }}
                         />
                       ) : (
                         <FontAwesomeIcon
-                          icon="fa-solid fa-eye"
-                          style={{ fontSize: "16px" }}
+                          icon='fa-solid fa-eye'
+                          style={{ fontSize: '16px' }}
                         />
                       )}
                     </IconButton>
@@ -1033,22 +944,22 @@ const AdminGestion = () => {
             item
             sx={{
               mb: 3,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              alignContent: "center",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              alignContent: 'center',
             }}
           >
             <ColorButton
-              variant="contained"
+              variant='contained'
               sx={{
                 backgroundColor: theme.palette.primary.main,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                alignContent: "center",
-                borderRadius: "10px",
-                padding: "10px 15px",
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                alignContent: 'center',
+                borderRadius: '10px',
+                padding: '10px 15px',
               }}
               onClick={handleAddAdmin}
             >
@@ -1060,45 +971,45 @@ const AdminGestion = () => {
       <Modal open={openDelete} onClose={handleCloseDelete}>
         <Grid
           container
-          direction="column"
-          alignItems="center"
-          justifyContent="center"
+          direction='column'
+          alignItems='center'
+          justifyContent='center'
           sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: "fit-content",
-            bgcolor: "background.paper",
-            borderRadius: "15px",
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 'fit-content',
+            bgcolor: 'background.paper',
+            borderRadius: '15px',
             boxShadow: 24,
             p: 4,
           }}
         >
           <Grid
             container
-            alignItems="center"
-            justifyContent="space-between"
-            sx={{ mb: 3, width: "100%" }}
+            alignItems='center'
+            justifyContent='space-between'
+            sx={{ mb: 3, width: '100%' }}
           >
             <Grid item xs={2} />
             <Grid item xs={8}>
               <Typography
-                variant="h6"
-                component="h2"
+                variant='h6'
+                component='h2'
                 sx={{
-                  fontFamily: "Poppins, sans-serif",
-                  fontWeight: "600",
-                  fontSize: "24px",
-                  lineHeight: "36px",
-                  color: "#0E1419",
-                  textAlign: "center",
+                  fontFamily: 'Poppins, sans-serif',
+                  fontWeight: '600',
+                  fontSize: '24px',
+                  lineHeight: '36px',
+                  color: '#0E1419',
+                  textAlign: 'center',
                 }}
               >
                 Avertissement
               </Typography>
             </Grid>
-            <Grid item xs={2} sx={{ textAlign: "right" }}>
+            <Grid item xs={2} sx={{ textAlign: 'right' }}>
               <IconButton onClick={handleCloseDelete}>
                 <CloseIcon />
               </IconButton>
@@ -1106,12 +1017,12 @@ const AdminGestion = () => {
           </Grid>
           <Typography
             sx={{
-              fontFamily: "Poppins, sans-serif",
-              fontWeight: "400",
-              fontSize: "16px",
-              lineHeight: "24px",
-              color: "#0E1419",
-              textAlign: "center",
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: '400',
+              fontSize: '16px',
+              lineHeight: '24px',
+              color: '#0E1419',
+              textAlign: 'center',
               mb: 3,
             }}
           >
@@ -1121,46 +1032,46 @@ const AdminGestion = () => {
             item
             sx={{
               mb: 3,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              alignContent: "center",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              alignContent: 'center',
             }}
           >
             <ColorButton
               sx={{
-                backgroundColor: "transparent",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                alignContent: "center",
-                borderRadius: "10px",
-                border: "1px solid",
+                backgroundColor: 'transparent',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                alignContent: 'center',
+                borderRadius: '10px',
+                border: '1px solid',
                 borderColor: theme.palette.secondary.main,
-                padding: "10px 15px",
-                mr: "10px",
+                padding: '10px 15px',
+                mr: '10px',
                 color: theme.palette.secondary.main,
               }}
-              variant="contained"
+              variant='contained'
               onClick={handleCloseDelete}
             >
               Annuler
             </ColorButton>
 
             <ColorButton
-              variant="contained"
+              variant='contained'
               sx={{
                 backgroundColor: theme.palette.primary.main,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                alignContent: "center",
-                borderRadius: "10px",
-                padding: "10px 15px",
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                alignContent: 'center',
+                borderRadius: '10px',
+                padding: '10px 15px',
               }}
               onClick={() => {
                 setRequestDelete({
-                  url: "/admin/delete",
+                  url: '/admin/delete',
                   data: {
                     id: selectedAdmin.id,
                   },

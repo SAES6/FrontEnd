@@ -1,24 +1,18 @@
-import { Grid, Typography, useMediaQuery, TextField, Box } from '@mui/material';
+import { Grid, Typography, TextField, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { theme } from '../theme';
+import { theme } from '../../theme';
+import Enonce from './Enonce';
 
-const QuestionOpen = ({
-  children,
-  questionTitle,
-  onResponseChange,
-  userResponse,
-  mode,
-}) => {
-  const themeSummary = useTheme(theme);
-  const screenSize = useMediaQuery('(min-width:1600px)');
+const QuestionOpen = ({ onResponseChange, question, userResponse, mode }) => {
   const [responseValue, setResponseValue] = useState('');
 
+  const themeSummary = useTheme(theme);
+
   const handleResponseChange = (event) => {
-    const { value } = event.target;
-    setResponseValue(value);
-    onResponseChange(value);
+    setResponseValue(event.target.value);
+    onResponseChange(event.target.value);
   };
 
   return (
@@ -26,7 +20,7 @@ const QuestionOpen = ({
       className='question'
       container
       sx={{
-        width: screenSize ? '1500px' : '1300px',
+        width: '100%',
         height: 'auto',
         alignItems: 'center',
         justifyContent: 'center',
@@ -55,7 +49,7 @@ const QuestionOpen = ({
             color: themeSummary.palette.text.primary,
           }}
         >
-          {questionTitle}
+          {question.title}
         </Typography>
         <Grid
           sx={{
@@ -81,35 +75,7 @@ const QuestionOpen = ({
           </Typography>
         </Grid>
       </Grid>
-      <Grid
-        className='enonce'
-        sx={{
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <Typography
-          sx={{
-            fontFamily: 'Poppins, sans-serif',
-            fontSize: '16px',
-            fontWeight: '600',
-            lineHeight: '24px',
-          }}
-        >
-          Enoncé
-        </Typography>
-        <Typography
-          sx={{
-            fontFamily: 'Poppins, sans-serif',
-            fontSize: '16px',
-            fontWeight: '400',
-            lineHeight: '24px',
-          }}
-        >
-          {children}
-        </Typography>
-      </Grid>
+      <Enonce description={question.description} imgSrc={question.img_src} />
       {mode === 'question' ? (
         <Grid
           className='answer'
