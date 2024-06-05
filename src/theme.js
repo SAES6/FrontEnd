@@ -79,6 +79,10 @@ export const theme = createTheme({
             border: 'none',
           },
         },
+        multiline: {
+          fontSize: '16px',
+          padding: '10px 15px',
+        },
       },
     },
     MuiSelect: {

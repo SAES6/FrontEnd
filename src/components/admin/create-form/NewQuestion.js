@@ -170,14 +170,15 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
             item
             xs={7}
             sx={{
-              border: 'solid',
-              borderColor: 'blue',
+              border: '1px solid',
+              borderColor: muiTheme.palette.secondary.main,
               borderRadius: '15px',
               display: 'flex',
               alignItems: 'center',
+              padding: '10px 15px',
             }}
           >
-            <Typography variant='h5' sx={{ fontWeight: 'bold', pl: 2 }}>
+            <Typography sx={{ fontSize: '24px', fontWeight: '600' }}>
               Question {questionData.order}
             </Typography>
           </Grid>
@@ -193,7 +194,6 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
                   selectChangeHandler(e.target.value.label);
                 }}
                 displayEmpty
-                inputProps={{ 'aria-label': 'Without label' }}
                 renderValue={(value) =>
                   value === '' ? (
                     <Typography
@@ -230,14 +230,19 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
           <Grid
             item
             xs={1}
-            sx={{ display: 'flex', justifyContent: 'flex-end' }}
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+            }}
           >
             <Card
               sx={{
-                border: 'solid',
-                borderColor: 'blue',
+                border: '1px solid',
+                borderColor: muiTheme.palette.secondary.main,
                 borderRadius: '15px',
                 height: 'fit-content',
+                boxShadow: 'none',
               }}
             >
               <IconButton onClick={handleClose}>
@@ -248,21 +253,16 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
         </Grid>
         <Grid item container xs={12} sx={{ mt: 1 }}>
           <Grid item xs={12}>
-            <Typography variant='h6' sx={{ fontWeight: 'bold' }}>
+            <Typography sx={{ fontWeight: '600', fontSize: '16px' }}>
               Enoncé
             </Typography>
           </Grid>
           <Grid item xs={11} sx={{ pr: 3 }}>
             <TextField
               focused={false}
-              sx={{
-                border: 'solid',
-                borderColor: 'blue',
-                borderRadius: '15px',
-              }}
-              size='small'
               fullWidth
               multiline
+              placeholder='Rédigez votre question'
               variant='outlined'
               value={questionData.enonce ? questionData.enonce : ''}
               onChange={(e) =>
@@ -276,14 +276,19 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
           <Grid
             item
             xs={1}
-            sx={{ display: 'flex', justifyContent: 'flex-end' }}
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+            }}
           >
             <Card
               sx={{
-                border: 'solid',
-                borderColor: 'blue',
+                border: '1px solid',
+                borderColor: muiTheme.palette.secondary.main,
                 borderRadius: '15px',
                 height: 'fit-content',
+                boxShadow: 'none',
               }}
             >
               <input
