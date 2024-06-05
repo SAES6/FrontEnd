@@ -11,7 +11,10 @@ const initialState = {
         dropdownOpen: false,
         sections: [] // {id: 6494984, order: 1, name: 'Section 1', dropdownOpen: false}
     },
-    currentSectionInfos: [],
+    currentSectionInfos: {
+        quizInfos: {},
+        questions: [],
+    },
 };
 
 const quizSlice = createSlice({
@@ -33,13 +36,13 @@ const quizSlice = createSlice({
 
         },
         setCurrentSectionInfos(state, action) {
-            state.currentSectionInfos = action.payload;
-            state.currentSectionId = action.payload.id;
+            state.currentSectionInfos.questions = action.payload;
         },
         setQuizzesAndCurrentSectionInfos(state, action) {
             state.quizzesInfos = action.payload.quizzesInfos;
-            state.currentSectionInfos = action.payload.firstSectionDetails;
+            state.currentSectionInfos.questions = action.payload.firstSectionDetails;
             state.currentQuizId = action.payload.quizzesInfos[0].id;
+            state.currentQuizInfos = action.payload.quizzesInfos[0];
             state.currentSectionId = action.payload.firstSectionDetails.id;
         },
         setQuizzesInfos(state, action) {
@@ -84,7 +87,18 @@ const quizSlice = createSlice({
         toggleDropdown(state, action) {
             const {quizId, sectionId} = action.payload;
             state.currentQuizId = quizId;
-            state.currentSectionId = sectionId;
+
+            if (sectionId) {
+                state.currentSectionId = sectionId;
+            } else {
+                const quiz = state.quizzesInfos.find(q => q.id === quizId);
+                if (quiz && quiz.sections.length > 0) {
+                    const minSection = quiz.sections.reduce((min, section) => section.order < min.order ? section : min);
+                    state.currentSectionId = minSection.id;
+                } else {
+                    state.currentSectionId = null;
+                }
+            }
 
             state.quizzesInfos = state.quizzesInfos.map(quiz => {
                 if (quiz.id === quizId) {
@@ -108,9 +122,6 @@ const quizSlice = createSlice({
                     };
                 }
             });
-        },
-        updateSection(state, action) {
-
         },
         rename(state, action) {
             if (state.currentSectionId) {

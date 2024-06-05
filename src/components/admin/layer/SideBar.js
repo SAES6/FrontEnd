@@ -59,8 +59,8 @@ const ModalConfirmation = ({isOpen, setIsOpen, deleteHandler}) => {
 };
 
 const SideBar = () => {
-  const currentQuizId = useSelector((state) => state.quiz.currentQuizId);
-  const quizzesInfos = useSelector((state) => state.quiz.quizzesInfos);
+    const currentQuizId = useSelector((state) => state.quiz.currentQuizId);
+    const quizzesInfos = useSelector((state) => state.quiz.quizzesInfos);
 
     const [newSectionName, setNewSectionName] = useState("");
     const [isOpen, setIsOpen] = useState(false);
@@ -85,9 +85,9 @@ const SideBar = () => {
         dispatch(quizActions.addQuiz());
     };
 
-    const onClickModalHandler = (quizId, sectionId = null) => {
+    const onClickModalHandler = (quizId, sectionId, isQuiz = false) => {
         console.log(sectionId)
-        dispatch(getSectionDetails(quizId, sectionId));
+        dispatch(getSectionDetails(quizId, sectionId, isQuiz));
     };
 
     const beforeDelete = () => {
@@ -110,7 +110,7 @@ const SideBar = () => {
                     <React.Fragment key={quiz.id + quiz.name}>
                         <InteractiveListItem
                             item={quiz}
-                            onClickHandler={() => onClickModalHandler(quiz.id)}
+                            onClickHandler={() => onClickModalHandler(quiz.id, quiz.sections.reduce((min, section) => section.order < min.order ? section : min).id, true)}
                             deleteHandler={beforeDelete}
                             moreSx={{box: {bgcolor: 'red'}, typo: {pl: 2}}}
                         />

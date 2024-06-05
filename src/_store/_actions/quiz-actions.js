@@ -1,7 +1,7 @@
 import {quizActions} from "../_slices/quiz-slice";
 import {callApiGet, callApiPost} from "../../utils/callApi";
 
-export const getSectionDetails = (quizId, sectionId) => {
+export const getSectionDetails = (quizId, sectionId, isQuiz) => {
     return async (dispatch, getState) => {
         const state = getState();
         const token = state.user.token;
@@ -16,11 +16,12 @@ export const getSectionDetails = (quizId, sectionId) => {
             return response.data;
         };
 
-        dispatch(quizActions.toggleDropdown({quizId, sectionId}));
+        if (isQuiz) dispatch(quizActions.toggleDropdown({quizId, sectionId: null}));
+        else dispatch(quizActions.toggleDropdown({quizId, sectionId}));
 
         try {
             const sectionDetails = await fetchFirstSectionDetails(sectionId);
-                dispatch(quizActions.setCurrentSectionInfos(sectionDetails || {}));
+            dispatch(quizActions.setCurrentSectionInfos(sectionDetails || {}));
         } catch (e) {
         }
     };
@@ -56,7 +57,7 @@ export const getQuizDetails = () => {
             console.log(quizzesList)
             if (quizzesList && quizzesList.length > 0) {
                 const firstSectionDetails = await fetchFirstSectionDetails(quizzesList[0].sections[0].id);
-                    console.log(firstSectionDetails)
+                console.log(firstSectionDetails)
                 dispatch(quizActions.setQuizzesAndCurrentSectionInfos({
                     quizzesInfos: quizzesList || [],
                     firstSectionDetails: firstSectionDetails || {}
@@ -73,6 +74,7 @@ export const postSectionInfos = (sectionInfos) => {
     return async (dispatch, getState) => {
         const state = getState();
         const token = state.user.token;
+        const sectionId = state.quiz.currentSectionId;
 
         const fetchFirstSectionDetails = async (sectionInfos) => {
             const response = await callApiPost({
@@ -84,11 +86,9 @@ export const postSectionInfos = (sectionInfos) => {
 
             return response.data;
         };
-
-        dispatch(quizActions.setCurrentSectionInfos(sectionInfos || {}));
-
+        console.log({sectionInfos, sectionId})
         try {
-            //await fetchFirstSectionDetails(sectionInfos);
+            //await fetchFirstSectionDetails({sectionInfos, sectionId});
         } catch (e) {
         }
     };
