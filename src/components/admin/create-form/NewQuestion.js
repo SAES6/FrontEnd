@@ -122,19 +122,22 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
   };
 
   const imageChangeHandler = (event) => {
-    const file = event.target.files[0];
+    const fileTotal = event.target.files[0];
+    console.log("file", fileTotal);
+
     if (
-      file &&
-      (file.type === "image/jpeg" ||
-        file.type === "image/png" ||
-        file.type === "image/gif")
+      fileTotal &&
+      (fileTotal.type === "image/jpeg" ||
+        fileTotal.type === "image/jpg" ||
+        fileTotal.type === "image/png" ||
+        fileTotal.type === "image/gif")
     ) {
-      const fileUrl = URL.createObjectURL(file);
+      const fileUrl = URL.createObjectURL(fileTotal);
 
       const fileInfo = {
-        file,
-        fileName: file.name,
-        fileType: file.type,
+        file: fileTotal,
+        fileName: fileTotal.name,
+        fileType: fileTotal.type,
         fileUrl,
       };
 
@@ -186,7 +189,7 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
                 fontWeight: "600",
                 border: "none",
                 input: {
-                  padding: "0",
+                  padding: "10px 15px",
                   border: "none",
                   fontWeight: "400",
                   fontFamily: "Poppins, sans-serif",

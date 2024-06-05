@@ -1,12 +1,18 @@
-import { Grid, Typography, TextField, Box } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { theme } from '../../theme';
-import Enonce from './Enonce';
+import { Grid, Typography, TextField, Box } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { theme } from "../../theme";
+import Enonce from "./Enonce";
 
-const QuestionOpen = ({ onResponseChange, question, userResponse, mode }) => {
-  const [responseValue, setResponseValue] = useState('');
+const QuestionOpen = ({
+  onResponseChange,
+  question,
+  userResponse,
+  mode,
+  preview,
+}) => {
+  const [responseValue, setResponseValue] = useState("");
 
   const themeSummary = useTheme(theme);
 
@@ -17,35 +23,35 @@ const QuestionOpen = ({ onResponseChange, question, userResponse, mode }) => {
 
   return (
     <Grid
-      className='question'
+      className="question"
       container
       sx={{
-        width: '100%',
-        height: 'auto',
-        alignItems: 'center',
-        justifyContent: 'center',
-        alignContent: 'center',
-        gap: '10px',
-        padding: '10px 0',
+        width: "100%",
+        height: "auto",
+        alignItems: "center",
+        justifyContent: "center",
+        alignContent: "center",
+        gap: "10px",
+        padding: "10px 0",
       }}
     >
       <Grid
-        className='first-row'
+        className="first-row"
         sx={{
-          width: '100%',
-          height: '56px',
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
+          width: "100%",
+          height: "56px",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
         <Typography
           sx={{
-            fontFamily: 'Poppins, sans-serif',
-            fontSize: '24px',
-            fontWeight: '600',
-            lineHeight: '36px',
+            fontFamily: "Poppins, sans-serif",
+            fontSize: "24px",
+            fontWeight: "600",
+            lineHeight: "36px",
             color: themeSummary.palette.text.primary,
           }}
         >
@@ -53,22 +59,22 @@ const QuestionOpen = ({ onResponseChange, question, userResponse, mode }) => {
         </Typography>
         <Grid
           sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
           }}
         >
           <FontAwesomeIcon
-            icon='fa-solid fa-feather'
-            style={{ opacity: '0.50' }}
+            icon="fa-solid fa-feather"
+            style={{ opacity: "0.50" }}
           />
           <Typography
             sx={{
-              fontFamily: 'Poppins, sans-serif',
-              fontSize: '16px',
-              fontWeight: '600',
-              lineHeight: '24px',
-              marginLeft: '5px',
+              fontFamily: "Poppins, sans-serif",
+              fontSize: "16px",
+              fontWeight: "600",
+              lineHeight: "24px",
+              marginLeft: "5px",
             }}
           >
             Question Ouverte
@@ -76,64 +82,65 @@ const QuestionOpen = ({ onResponseChange, question, userResponse, mode }) => {
         </Grid>
       </Grid>
       <Enonce description={question.description} imgSrc={question.img_src} />
-      {mode === 'question' ? (
+      {mode === "question" ? (
         <Grid
-          className='answer'
+          className="answer"
           sx={{
-            width: '100%',
+            width: "100%",
           }}
         >
           <TextField
-            margin='normal'
+            margin="normal"
             required
             value={responseValue}
+            disabled={preview}
             onChange={handleResponseChange}
             sx={{
-              mt: '5px',
-              width: '100%',
-              borderRadius: '15px',
-              border: '1px solid',
+              mt: "5px",
+              width: "100%",
+              borderRadius: "15px",
+              border: "1px solid",
               borderColor: themeSummary.palette.secondary.main,
               input: {
-                padding: '10px 15px',
-                border: 'none',
-                fontWeight: '400',
+                padding: "10px 15px",
+                border: "none",
+                fontWeight: "400",
                 color: themeSummary.palette.text.secondary,
-                fontFamily: 'Poppins, sans-serif',
-                fontSize: '16px',
+                fontFamily: "Poppins, sans-serif",
+                fontSize: "16px",
               },
               fieldset: {
-                border: 'none',
+                border: "none",
               },
             }}
-            type='text'
-            placeholder='Saisissez votre réponse'
+            type="text"
+            placeholder="Saisissez votre réponse"
           />
         </Grid>
       ) : (
         <Grid
-          className='userResponse'
+          className="userResponse"
           sx={{
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'row',
-            gap: '10px',
+            width: "100%",
+            display: "flex",
+            flexDirection: "row",
+            gap: "10px",
           }}
         >
           <Box
             sx={{
-              width: '8px',
-              height: '24px',
-              borderRadius: '15px',
+              width: "8px",
+              height: "24px",
+              borderRadius: "15px",
               backgroundColor: themeSummary.palette.secondary.main,
             }}
           />
           <Typography
             sx={{
-              fontFamily: 'Poppins, sans-serif',
-              fontSize: '16px',
-              fontWeight: '400',
-              lineHeight: '24px',
+              fontFamily: "Poppins, sans-serif",
+              fontSize: "16px",
+              fontWeight: "400",
+              lineHeight: "24px",
             }}
           >
             "{userResponse}"
