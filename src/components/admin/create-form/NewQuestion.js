@@ -7,34 +7,34 @@ import {
   Select,
   TextField,
   Typography,
-} from "@mui/material";
-import { theme } from "../../../theme";
-import { useTheme } from "@mui/material/styles";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Choices from "./Choices";
-import Cursor from "./Cursor";
+} from '@mui/material';
+import { theme } from '../../../theme';
+import { useTheme } from '@mui/material/styles';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Choices from './Choices';
+import Cursor from './Cursor';
 import {
   forwardRef,
   useEffect,
   useImperativeHandle,
   useRef,
   useState,
-} from "react";
+} from 'react';
 
 const Pending = () => <></>;
 
 const COMPONENT_MAP = {
-  "Choix unique": Choices,
-  "Choix multiple": Choices,
+  'Choix unique': Choices,
+  'Choix multiple': Choices,
   Libre: Pending,
   Curseur: Cursor,
 };
 
 const QType = [
-  { label: "Choix unique", icon: "fa-solid fa-bullseye" },
-  { label: "Choix multiple", icon: "fa-solid fa-list-check" },
-  { label: "Libre", icon: "fa-solid fa-feather" },
-  { label: "Curseur", icon: "fa-solid fa-sliders" },
+  { label: 'Choix unique', icon: 'fa-solid fa-bullseye' },
+  { label: 'Choix multiple', icon: 'fa-solid fa-list-check' },
+  { label: 'Libre', icon: 'fa-solid fa-feather' },
+  { label: 'Curseur', icon: 'fa-solid fa-sliders' },
 ];
 
 const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
@@ -42,8 +42,8 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
 
   const [questionData, setQuestionData] = useState({
     title: `Question ${index + 1}`,
-    type: "",
-    enonce: "",
+    type: '',
+    enonce: '',
     image: {},
     choices: [],
   });
@@ -54,8 +54,8 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
   useEffect(() => {
     setQuestionData({
       ...sectionInfos,
-      type: sectionInfos.type || "Choix unique",
-      enonce: sectionInfos.description || "",
+      type: sectionInfos.type || 'Choix unique',
+      enonce: sectionInfos.description || '',
       image: sectionInfos.image || {},
       choices:
         sectionInfos.choices?.length > 0
@@ -83,15 +83,15 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
 
   const getDefaultChoices = (type = null) => {
     const defaults = {
-      "Choix unique": [
-        { type: "Choix unique", text: "", image_src: {}, id: 1 },
-        { type: "Choix unique", text: "", image_src: {}, id: 2 },
+      'Choix unique': [
+        { type: 'Choix unique', text: '', image_src: {}, id: 1 },
+        { type: 'Choix unique', text: '', image_src: {}, id: 2 },
       ],
-      "Choix multiple": [
-        { type: "Choix multiple", text: "", image_src: {}, id: 1 },
-        { type: "Choix multiple", text: "", image_src: {}, id: 2 },
+      'Choix multiple': [
+        { type: 'Choix multiple', text: '', image_src: {}, id: 1 },
+        { type: 'Choix multiple', text: '', image_src: {}, id: 2 },
       ],
-      Curseur: [{ type: "Curseur", min: 0, max: 5, step: 0.5 }],
+      Curseur: [{ type: 'Curseur', min: 0, max: 5, step: 0.5 }],
     };
 
     if (type)
@@ -125,9 +125,9 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
     const file = event.target.files[0];
     if (
       file &&
-      (file.type === "image/jpeg" ||
-        file.type === "image/png" ||
-        file.type === "image/gif")
+      (file.type === 'image/jpeg' ||
+        file.type === 'image/png' ||
+        file.type === 'image/gif')
     ) {
       const fileUrl = URL.createObjectURL(file);
 
@@ -140,7 +140,7 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
 
       setQuestionData((prevState) => ({ ...prevState, image: fileInfo }));
     } else {
-      alert("Seulement les images sont autorisées.");
+      alert('Seulement les images sont autorisées.');
     }
   };
 
@@ -168,32 +168,22 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
   };
 
   return (
-    <Card sx={{ padding: 2, margin: 2, borderRadius: "15px" }}>
-      <Grid container alignItems="center" justifyContent="space-between">
+    <Grid container>
+      <Grid container alignItems='center' justifyContent='space-between'>
         <Grid item container xs={12}>
           <Grid
             item
             xs={7}
             sx={{
-              display: "flex",
-              alignItems: "center",
+              display: 'flex',
+              alignItems: 'center',
             }}
           >
             <TextField
               sx={{
-                borderRadius: "15px",
-                fontSize: "16px",
-                fontWeight: "600",
-                border: "none",
                 input: {
-                  padding: "0",
-                  border: "none",
-                  fontWeight: "400",
-                  fontFamily: "Poppins, sans-serif",
-                  fontSize: "16px",
-                },
-                fieldset: {
-                  border: "none",
+                  fontWeight: '600 !important',
+                  fontSize: '24px !important',
                 },
               }}
               fullWidth
@@ -204,19 +194,19 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
           <Grid
             item
             xs={4}
-            sx={{ display: "flex", justifyContent: "flex-end", pl: 3, pr: 3 }}
+            sx={{ display: 'flex', justifyContent: 'flex-end', pl: 3, pr: 3 }}
           >
             <FormControl fullWidth>
               <Select
-                value={QType.find((q) => q.label === questionData.type) || ""}
+                value={QType.find((q) => q.label === questionData.type) || ''}
                 onChange={(e) => {
                   selectChangeHandler(e.target.value.label);
                 }}
                 displayEmpty
                 renderValue={(value) =>
-                  value === "" ? (
+                  value === '' ? (
                     <Typography
-                      sx={{ color: "text.secondary", fontSize: "16px" }}
+                      sx={{ color: 'text.secondary', fontSize: '16px' }}
                     >
                       Type de question
                     </Typography>
@@ -231,7 +221,7 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
                     </>
                   )
                 }
-                sx={{ height: "100%" }}
+                sx={{ height: '100%' }}
               >
                 {QType.map((type, index) => (
                   <MenuItem value={type} key={index}>
@@ -250,28 +240,28 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
             item
             xs={1}
             sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "center",
+              display: 'flex',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
             }}
           >
             <Card
               sx={{
-                border: "1px solid",
+                border: '1px solid',
                 borderColor: muiTheme.palette.secondary.main,
-                borderRadius: "15px",
-                boxShadow: "none",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                height: "40px",
-                aspectRatio: "1/1",
+                borderRadius: '15px',
+                boxShadow: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '40px',
+                aspectRatio: '1/1',
               }}
             >
               <IconButton onClick={handleClose}>
                 <FontAwesomeIcon
                   fixedWidth
-                  icon={"fa-solid fa-xmark"}
+                  icon={'fa-solid fa-xmark'}
                   fontSize={20}
                 />
               </IconButton>
@@ -280,7 +270,7 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
         </Grid>
         <Grid item container xs={12} sx={{ mt: 1 }}>
           <Grid item xs={12}>
-            <Typography sx={{ fontWeight: "600", fontSize: "16px" }}>
+            <Typography sx={{ fontWeight: '600', fontSize: '16px' }}>
               Enoncé
             </Typography>
           </Grid>
@@ -289,8 +279,8 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
               focused={false}
               fullWidth
               multiline
-              placeholder="Rédigez votre question"
-              value={questionData.enonce ? questionData.enonce : ""}
+              placeholder='Rédigez votre question'
+              value={questionData.enonce ? questionData.enonce : ''}
               onChange={(e) =>
                 setQuestionData((prevState) => ({
                   ...prevState,
@@ -303,35 +293,35 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
             item
             xs={1}
             sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "center",
+              display: 'flex',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
             }}
           >
             <Card
               sx={{
-                border: "1px solid",
+                border: '1px solid',
                 borderColor: muiTheme.palette.secondary.main,
-                borderRadius: "15px",
-                boxShadow: "none",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                height: "40px",
-                aspectRatio: "1/1",
+                borderRadius: '15px',
+                boxShadow: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '40px',
+                aspectRatio: '1/1',
               }}
             >
               <input
-                type="file"
+                type='file'
                 ref={fileInputRef}
                 onChange={imageChangeHandler}
-                style={{ display: "none" }}
+                style={{ display: 'none' }}
               />
               {Object.keys(questionData.image).length === 0 ? (
                 <IconButton onClick={buttonClickHandler}>
                   <FontAwesomeIcon
                     fixedWidth
-                    icon={"fa-solid fa-image"}
+                    icon={'fa-solid fa-image'}
                     fontSize={20}
                   />
                 </IconButton>
@@ -339,7 +329,7 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
                 <IconButton onClick={deleteHandler}>
                   <FontAwesomeIcon
                     fixedWidth
-                    icon={"fa-solid fa-images"}
+                    icon={'fa-solid fa-images'}
                     fontSize={20}
                   />
                 </IconButton>
@@ -358,7 +348,7 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
           />
         </Grid>
       </Grid>
-    </Card>
+    </Grid>
   );
 });
 
