@@ -46,32 +46,80 @@ const SyntheseSlider = ({ question, theme, isJournalist, isUser }) => {
           height: "fit-content",
         }}
       >
-        <Typography
+        <Grid
+          container
+          spacing={2}
           sx={{
-            textAlign: "left",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            width: "100%",
+          }}
+        >
+          {question.question.img_src != null && (
+            <Grid
+              item
+              xs={6}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <img
+                style={{
+                  width: "100%",
+                  maxHeight: "200px",
+                  borderRadius: "15px",
+                  objectFit: "cover",
+                }}
+                src={question.question.img_src}
+              ></img>
+            </Grid>
+          )}
+          <Grid
+            item
+            xs={question.question.img_src != null ? 6 : 12}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              alignSelf: "baseline",
+              justifyContent: "start",
+              width: "100%",
+            }}
+          >
+            <Typography
+              sx={{
+                textAlign: "left",
 
-            fontFamily: "Poppins, sans-serif",
-            fontSize: "16px",
-            fontWeight: "600",
-            lineHeight: "36px",
-            color: themeSynthese.palette.text.primary,
-          }}
-        >
-          Énoncé
-        </Typography>
-        <Typography
-          sx={{
-            textAlign: "left",
-            mt: "10px",
-            fontFamily: "Poppins, sans-serif",
-            fontSize: "16px",
-            fontWeight: "400",
-            lineHeight: "24px",
-            color: themeSynthese.palette.text.primary,
-          }}
-        >
-          {question.question.description}
-        </Typography>
+                fontFamily: "Poppins, sans-serif",
+                fontSize: "16px",
+                fontWeight: "600",
+                lineHeight: "36px",
+                color: themeSynthese.palette.text.primary,
+              }}
+            >
+              Énoncé
+            </Typography>
+            <Typography
+              sx={{
+                textAlign: "left",
+                mt: "10px",
+                fontFamily: "Poppins, sans-serif",
+                fontSize: "16px",
+                fontWeight: "400",
+                lineHeight: "24px",
+                color: themeSynthese.palette.text.primary,
+              }}
+            >
+              {question.question.description}
+            </Typography>
+          </Grid>
+        </Grid>
+
         <Grid
           sx={{
             display: "flex",
@@ -132,105 +180,101 @@ const SyntheseSlider = ({ question, theme, isJournalist, isUser }) => {
                   justifyContent: "start",
                   width: "100%",
                   height: "100%",
+                  mt: "20px",
                   fontFamily: "Poppins, sans-serif",
                 }}
               >
                 <Grid
                   sx={{
                     display: "flex",
-                    flexDirection: "row",
+                    flexDirection: "column",
                     alignItems: "center",
-                    justifyContent: "space-between",
-                    width: "100%",
+                    justifyContent: "center",
                     height: "100%",
+                    width: "48%",
+                    ml: "1%",
+                    mr: "1%",
                     fontFamily: "Poppins, sans-serif",
-                    textOverflow: "ellipsis",
                   }}
                 >
-                  <Grid
+                  <Gauge
+                    value={question.stats.others.mean}
+                    startAngle={-90}
+                    endAngle={90}
+                    outerRadius={100}
+                    cornerRadius={5}
+                    valueMax={question.question.slider_max}
                     sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      height: "100%",
+                      [`& .${gaugeClasses.valueText}`]: {
+                        fontSize: 24,
+                        fontFamily: "Poppins, sans-serif",
+                        fontWeight: 600,
+                        textAnchor: "middle", // Pour centrer horizontalement
+                        dominantBaseline: "middle", // Pour centrer verticalement
+                      },
+                      width: "100%",
+                    }}
+                    text={({ value, valueMax }) => `${value} / ${valueMax}`}
+                    width={200}
+                    height={130} // Ajout de la hauteur
+                  />
+                  <Typography
+                    sx={{
+                      textAlign: "center",
                       fontFamily: "Poppins, sans-serif",
+                      fontSize: "16px",
+                      fontWeight: "600",
+                      lineHeight: "24px",
+                      color: themeSynthese.palette.text.secondary,
                     }}
                   >
-                    <Gauge
-                      value={question.stats.others.mean}
-                      startAngle={-90}
-                      endAngle={90}
-                      outerRadius={100}
-                      cornerRadius={5}
-                      valueMax={question.question.slider_max}
-                      sx={{
-                        [`& .${gaugeClasses.valueText}`]: {
-                          fontSize: 24,
-                          fontFamily: "Poppins, sans-serif",
-                          fontWeight: 600,
-                          textAnchor: "middle", // Pour centrer horizontalement
-                          dominantBaseline: "middle", // Pour centrer verticalement
-                        },
-                      }}
-                      text={({ value, valueMax }) => `${value} / ${valueMax}`}
-                      width={200}
-                      height={130} // Ajout de la hauteur
-                    />
-                    <Typography
-                      sx={{
-                        textAlign: "center",
-                        fontFamily: "Poppins, sans-serif",
-                        fontSize: "16px",
-                        fontWeight: "600",
-                        lineHeight: "24px",
-                        color: themeSynthese.palette.text.secondary,
-                      }}
-                    >
-                      Moyenne
-                    </Typography>
-                  </Grid>
-                  <Grid
+                    Moyenne
+                  </Typography>
+                </Grid>
+                <Grid
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "100%",
+                    width: "48%",
+                    ml: "1%",
+                    mr: "1%",
+                    fontFamily: "Poppins, sans-serif",
+                  }}
+                >
+                  <Gauge
                     sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      height: "100%",
+                      [`& .${gaugeClasses.valueText}`]: {
+                        fontSize: 24,
+                        fontFamily: "Poppins, sans-serif",
+                        fontWeight: 600,
+                      },
+                      width: "100%",
+                    }}
+                    cornerRadius={5}
+                    value={question.stats.others.median}
+                    valueMax={question.question.slider_max}
+                    startAngle={-90}
+                    endAngle={90}
+                    outerRadius={100}
+                    text={({ value, valueMax }) => `${value} / ${valueMax}`}
+                    width={200}
+                    height={130} // Ajout de la hauteur
+                  />
+                  <Typography
+                    sx={{
+                      textAlign: "center",
                       fontFamily: "Poppins, sans-serif",
+                      fontSize: "16px",
+                      fontWeight: "600",
+                      lineHeight: "24px",
+                      color: themeSynthese.palette.text.secondary,
                     }}
                   >
-                    <Gauge
-                      sx={{
-                        [`& .${gaugeClasses.valueText}`]: {
-                          fontSize: 24,
-                          fontFamily: "Poppins, sans-serif",
-                          fontWeight: 600,
-                        },
-                      }}
-                      cornerRadius={5}
-                      value={question.stats.others.median}
-                      valueMax={question.question.slider_max}
-                      startAngle={-90}
-                      endAngle={90}
-                      outerRadius={100}
-                      text={({ value, valueMax }) => `${value} / ${valueMax}`}
-                      width={200}
-                      height={130} // Ajout de la hauteur
-                    />
-                    <Typography
-                      sx={{
-                        textAlign: "center",
-                        fontFamily: "Poppins, sans-serif",
-                        fontSize: "16px",
-                        fontWeight: "600",
-                        lineHeight: "24px",
-                        color: themeSynthese.palette.text.secondary,
-                      }}
-                    >
-                      Médiane
-                    </Typography>
-                  </Grid>
+                    Médiane
+                  </Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -282,6 +326,7 @@ const SyntheseSlider = ({ question, theme, isJournalist, isUser }) => {
                   display: "flex",
                   flexDirection: "row",
                   alignItems: "center",
+                  mt: "20px",
                   justifyContent: "start",
                   width: "100%",
                   height: "100%",
@@ -291,97 +336,92 @@ const SyntheseSlider = ({ question, theme, isJournalist, isUser }) => {
                 <Grid
                   sx={{
                     display: "flex",
-                    flexDirection: "row",
+                    flexDirection: "column",
                     alignItems: "center",
-                    justifyContent: "space-between",
-                    width: "100%",
+                    justifyContent: "center",
                     height: "100%",
+                    width: "48%",
+                    ml: "1%",
+                    mr: "1%",
                     fontFamily: "Poppins, sans-serif",
-                    textOverflow: "ellipsis",
                   }}
                 >
-                  <Grid
+                  <Gauge
+                    cornerRadius={5}
+                    value={question.stats.journalists.mean}
+                    startAngle={-90}
+                    endAngle={90}
+                    outerRadius={100}
+                    valueMax={question.question.slider_max}
                     sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      height: "100%",
+                      [`& .${gaugeClasses.valueText}`]: {
+                        fontSize: 24,
+                        fontFamily: "Poppins, sans-serif",
+                        fontWeight: 600,
+                      },
+                      width: "100%",
+                    }}
+                    text={({ value, valueMax }) => `${value} / ${valueMax}`}
+                    width={200}
+                    height={130} // Ajout de la hauteur
+                  />
+                  <Typography
+                    sx={{
+                      textAlign: "center",
                       fontFamily: "Poppins, sans-serif",
+                      fontSize: "16px",
+                      fontWeight: "600",
+                      lineHeight: "24px",
+                      color: themeSynthese.palette.text.secondary,
                     }}
                   >
-                    <Gauge
-                      cornerRadius={5}
-                      value={question.stats.journalists.mean}
-                      startAngle={-90}
-                      endAngle={90}
-                      outerRadius={100}
-                      valueMax={question.question.slider_max}
-                      sx={{
-                        [`& .${gaugeClasses.valueText}`]: {
-                          fontSize: 24,
-                          fontFamily: "Poppins, sans-serif",
-                          fontWeight: 600,
-                        },
-                      }}
-                      text={({ value, valueMax }) => `${value} / ${valueMax}`}
-                      width={200}
-                      height={130} // Ajout de la hauteur
-                    />
-                    <Typography
-                      sx={{
-                        textAlign: "center",
-                        fontFamily: "Poppins, sans-serif",
-                        fontSize: "16px",
-                        fontWeight: "600",
-                        lineHeight: "24px",
-                        color: themeSynthese.palette.text.secondary,
-                      }}
-                    >
-                      Moyenne
-                    </Typography>
-                  </Grid>
-                  <Grid
+                    Moyenne
+                  </Typography>
+                </Grid>
+                <Grid
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "100%",
+                    width: "48%",
+                    ml: "1%",
+                    mr: "1%",
+                    fontFamily: "Poppins, sans-serif",
+                  }}
+                >
+                  <Gauge
                     sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      height: "100%",
+                      [`& .${gaugeClasses.valueText}`]: {
+                        fontSize: 24,
+                        fontFamily: "Poppins, sans-serif",
+                        fontWeight: 600,
+                      },
+                      width: "100%",
+                    }}
+                    cornerRadius={5}
+                    value={question.stats.journalists.median}
+                    valueMax={question.question.slider_max}
+                    startAngle={-90}
+                    endAngle={90}
+                    outerRadius={100}
+                    text={({ value, valueMax }) => `${value} / ${valueMax}`}
+                    width={200}
+                    height={130} // Ajout de la hauteur
+                  />
+                  <Typography
+                    sx={{
+                      textAlign: "center",
                       fontFamily: "Poppins, sans-serif",
+                      fontSize: "16px",
+                      fontWeight: "600",
+                      lineHeight: "24px",
+                      color: themeSynthese.palette.text.secondary,
                     }}
                   >
-                    <Gauge
-                      sx={{
-                        [`& .${gaugeClasses.valueText}`]: {
-                          fontSize: 24,
-                          fontFamily: "Poppins, sans-serif",
-                          fontWeight: 600,
-                        },
-                      }}
-                      cornerRadius={5}
-                      value={question.stats.journalists.median}
-                      valueMax={question.question.slider_max}
-                      startAngle={-90}
-                      endAngle={90}
-                      outerRadius={100}
-                      text={({ value, valueMax }) => `${value} / ${valueMax}`}
-                      width={200}
-                      height={130} // Ajout de la hauteur
-                    />
-                    <Typography
-                      sx={{
-                        textAlign: "center",
-                        fontFamily: "Poppins, sans-serif",
-                        fontSize: "16px",
-                        fontWeight: "600",
-                        lineHeight: "24px",
-                        color: themeSynthese.palette.text.secondary,
-                      }}
-                    >
-                      Médiane
-                    </Typography>
-                  </Grid>
+                    Médiane
+                  </Typography>
                 </Grid>
               </Grid>
             </Grid>

@@ -9,6 +9,7 @@ import {
   Checkbox,
   FormControlLabel,
   MenuItem,
+  IconButton,
 } from "@mui/material";
 import { theme } from "../../../theme";
 import { useTheme } from "@mui/material/styles";
@@ -19,6 +20,7 @@ import SyntheseGlobal from "./SyntheseGlobal";
 import useGET from "../../../hooks/useGET";
 import { useSelector } from "react-redux";
 import SyntheseChoicesQuestion from "./SyntheseChoicesQuestion";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const SyntheseHeader = ({
@@ -29,7 +31,12 @@ const SyntheseHeader = ({
   isUser,
   isJournalist,
   setSelectedUser,
+  questionnaireId,
 }) => {
+  const [responseExport, setResponseExport] = useGET({
+    api: process.env.REACT_APP_API_URL,
+  });
+  const tokenAdmin = useSelector((state) => state.user.token);
   const themeSynthese = useTheme(theme);
   console.log("selectedUser", selectedUser);
   console.log("userList", userList);
@@ -46,6 +53,42 @@ const SyntheseHeader = ({
 
   const setSelectedUserHeader = (event) => {
     setSelectedUser(event.target.value);
+  };
+
+  const exportData = () => {
+    fetch(
+      `${process.env.REACT_APP_API_URL}/admin/exportData?questionnaire_id=${questionnaireId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${tokenAdmin}`,
+        },
+      }
+    )
+      .then((response) => {
+        if (response.ok) {
+          return response.blob();
+        } else {
+          throw new Error("Network response was not ok.");
+        }
+      })
+      .then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "responses.csv";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        toast.success("Export des données réussi");
+      })
+      .catch((error) => {
+        console.error("Erreur lors de l'export des données", error);
+        toast.error("Erreur lors de l'export des données");
+      });
+  };
+
+  const resetSelectedUser = () => {
+    setSelectedUser(null);
   };
 
   return (
@@ -74,6 +117,22 @@ const SyntheseHeader = ({
           justifyContent: "center",
         }}
       >
+        <IconButton
+          onClick={resetSelectedUser}
+          sx={{
+            display: selectedUser ? "flex" : "none",
+
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <FontAwesomeIcon
+            fontSize={16}
+            icon="fa-solid fa-rotate-right"
+            fixedWidth
+            color={themeSynthese.palette.primary.main}
+          />
+        </IconButton>
         <Select
           value={selectedUser}
           onChange={setSelectedUserHeader}
@@ -154,7 +213,12 @@ const SyntheseHeader = ({
           justifyContent: "center",
         }}
       >
-        <Button variant="contained" color="primary" sx={{ width: "100%" }}>
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ width: "100%" }}
+          onClick={exportData}
+        >
           <FontAwesomeIcon
             fontSize={16}
             icon="fa-solid fa-file-csv"
