@@ -25,10 +25,15 @@ const QuestionSimple = ({ onResponseChange, question, mode, userResponse }) => {
   }, [selectedChoices]);
 
   const handleCheckboxChange = (choiceId) => {
-    setSelectedChoices((prevState) => {
-      return prevState.includes(choiceId)
-        ? prevState.filter((id) => id !== choiceId)
-        : [...prevState, choiceId];
+    setSelectedChoices((prevSelectedChoices) => {
+      if (question.type === 'single_choice') {
+        return [choiceId];
+      } else {
+        const newSelectedChoices = prevSelectedChoices.includes(choiceId)
+          ? prevSelectedChoices.filter((id) => id !== choiceId)
+          : [...prevSelectedChoices, choiceId];
+        return newSelectedChoices;
+      }
     });
   };
 
