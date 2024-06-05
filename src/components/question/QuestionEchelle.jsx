@@ -1,18 +1,23 @@
 import {Grid, Typography, Slider} from '@mui/material';
 import {useTheme} from '@mui/material/styles';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {theme} from '../../theme';
 import Enonce from './Enonce';
 
 const QuestionEchelle = ({onResponseChange, question, mode, userResponse = 0}) => {
-    const [sliderValue, setSliderValue] = useState(question.slider_min);
+    const [sliderValue, setSliderValue] = useState(question.slider_max / 2);
 
     const themeQuestion = useTheme(theme);
 
+    useEffect(() => {
+        if(mode === 'question')
+            onResponseChange(question.slider_max / 2);
+    }, []);
+
     const handleSliderChange = (event, newValue) => {
-        setSliderValue(newValue);
         onResponseChange(newValue);
+        setSliderValue(newValue);
     };
 
     const generateMarks = (min, max, step) => {
@@ -90,7 +95,7 @@ const QuestionEchelle = ({onResponseChange, question, mode, userResponse = 0}) =
                     </Typography>
                 </Grid>
             </Grid>
-            <Enonce children={question.description} imgSrc={question.image_src}/>
+            <Enonce description={question.description} imgSrc={question.image_src}/>
             {mode === 'question' ? (
                 <Grid
                     className='slider'
@@ -103,10 +108,10 @@ const QuestionEchelle = ({onResponseChange, question, mode, userResponse = 0}) =
                         valueLabelDisplay='auto'
                         value={sliderValue}
                         onChange={handleSliderChange}
-                        step={question.slider_gap && 0}
+                        step={question.slider_gap}
                         marks={marks}
-                        min={question.slider_min && 0}
-                        max={question.slider_max && 0}
+                        min={question.slider_min}
+                        max={question.slider_max}
                     />
                 </Grid>
             ) : (

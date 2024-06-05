@@ -44,14 +44,9 @@ const questionnaireSlice = createSlice({
             }
         },
         addResponse(state, action) {
-            const {questionId, questionType, value} = action.payload;
             const currentQuestionnaire = state.questionnaires.find(q => q.id === state.currentQuestionnaireId);
             if (currentQuestionnaire) {
-                currentQuestionnaire.responses.push({
-                    questionId,
-                    questionType,
-                    value,
-                });
+                currentQuestionnaire.responses = [...currentQuestionnaire.responses, ...action.payload];
             }
         },
         nextSectionHandler(state, action) {
@@ -67,10 +62,10 @@ const questionnaireSlice = createSlice({
 });
 
 const selectQuestionnaires = state => state.questionnaire.questionnaires;
-const selectCurrentQuestionnaire = state => state.questionnaire.currentQuestionnaireId;
+const selectCurrentQuestionnaireId = state => state.questionnaire.currentQuestionnaireId;
 
 export const selectCurrentSelection = createSelector(
-    [selectQuestionnaires, selectCurrentQuestionnaire],
+    [selectQuestionnaires, selectCurrentQuestionnaireId],
     (questionnaires, currentQuestionnaireId) => questionnaires.find(q => q.id === currentQuestionnaireId)
 );
 

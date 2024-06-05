@@ -16,7 +16,7 @@ const QuestionSimple = ({onResponseChange, question, mode, userResponse}) => {
         } else if (mode !== 'question') {
             setSelectedChoices(userResponse);
         }
-    }, []);
+    }, [selectedChoices]);
 
     const handleCheckboxChange = (choiceId) => {
         setSelectedChoices((prevState) => {
@@ -85,51 +85,198 @@ const QuestionSimple = ({onResponseChange, question, mode, userResponse}) => {
                     </Typography>
                 </Grid>
             </Grid>
-            <Enonce children={question.description} imgSrc={question.img_src}/>
+            <Enonce description={question.description} imgSrc={question.img_src}/>
             {mode === 'question' ? (
                 //--------------------------------------------------------------------------------------------
                 //-------------------------------------- Mode Question ---------------------------------------
                 //--------------------------------------------------------------------------------------------
 
                 <Grid container className='choices' spacing={2} sx={{width: '100%'}}>
-                    {question.choices.map(choice => {
-                        const handleClick = () => {
-                            handleCheckboxChange(choice.id);
-                        };
-                        return (
-                            <Grid item xs={choice.image_src ? 6 : 12} key={choice.id}>
-                                {choice.image_src ? (
-                                    <Box
-                                        onClick={handleClick}
+                    {question.choices.map(choice => (
+                        <Grid item xs={choice.image_src ? 6 : 12} key={choice.id}>
+                            {choice.image_src ?
+                                <Box
+                                    onClick={() => handleCheckboxChange(choice.id)}
+                                    sx={{
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        padding: '10px',
+                                        border: selectedChoices.includes(choice.id)
+                                            ? `2px solid ${themeQuestion.palette.primary.main}`
+                                            : `2px solid transparent`,
+                                        borderRadius: '15px',
+                                        transition: 'border 0.3s ease',
+                                        '&:hover': {
+                                            border: `2px solid ${themeQuestion.palette.secondary.main}`,
+                                        },
+                                    }}
+                                >
+                                    <img
+                                        style={{
+                                            width: '100%',
+                                            height: 'auto',
+                                            maxHeight: '250px',
+                                            objectFit: 'cover',
+                                            borderRadius: '15px',
+                                        }}
+                                        src={choice.image_src}
+                                        alt='image du choix'
+                                    />
+                                </Box>
+                                :
+                                <FormControlLabel
+                                    sx={{
+                                        '& .MuiFormControlLabel-label': {
+                                            fontFamily: 'Poppins, sans-serif',
+                                            fontSize: '16px',
+                                            fontWeight: '400',
+                                            lineHeight: '24px',
+                                            color: themeQuestion.palette.text.primary,
+                                        },
+                                    }}
+                                    control={
+                                        <Checkbox
+                                            checked={selectedChoices.includes(choice.id)}
+                                            onChange={() => handleCheckboxChange(choice.id)}
+                                        />
+                                    }
+                                    label={choice.text}
+                                />
+                            }
+                        </Grid>
+                    ))}
+                </Grid>
+            ) : (
+                //--------------------------------------------------------------------------------------------
+                //-------------------------------------- Mode Sommaire ---------------------------------------
+                //--------------------------------------------------------------------------------------------
+
+                <Grid container className='choices' spacing={2} sx={{width: '100%'}}>
+                    {question.choices.map(choice => (
+                        <Grid item xs={choice.image_src ? 6 : 12} key={choice.id}>
+                            {choice.image_src ?
+                                <Grid
+                                    sx={{
+                                        cursor: 'pointer',
+                                        height: '250px',
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'flex-end',
+                                        justifyContent: 'space-evenly',
+                                        backgroundImage: `url(${choice.image_src})`,
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'center',
+                                        outline: selectedChoices.includes(choice.id)
+                                            ? `2px solid ${themeQuestion.palette.primary.main}`
+                                            : `2px solid transparent`,
+                                        borderRadius: '15px',
+                                    }}
+                                >
+                                    <Grid
+                                        xs={5}
                                         sx={{
-                                            cursor: 'pointer',
+                                            backgroundColor: themeQuestion.palette.primary.main,
+                                            padding: '10px',
+                                            opacity: '0.85',
                                             display: 'flex',
                                             flexDirection: 'column',
                                             alignItems: 'center',
-                                            padding: '10px',
-                                            border: selectedChoices.includes(choice.id)
-                                                ? `2px solid ${themeQuestion.palette.primary.main}`
-                                                : `2px solid transparent`,
-                                            borderRadius: '15px',
-                                            transition: 'border 0.3s ease',
-                                            '&:hover': {
-                                                border: `2px solid ${themeQuestion.palette.secondary.main}`,
-                                            },
+                                            justifyContent: 'space-between',
+                                            height: '75%',
+                                            borderRadius: '15px 15px 0 0',
                                         }}
                                     >
-                                        <img
-                                            style={{
-                                                width: '100%',
-                                                height: 'auto',
-                                                maxHeight: '250px',
-                                                objectFit: 'cover',
-                                                borderRadius: '15px',
+                                        <Grid
+                                            sx={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '5px',
                                             }}
-                                            src={choice.image_src}
-                                            alt='image du choix'
-                                        />
-                                    </Box>
-                                ) : (
+                                        >
+                                            <FontAwesomeIcon
+                                                icon='fa-solid fa-user'
+                                                style={{
+                                                    fontSize: '16px',
+                                                    color: themeQuestion.palette.primary.contrastText,
+                                                }}
+                                            />
+                                            <Typography
+                                                sx={{
+                                                    fontFamily: 'Poppins, sans-serif',
+                                                    fontSize: '24px',
+                                                    fontWeight: '600',
+                                                    color: themeQuestion.palette.primary.contrastText,
+                                                }}
+                                            >
+                                                736
+                                            </Typography>
+                                        </Grid>
+                                        <Typography
+                                            sx={{
+                                                fontFamily: 'Poppins, sans-serif',
+                                                fontSize: '24px',
+                                                fontWeight: '600',
+                                                color: themeQuestion.palette.primary.contrastText,
+                                            }}
+                                        >
+                                            75%
+                                        </Typography>
+                                    </Grid>
+                                    <Grid
+                                        xs={5}
+                                        sx={{
+                                            backgroundColor: themeQuestion.palette.secondary.main,
+                                            padding: '10px',
+                                            opacity: '0.85',
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                            height: '35%',
+                                            borderRadius: '15px 15px 0 0',
+                                        }}
+                                    >
+                                        <Grid
+                                            sx={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '5px',
+                                            }}
+                                        >
+                                            <FontAwesomeIcon
+                                                icon='fa-solid fa-user'
+                                                style={{
+                                                    fontSize: '16px',
+                                                    color: themeQuestion.palette.primary.contrastText,
+                                                }}
+                                            />
+                                            <Typography
+                                                sx={{
+                                                    fontFamily: 'Poppins, sans-serif',
+                                                    fontSize: '24px',
+                                                    fontWeight: '600',
+                                                    color: themeQuestion.palette.primary.contrastText,
+                                                }}
+                                            >
+                                                213
+                                            </Typography>
+                                        </Grid>
+                                        <Typography
+                                            sx={{
+                                                fontFamily: 'Poppins, sans-serif',
+                                                fontSize: '24px',
+                                                fontWeight: '600',
+                                                color: themeQuestion.palette.primary.contrastText,
+                                            }}
+                                        >
+                                            15%
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                                :
+                                <Grid sx={{display: 'flex'}}>
                                     <FormControlLabel
                                         sx={{
                                             '& .MuiFormControlLabel-label': {
@@ -143,172 +290,18 @@ const QuestionSimple = ({onResponseChange, question, mode, userResponse}) => {
                                         control={
                                             <Checkbox
                                                 checked={selectedChoices.includes(choice.id)}
-                                                onChange={() => handleCheckboxChange(choice.id)}
                                             />
                                         }
                                         label={choice.text}
                                     />
-                                )}
-                            </Grid>
-                        );
-                    })}
-                </Grid>
-            ) : (
-                //--------------------------------------------------------------------------------------------
-                //-------------------------------------- Mode Sommaire ---------------------------------------
-                //--------------------------------------------------------------------------------------------
-
-                <Grid container className='choices' spacing={2} sx={{width: '100%'}}>
-                    {question.choices.map(choice => {
-                        return (
-                            <Grid item xs={choice.image_src ? 6 : 12} key={choice.id}>
-                                {choice.image_src ? (
-                                    <Grid
-                                        sx={{
-                                            cursor: 'pointer',
-                                            height: '250px',
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            alignItems: 'flex-end',
-                                            justifyContent: 'space-evenly',
-                                            backgroundImage: `url(${choice.image_src})`,
-                                            backgroundSize: 'cover',
-                                            backgroundPosition: 'center',
-                                            outline: selectedChoices.includes(choice.id)
-                                                ? `2px solid ${themeQuestion.palette.primary.main}`
-                                                : `2px solid transparent`,
-                                            borderRadius: '15px',
-                                        }}
-                                    >
-                                        <Grid
-                                            xs={5}
-                                            sx={{
-                                                backgroundColor: themeQuestion.palette.primary.main,
-                                                padding: '10px',
-                                                opacity: '0.85',
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                alignItems: 'center',
-                                                justifyContent: 'space-between',
-                                                height: '75%',
-                                                borderRadius: '15px 15px 0 0',
-                                            }}
-                                        >
-                                            <Grid
-                                                sx={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    gap: '5px',
-                                                }}
-                                            >
-                                                <FontAwesomeIcon
-                                                    icon='fa-solid fa-user'
-                                                    style={{
-                                                        fontSize: '16px',
-                                                        color: themeQuestion.palette.primary.contrastText,
-                                                    }}
-                                                />
-                                                <Typography
-                                                    sx={{
-                                                        fontFamily: 'Poppins, sans-serif',
-                                                        fontSize: '24px',
-                                                        fontWeight: '600',
-                                                        color: themeQuestion.palette.primary.contrastText,
-                                                    }}
-                                                >
-                                                    736
-                                                </Typography>
-                                            </Grid>
-                                            <Typography
-                                                sx={{
-                                                    fontFamily: 'Poppins, sans-serif',
-                                                    fontSize: '24px',
-                                                    fontWeight: '600',
-                                                    color: themeQuestion.palette.primary.contrastText,
-                                                }}
-                                            >
-                                                75%
-                                            </Typography>
-                                        </Grid>
-                                        <Grid
-                                            xs={5}
-                                            sx={{
-                                                backgroundColor: themeQuestion.palette.secondary.main,
-                                                padding: '10px',
-                                                opacity: '0.85',
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                alignItems: 'center',
-                                                justifyContent: 'space-between',
-                                                height: '35%',
-                                                borderRadius: '15px 15px 0 0',
-                                            }}
-                                        >
-                                            <Grid
-                                                sx={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    gap: '5px',
-                                                }}
-                                            >
-                                                <FontAwesomeIcon
-                                                    icon='fa-solid fa-user'
-                                                    style={{
-                                                        fontSize: '16px',
-                                                        color: themeQuestion.palette.primary.contrastText,
-                                                    }}
-                                                />
-                                                <Typography
-                                                    sx={{
-                                                        fontFamily: 'Poppins, sans-serif',
-                                                        fontSize: '24px',
-                                                        fontWeight: '600',
-                                                        color: themeQuestion.palette.primary.contrastText,
-                                                    }}
-                                                >
-                                                    213
-                                                </Typography>
-                                            </Grid>
-                                            <Typography
-                                                sx={{
-                                                    fontFamily: 'Poppins, sans-serif',
-                                                    fontSize: '24px',
-                                                    fontWeight: '600',
-                                                    color: themeQuestion.palette.primary.contrastText,
-                                                }}
-                                            >
-                                                15%
-                                            </Typography>
-                                        </Grid>
-                                    </Grid>
-                                ) : (
-                                    <Grid sx={{display: 'flex'}}>
-                                        <FormControlLabel
-                                            sx={{
-                                                '& .MuiFormControlLabel-label': {
-                                                    fontFamily: 'Poppins, sans-serif',
-                                                    fontSize: '16px',
-                                                    fontWeight: '400',
-                                                    lineHeight: '24px',
-                                                    color: themeQuestion.palette.text.primary,
-                                                },
-                                            }}
-                                            control={
-                                                <Checkbox
-                                                    checked={selectedChoices.includes(choice.id)}
-                                                />
-                                            }
-                                            label={choice.text}
-                                        />
-                                        <QuestionChoiceStat
-                                            userPercent={23}
-                                            journalistPercent={15}
-                                        />
-                                    </Grid>
-                                )}
-                            </Grid>
-                        );
-                    })}
+                                    <QuestionChoiceStat
+                                        userPercent={23}
+                                        journalistPercent={15}
+                                    />
+                                </Grid>
+                            }
+                        </Grid>
+                    ))}
                 </Grid>
             )}
         </Grid>

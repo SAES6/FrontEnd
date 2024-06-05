@@ -75,7 +75,7 @@ const QuestionOpen = ({onResponseChange, question, userResponse, mode,}) => {
                     </Typography>
                 </Grid>
             </Grid>
-            <Enonce children={question.description} imgSrc={question.image_src}/>
+            <Enonce description={question.description} imgSrc={question.image_src}/>
             {mode === 'question' ? (
                 <Grid
                     className='answer'

@@ -1,5 +1,5 @@
 import {Grid, Button, Typography, useMediaQuery} from '@mui/material';
-import {useTheme, styled} from '@mui/material/styles';
+import {useTheme} from '@mui/material/styles';
 import {theme} from '../../theme';
 import QuestionOpen from '../../components/question/QuestionOpen';
 import QuestionSimple from '../../components/question/QuestionSimple';
@@ -12,7 +12,6 @@ import {selectCurrentSelection} from "../../_store/_slices/questionnaire-slice";
 
 const Summary = () => {
     const questionnaireState = useSelector(selectCurrentSelection);
-    const responses = questionnaireState?.response && [];
 
     const [response, setRequest] = useGET();
 
@@ -24,28 +23,23 @@ const Summary = () => {
 
     const navigate = useNavigate();
 
-    const ColorButton = styled(Button)(({theme}) => ({
-        color: theme.palette.primary.contrastText,
-        backgroundColor: theme.palette.primary.main,
-        transition: "ease 0.3s",
-        "&:hover": {
-            backgroundColor: theme.palette.primary.main,
-        },
-    }));
-
     useEffect(() => {
         setRequest({url: `/questionnaire/loadById?id=${id}`,});
     }, []);
 
     useEffect(() => {
+        if(!questionnaireState || questionnaireState?.length === 0)
+            navigate('/');
+    }, [questionnaireState]);
+
+    useEffect(() => {
         if (response?.status >= 200 || response?.status < 300) {
             setQuestions(response?.data);
         }
-        console.log(responses);
     }, [response]);
 
     const getResponseForQuestion = (questionId) => {
-        const response = responses?.find((res) => res.questionId === questionId);
+        const response = questionnaireState.responses?.find((res) => res.questionId === questionId);
         return response ? response.value : '';
     };
 

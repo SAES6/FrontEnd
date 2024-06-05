@@ -1,4 +1,4 @@
-import {getCurrentFieldCoords, questionnaireActions, selectCurrentSelection} from '../_slices/questionnaire-slice';
+import {getCurrentFieldCoords, questionnaireActions} from '../_slices/questionnaire-slice';
 import {callApiPost} from '../../utils/callApi';
 
 export const postResponses = (localResponses, id, navigate) => {
@@ -23,15 +23,13 @@ export const postResponses = (localResponses, id, navigate) => {
         };
 
         dispatch(questionnaireActions.setProgression((localResponses.currentSection / localResponses.totalSections) * 100));
-        console.log(userRole);
-        dispatch(questionnaireActions.addResponse(...localResponses));
-        navigate(`/summary/${id}`);
+        dispatch(questionnaireActions.addResponse(localResponses));
 
         try {
-            const unNom = await insertUserResponse([...responses, ...localResponses]);
-            console.log(unNom);
+            await insertUserResponse([...responses, ...localResponses]);
         } catch (e) {
             console.log(e);
         }
+        navigate(`/summary/${id}`);
     };
 };
