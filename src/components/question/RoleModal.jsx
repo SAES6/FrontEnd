@@ -4,13 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
-const RoleModal = ({
-  modalRole,
-  userRole,
-  handleSetJournalist,
-  handleValidateRole,
-  themeQuestions,
-}) => {
+const RoleModal = ({modalRole, userRole, handleSetJournalist, handleValidateRole, themeQuestions,}) => {
   return (
     <Modal open={modalRole}>
       <Grid
