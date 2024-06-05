@@ -21,7 +21,7 @@ const Questions = () => {
     const navigate = useNavigate();
     const {id} = useParams();
 
-    const currentQuestionnaire = useSelector(selectCurrentSelection) || {currentSection: 0};
+    const currentQuestionnaire = useSelector(selectCurrentSelection);
     const userRoleStored = useSelector(state => state.user.roleUser);
 
     const [questions, setQuestions] = useState([]);
@@ -48,14 +48,13 @@ const Questions = () => {
             const uniqueSections = new Set(response.data.map(question => question.section.id));
             dispatch(questionnaireActions.setQuestionnaire({id: id, totalSections: uniqueSections.size}));
         }
-    }, [response]);
-
+    }, [response, dispatch, id]);
 
     useEffect(() => {
-        if (questions.length > 0) {
-            setCurrentQuestions(questions.filter((question) => question.section.order === currentQuestionnaire.currentSection));
+        if (questions.length > 0 && currentQuestionnaire) {
+            setCurrentQuestions(questions.filter(question => question.section.order === currentQuestionnaire.currentSection));
         }
-    }, [questions, currentQuestionnaire?.currentSection]);
+    }, [questions, currentQuestionnaire]);
 
     const handleResponseChange = (questionId, value) => {
         setLocalResponses(prev => {
@@ -72,14 +71,13 @@ const Questions = () => {
     };
 
     const nextSection = () => {
-        if (currentQuestionnaire?.currentSection >= currentQuestionnaire?.totalSections) {
-            console.log(currentQuestionnaire.currentSection >= currentQuestionnaire.totalSections, currentQuestionnaire.currentSection, currentQuestionnaire.totalSections);
-            dispatch(postResponses(localResponses, id, navigate));
-        } else {
-            const newSection = currentQuestionnaire?.currentSection + 1;
+        if (currentQuestionnaire && currentQuestionnaire.currentSection >= currentQuestionnaire.totalSections) {
+           dispatch(postResponses(localResponses, id, navigate));
+        } else if (currentQuestionnaire) {
+            const newSection = currentQuestionnaire.currentSection + 1;
             dispatch(questionnaireActions.nextSectionHandler({
                 responses: localResponses,
-                progression: (newSection / currentQuestionnaire?.totalSections) * 100,
+                progression: (newSection / currentQuestionnaire.totalSections) * 100,
                 currentSection: newSection
             }));
             setLocalResponses([]);
@@ -92,7 +90,7 @@ const Questions = () => {
     };
 
     const handleValidateRole = () => {
-        if(!userRole)
+        if (!userRole)
             dispatch(userActions.setRoleUser('user'));
         setModalRole(false);
     };
@@ -113,13 +111,17 @@ const Questions = () => {
                 currentQuestions={currentQuestions}
                 handleResponseChange={handleResponseChange}
             />
-            <QuestionnaireNavigation
-                screenSize={screenSize}
-                themeQuestions={themeQuestions}
-                currentSection={currentQuestionnaire?.currentSection}
-                nextSection={nextSection}
-            />
-            <ProgressBar themeQuestions={themeQuestions} progression={currentQuestionnaire?.progression}/>
+            {currentQuestionnaire && (
+                <>
+                    <QuestionnaireNavigation
+                        screenSize={screenSize}
+                        themeQuestions={themeQuestions}
+                        currentSection={currentQuestionnaire.currentSection}
+                        nextSection={nextSection}
+                    />
+                    <ProgressBar themeQuestions={themeQuestions} progression={currentQuestionnaire.progression}/>
+                </>
+            )}
             <RoleModal
                 modalRole={modalRole}
                 userRole={userRole}

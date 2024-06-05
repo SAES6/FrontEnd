@@ -131,7 +131,7 @@ const Home = () => {
                     }}
                 >
                     <Button
-                        onClick={() => goToQuestionnaire(suggestedQuestionnaire)}
+                        onClick={() => goToQuestionnaire(suggestedQuestionnaire.id)}
                         disabled={suggestedQuestionnaire.completed}
                         sx={{
                             backgroundColor: suggestedQuestionnaire.completed

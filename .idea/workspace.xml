@@ -4,16 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb71d015-2964-42ab-8d1a-df10f0733de2" name="Changes" comment="pitié stop">
+    <list default="true" id="fb71d015-2964-42ab-8d1a-df10f0733de2" name="Changes" comment="impeccable">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_store/_actions/questionnaire-actions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/_store/_actions/questionnaire-actions.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/_store/_slices/questionnaire-slice.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/_store/_slices/questionnaire-slice.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/question/Enonce.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/question/Enonce.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/question/QuestionEchelle.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/question/QuestionEchelle.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/question/QuestionOpen.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/question/QuestionOpen.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/question/QuestionSimple.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/question/QuestionSimple.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/theme.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/theme.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/home/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/home/Home.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/summary/Summary.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/summary/Summary.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/questions/Questions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/questions/Questions.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,9 +26,9 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="C:\xampp\php\php.exe" />
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="2hPElZF6QKNfvjbnCSQzUErCcF4" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -78,5 +74,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="impeccable" />
+    <option name="LAST_COMMIT_MESSAGE" value="impeccable" />
   </component>
 </project>
