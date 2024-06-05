@@ -10,9 +10,7 @@ import {
 } from '@mui/material';
 import { theme } from '../../../theme';
 import { useTheme } from '@mui/material/styles';
-import CloseIcon from '@mui/icons-material/Close';
-import ImageIcon from '@mui/icons-material/Image';
-import HideImageIcon from '@mui/icons-material/HideImage';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Choices from './Choices';
 import Cursor from './Cursor';
 import {
@@ -22,7 +20,6 @@ import {
   useRef,
   useState,
 } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Pending = () => <></>;
 
@@ -36,8 +33,8 @@ const COMPONENT_MAP = {
 const QType = [
   { label: 'Choix unique', icon: 'fa-solid fa-bullseye' },
   { label: 'Choix multiple', icon: 'fa-solid fa-list-check' },
-  { label: 'Question ouverte', icon: 'fa-solid fa-feather' },
-  { label: 'Échelle', icon: 'fa-solid fa-sliders' },
+  { label: 'Libre', icon: 'fa-solid fa-feather' },
+  { label: 'Curseur', icon: 'fa-solid fa-sliders' },
 ];
 
 const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
@@ -241,12 +238,20 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
                 border: '1px solid',
                 borderColor: muiTheme.palette.secondary.main,
                 borderRadius: '15px',
-                height: 'fit-content',
                 boxShadow: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '40px',
+                aspectRatio: '1/1',
               }}
             >
               <IconButton onClick={handleClose}>
-                <CloseIcon />
+                <FontAwesomeIcon
+                  fixedWidth
+                  icon={'fa-solid fa-xmark'}
+                  fontSize={20}
+                />
               </IconButton>
             </Card>
           </Grid>
@@ -263,7 +268,6 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
               fullWidth
               multiline
               placeholder='Rédigez votre question'
-              variant='outlined'
               value={questionData.enonce ? questionData.enonce : ''}
               onChange={(e) =>
                 setQuestionData((prevState) => ({
@@ -287,8 +291,12 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
                 border: '1px solid',
                 borderColor: muiTheme.palette.secondary.main,
                 borderRadius: '15px',
-                height: 'fit-content',
                 boxShadow: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '40px',
+                aspectRatio: '1/1',
               }}
             >
               <input
@@ -299,11 +307,19 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
               />
               {Object.keys(questionData.image).length === 0 ? (
                 <IconButton onClick={buttonClickHandler}>
-                  <ImageIcon />
+                  <FontAwesomeIcon
+                    fixedWidth
+                    icon={'fa-solid fa-image'}
+                    fontSize={20}
+                  />
                 </IconButton>
               ) : (
                 <IconButton onClick={deleteHandler}>
-                  <HideImageIcon />
+                  <FontAwesomeIcon
+                    fixedWidth
+                    icon={'fa-solid fa-images'}
+                    fontSize={20}
+                  />
                 </IconButton>
               )}
             </Card>

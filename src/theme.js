@@ -52,9 +52,7 @@ export const theme = createTheme({
           marginRight: '10px',
         },
         iconSizeMedium: {
-          "& > *:first-of-type": {
-            fontSize: "inherit",
-          '& > *:first-child': {
+          '& > *:first-of-type': {
             fontSize: 'inherit',
           },
         },
@@ -83,7 +81,7 @@ export const theme = createTheme({
         },
         multiline: {
           fontSize: '16px',
-          padding: '10px 15px',
+          padding: '10px 15px !important',
         },
       },
     },
