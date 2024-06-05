@@ -52,6 +52,8 @@ export const theme = createTheme({
           marginRight: '10px',
         },
         iconSizeMedium: {
+          "& > *:first-of-type": {
+            fontSize: "inherit",
           '& > *:first-child': {
             fontSize: 'inherit',
           },
