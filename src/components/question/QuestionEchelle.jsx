@@ -1,28 +1,27 @@
-import { Grid, Typography, useMediaQuery, Slider } from '@mui/material';
+import { Grid, Typography, Slider } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { theme } from '../../theme';
 import Enonce from './Enonce';
 
 const QuestionEchelle = ({
-  children,
-  questionTitle,
-  questionSliderMin,
-  questionSliderMax,
-  questionSliderGap,
-  imgSrc,
   onResponseChange,
-  userResponse,
+  question,
   mode,
+  userResponse = 0,
 }) => {
+  const [sliderValue, setSliderValue] = useState(question.slider_max / 2);
+
   const themeQuestion = useTheme(theme);
-  const screenSize = useMediaQuery('(min-width:1600px)');
-  const [sliderValue, setSliderValue] = useState(questionSliderMin);
+
+  useEffect(() => {
+    if (mode === 'question') onResponseChange(question.slider_max / 2);
+  }, []);
 
   const handleSliderChange = (event, newValue) => {
-    setSliderValue(newValue);
     onResponseChange(newValue);
+    setSliderValue(newValue);
   };
 
   const generateMarks = (min, max, step) => {
@@ -34,9 +33,9 @@ const QuestionEchelle = ({
   };
 
   const marks = generateMarks(
-    questionSliderMin,
-    questionSliderMax,
-    questionSliderGap
+    question.slider_min,
+    question.slider_max,
+    question.slider_gap
   );
 
   return (
@@ -73,7 +72,7 @@ const QuestionEchelle = ({
             color: themeQuestion.palette.text.primary,
           }}
         >
-          {questionTitle}
+          {question.title}
         </Typography>
         <Grid
           sx={{
@@ -100,7 +99,7 @@ const QuestionEchelle = ({
           </Typography>
         </Grid>
       </Grid>
-      <Enonce children={children} imgSrc={imgSrc} />
+      <Enonce description={question.description} imgSrc={question.img_src} />
       {mode === 'question' ? (
         <Grid
           className='slider'
@@ -113,10 +112,10 @@ const QuestionEchelle = ({
             valueLabelDisplay='auto'
             value={sliderValue}
             onChange={handleSliderChange}
-            step={questionSliderGap}
+            step={question.slider_gap}
             marks={marks}
-            min={questionSliderMin}
-            max={questionSliderMax}
+            min={question.slider_min}
+            max={question.slider_max}
           />
         </Grid>
       ) : (
@@ -135,10 +134,10 @@ const QuestionEchelle = ({
             valueLabelDisplay='auto'
             value={userResponse}
             onChange={handleSliderChange}
-            step={questionSliderGap}
+            step={question.slider_gap}
             marks={marks}
-            min={questionSliderMin}
-            max={questionSliderMax}
+            min={question.slider_mim}
+            max={question.slider_max}
             sx={{
               '&.MuiSlider-root': {
                 pointerEvents: 'none !important',

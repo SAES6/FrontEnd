@@ -1,13 +1,15 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   token: null,
   adminPrincipal: null,
   tokenUser: null,
+  roleUser: '',
+  userConsent: false,
 };
 
 const userSlice = createSlice({
-  name: "user",
+  name: 'user',
   initialState,
   reducers: {
     login(state, action) {
@@ -27,8 +29,11 @@ const userSlice = createSlice({
     setTokenUser(state, action) {
       state.tokenUser = action.payload;
     },
-    removeTokenUser(state) {
-      state.tokenUser = null;
+    setRoleUser(state, action) {
+      state.roleUser = action.payload;
+    },
+    setUserConsent(state, action) {
+      state.userConsent = action.payload;
     },
   },
 });

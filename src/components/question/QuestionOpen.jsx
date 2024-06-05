@@ -1,26 +1,18 @@
-import { Grid, Typography, useMediaQuery, TextField, Box } from '@mui/material';
+import { Grid, Typography, TextField, Box } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { theme } from '../../theme';
 import Enonce from './Enonce';
 
-const QuestionOpen = ({
-  children,
-  questionTitle,
-  imgSrc,
-  onResponseChange,
-  userResponse,
-  mode,
-}) => {
-  const themeSummary = useTheme(theme);
-  const screenSize = useMediaQuery('(min-width:1600px)');
+const QuestionOpen = ({ onResponseChange, question, userResponse, mode }) => {
   const [responseValue, setResponseValue] = useState('');
 
+  const themeSummary = useTheme(theme);
+
   const handleResponseChange = (event) => {
-    const { value } = event.target;
-    setResponseValue(value);
-    onResponseChange(value);
+    setResponseValue(event.target.value);
+    onResponseChange(event.target.value);
   };
 
   return (
@@ -57,7 +49,7 @@ const QuestionOpen = ({
             color: themeSummary.palette.text.primary,
           }}
         >
-          {questionTitle}
+          {question.title}
         </Typography>
         <Grid
           sx={{
@@ -83,7 +75,7 @@ const QuestionOpen = ({
           </Typography>
         </Grid>
       </Grid>
-      <Enonce children={children} imgSrc={imgSrc} />
+      <Enonce description={question.description} imgSrc={question.img_src} />
       {mode === 'question' ? (
         <Grid
           className='answer'
@@ -99,6 +91,20 @@ const QuestionOpen = ({
             sx={{
               mt: '5px',
               width: '100%',
+              borderRadius: '15px',
+              border: '1px solid',
+              borderColor: themeSummary.palette.secondary.main,
+              input: {
+                padding: '10px 15px',
+                border: 'none',
+                fontWeight: '400',
+                color: themeSummary.palette.text.secondary,
+                fontFamily: 'Poppins, sans-serif',
+                fontSize: '16px',
+              },
+              fieldset: {
+                border: 'none',
+              },
             }}
             type='text'
             placeholder='Saisissez votre réponse'
