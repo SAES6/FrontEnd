@@ -86,378 +86,386 @@ const Home = () => {
   return (
     <Grid
       container
+      direction='column'
       sx={{
-        maxWidth: screenSize ? '1500px' : '1300px',
+        width: '100%',
         height: '100%',
-        width: 'auto',
         alignItems: 'center',
-        justifyContent: 'center',
-        alignContent: 'center',
-        mt: 25,
+        overflow: 'auto',
       }}
     >
       <Grid
         container
         sx={{
-          display: 'flex',
-          flexDirection: 'row',
+          maxWidth: screenSize ? '1500px' : '1300px',
           alignItems: 'center',
           justifyContent: 'center',
-          alignContent: 'center',
-          width: '100%',
-          mt: 5,
-          mb: 1,
         }}
       >
-        <Typography
-          sx={{
-            fontFamily: 'Poppins, sans-serif',
-            fontSize: '48px',
-            fontWeight: '700',
-            lineHeight: '55,2px',
-            letterSpacing: '-5%',
-          }}
-        >
-          Projet Informare Valorem
-        </Typography>
-      </Grid>
-      <Grid
-        container
-        spacing={4}
-        sx={{
-          height: 'fit-content',
-          width: '100%',
-          flexDirection: 'row',
-          alignItems: 'flex-start',
-          mt: 0,
-        }}
-      >
-        <Caroussel theme={themeLayout} />
         <Grid
-          item
-          xs={6}
-          md={6}
+          container
           sx={{
-            borderRadius: '15px',
-            height: '350px',
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            alignContent: 'center',
+            width: '100%',
+            mt: 5,
+            mb: 1,
           }}
         >
-          <Button
-            onClick={() => goToQuestionnaire(suggestedQuestionnaire.id)}
-            disabled={suggestedQuestionnaire.completed}
+          <Typography
             sx={{
-              backgroundColor: suggestedQuestionnaire.completed
-                ? themeLayout.palette.secondary.main
-                : themeLayout.palette.primary.main,
-              height: '100%',
-              padding: '20px 25px',
-              width: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              alignItems: 'flex-start',
-              '&:disabled': {
-                backgroundColor: themeLayout.palette.secondary.main, // Exemple de couleur lorsque le bouton est désactivé
-              },
+              fontFamily: 'Poppins, sans-serif',
+              fontSize: '48px',
+              fontWeight: '700',
+              lineHeight: '55,2px',
+              letterSpacing: '-5%',
             }}
-            variant='contained'
           >
-            <Grid
+            Projet Informare Valorem
+          </Typography>
+        </Grid>
+        <Grid
+          container
+          spacing={4}
+          sx={{
+            height: 'fit-content',
+            width: '100%',
+            flexDirection: 'row',
+            alignItems: 'flex-start',
+            mt: 0,
+          }}
+        >
+          <Caroussel theme={themeLayout} />
+          <Grid
+            item
+            xs={6}
+            md={6}
+            sx={{
+              borderRadius: '15px',
+              height: '350px',
+            }}
+          >
+            <Button
+              onClick={() => goToQuestionnaire(suggestedQuestionnaire.id)}
+              disabled={suggestedQuestionnaire.completed}
               sx={{
+                backgroundColor: suggestedQuestionnaire.completed
+                  ? themeLayout.palette.secondary.main
+                  : themeLayout.palette.primary.main,
+                height: '100%',
+                padding: '20px 25px',
+                width: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'flex-start',
+                justifyContent: 'space-between',
                 alignItems: 'flex-start',
-                width: '100%',
+                '&:disabled': {
+                  backgroundColor: themeLayout.palette.secondary.main, // Exemple de couleur lorsque le bouton est désactivé
+                },
               }}
+              variant='contained'
             >
               <Grid
                 sx={{
                   display: 'flex',
-                  flexDirection: 'row',
+                  flexDirection: 'column',
                   justifyContent: 'flex-start',
-                  alignItems: 'center',
+                  alignItems: 'flex-start',
                   width: '100%',
                 }}
               >
-                {suggestedQuestionnaire.completed && (
-                  <FontAwesomeIcon
-                    icon='fa-solid fa-lock'
-                    style={{
+                <Grid
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'flex-start',
+                    alignItems: 'center',
+                    width: '100%',
+                  }}
+                >
+                  {suggestedQuestionnaire.completed && (
+                    <FontAwesomeIcon
+                      icon='fa-solid fa-lock'
+                      style={{
+                        fontSize: '24px',
+                        color: themeLayout.palette.primary.contrastText,
+                        marginRight: '10px',
+                      }}
+                    />
+                  )}
+                  <Typography
+                    sx={{
+                      fontFamily: 'Poppins, sans-serif',
                       fontSize: '24px',
+                      fontWeight: '600',
+                      lineHeight: '36px',
                       color: themeLayout.palette.primary.contrastText,
-                      marginRight: '10px',
+                      overflowWrap: 'break-word',
+                      textTransform: 'none',
+                      width: '100%',
+                      overflowX: 'auto',
+                      textAlign: 'left',
                     }}
-                  />
-                )}
+                  >
+                    {suggestedQuestionnaire.name}
+                  </Typography>
+                </Grid>
                 <Typography
                   sx={{
                     fontFamily: 'Poppins, sans-serif',
-                    fontSize: '24px',
-                    fontWeight: '600',
-                    lineHeight: '36px',
+                    fontSize: '16px',
+                    fontWeight: '400',
+                    lineHeight: '24px',
                     color: themeLayout.palette.primary.contrastText,
                     overflowWrap: 'break-word',
                     textTransform: 'none',
                     width: '100%',
-                    overflowX: 'auto',
+                    maxHeight: '40%',
+                    overfloX: 'auto',
                     textAlign: 'left',
                   }}
                 >
-                  {suggestedQuestionnaire.name}
-                </Typography>
-              </Grid>
-              <Typography
-                sx={{
-                  fontFamily: 'Poppins, sans-serif',
-                  fontSize: '16px',
-                  fontWeight: '400',
-                  lineHeight: '24px',
-                  color: themeLayout.palette.primary.contrastText,
-                  overflowWrap: 'break-word',
-                  textTransform: 'none',
-                  width: '100%',
-                  maxHeight: '40%',
-                  overfloX: 'auto',
-                  textAlign: 'left',
-                }}
-              >
-                {suggestedQuestionnaire.description}
-              </Typography>
-            </Grid>
-            <Grid
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'flex-end',
-                alignItems: 'flex-start',
-                width: '100%',
-                maxHeight: '20%',
-              }}
-            >
-              <Grid
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  width: '100%',
-                }}
-              >
-                <FontAwesomeIcon
-                  icon='fa-solid fa-circle-question'
-                  style={{
-                    fontSize: '16px',
-                    color: themeLayout.palette.primary.contrastText,
-                    opacity: '0.75',
-                    marginRight: '5px',
-                  }}
-                />
-                <Typography
-                  sx={{
-                    fontFamily: 'Poppins, sans-serif',
-                    fontSize: '16px',
-                    fontWeight: '600',
-                    lineHeight: '24px',
-                    color: themeLayout.palette.primary.contrastText,
-                    opacity: '0.75',
-                    textTransform: 'none',
-                  }}
-                >
-                  {suggestedQuestionnaire.number_of_questions === 1
-                    ? '1 question'
-                    : suggestedQuestionnaire.number_of_questions + ' questions'}
+                  {suggestedQuestionnaire.description}
                 </Typography>
               </Grid>
               <Grid
                 sx={{
                   display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
+                  flexDirection: 'column',
+                  justifyContent: 'flex-end',
+                  alignItems: 'flex-start',
                   width: '100%',
+                  maxHeight: '20%',
                 }}
               >
-                <FontAwesomeIcon
-                  icon='fa-solid fa-clock'
-                  style={{
-                    fontSize: '16px',
-                    color: themeLayout.palette.primary.contrastText,
-                    opacity: '0.75',
-                    marginRight: '5px',
-                  }}
-                />
-                <Typography
+                <Grid
                   sx={{
-                    fontFamily: 'Poppins, sans-serif',
-                    fontSize: '16px',
-                    fontWeight: '600',
-                    lineHeight: '24px',
-                    color: themeLayout.palette.primary.contrastText,
-                    opacity: '0.75',
-                    textTransform: 'none',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    width: '100%',
                   }}
                 >
-                  {suggestedQuestionnaire.duree + ' min'}
-                </Typography>
+                  <FontAwesomeIcon
+                    icon='fa-solid fa-circle-question'
+                    style={{
+                      fontSize: '16px',
+                      color: themeLayout.palette.primary.contrastText,
+                      opacity: '0.75',
+                      marginRight: '5px',
+                    }}
+                  />
+                  <Typography
+                    sx={{
+                      fontFamily: 'Poppins, sans-serif',
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      lineHeight: '24px',
+                      color: themeLayout.palette.primary.contrastText,
+                      opacity: '0.75',
+                      textTransform: 'none',
+                    }}
+                  >
+                    {suggestedQuestionnaire.number_of_questions === 1
+                      ? '1 question'
+                      : suggestedQuestionnaire.number_of_questions +
+                        ' questions'}
+                  </Typography>
+                </Grid>
+                <Grid
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    width: '100%',
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon='fa-solid fa-clock'
+                    style={{
+                      fontSize: '16px',
+                      color: themeLayout.palette.primary.contrastText,
+                      opacity: '0.75',
+                      marginRight: '5px',
+                    }}
+                  />
+                  <Typography
+                    sx={{
+                      fontFamily: 'Poppins, sans-serif',
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      lineHeight: '24px',
+                      color: themeLayout.palette.primary.contrastText,
+                      opacity: '0.75',
+                      textTransform: 'none',
+                    }}
+                  >
+                    {suggestedQuestionnaire.duree + ' min'}
+                  </Typography>
+                </Grid>
               </Grid>
-            </Grid>
-          </Button>
+            </Button>
+          </Grid>
         </Grid>
-      </Grid>
-      <Grid
-        container
-        gap={2}
-        sx={{
-          mt: '50px',
-          overflow: 'auto',
-          maxHeight: '350px',
-          width: '100%',
-          flexDirection: 'row',
-          alignItems: 'flex-end',
-        }}
-      >
-        {questionnaires.map((quiz) => (
-          <QuizBox
-            key={quiz.id}
-            quiz={quiz}
-            goToQuestionnaire={goToQuestionnaire}
-          />
-        ))}
-      </Grid>
-      <ConsentModal
-        open={openConsentPopup}
-        setOpen={setOpenConsentPopup}
-        qId={selectedQuestionnaire}
-      />
-      <Grid
-        sx={{
-          height: 'fit-content',
-          width: '100%',
-          mt: 0,
-        }}
-      >
-        <Typography
+        <Grid
+          container
+          gap={2}
           sx={{
-            fontSize: '24px',
-            fontFamily: 'Poppins, sans-serif',
-            fontWeight: 600,
-            lineHeight: '36px',
-            mb: '5px',
-            textAlign: 'center',
-            paddingTop: 10,
-            pb: '15px',
+            mt: '50px',
+            overflow: 'auto',
+            maxHeight: '350px',
+            width: '100%',
+            flexDirection: 'row',
+            alignItems: 'flex-end',
           }}
         >
-          A Propos
-        </Typography>
-        <Typography
+          {questionnaires.map((quiz) => (
+            <QuizBox
+              key={quiz.id}
+              quiz={quiz}
+              goToQuestionnaire={goToQuestionnaire}
+            />
+          ))}
+        </Grid>
+        <ConsentModal
+          open={openConsentPopup}
+          setOpen={setOpenConsentPopup}
+          qId={selectedQuestionnaire}
+        />
+        <Grid
           sx={{
-            fontSize: '16px',
-            fontFamily: 'Poppins, sans-serif',
-            fontWeight: 400,
-            lineHeight: '24px',
-            width: 700,
-            mb: '15px',
-            ml: '200px',
+            height: 'fit-content',
+            width: '100%',
+            mt: 0,
           }}
         >
-          De l’évaluation de la crédibilité des sources d'information par les
-          journalistes aux décisions quotidiennes prises par le grand public
-          basées sur les nouvelles consommées, l'appréciation de la valeur de
-          l'information joue un rôle crucial dans notre société de
-          l'information.
-        </Typography>
+          <Typography
+            sx={{
+              fontSize: '24px',
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: 600,
+              lineHeight: '36px',
+              mb: '5px',
+              textAlign: 'center',
+              paddingTop: 10,
+              pb: '15px',
+            }}
+          >
+            A Propos
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: '16px',
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: 400,
+              lineHeight: '24px',
+              width: 700,
+              mb: '15px',
+              ml: '200px',
+            }}
+          >
+            De l’évaluation de la crédibilité des sources d'information par les
+            journalistes aux décisions quotidiennes prises par le grand public
+            basées sur les nouvelles consommées, l'appréciation de la valeur de
+            l'information joue un rôle crucial dans notre société de
+            l'information.
+          </Typography>
 
-        <Typography
-          sx={{
-            fontSize: '16px',
-            fontFamily: 'Poppins, sans-serif',
-            fontWeight: 400,
-            lineHeight: '24px',
-            width: 700,
-            mb: '20px',
-            ml: '700px',
-          }}
-        >
-          L'importance accordée à différentes types d'informations peut varier
-          significativement entre professionnels de l'information et le grand
-          public, entraînant des perspectives diverses sur ce qui est considéré
-          comme « valeur de l'information ».
-        </Typography>
+          <Typography
+            sx={{
+              fontSize: '16px',
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: 400,
+              lineHeight: '24px',
+              width: 700,
+              mb: '20px',
+              ml: '700px',
+            }}
+          >
+            L'importance accordée à différentes types d'informations peut varier
+            significativement entre professionnels de l'information et le grand
+            public, entraînant des perspectives diverses sur ce qui est
+            considéré comme « valeur de l'information ».
+          </Typography>
 
-        <Typography
-          sx={{
-            fontSize: '16px',
-            fontFamily: 'Poppins, sans-serif',
-            fontWeight: 400,
-            lineHeight: '24px',
-            width: 700,
-            mb: '20px',
-            ml: '200px',
-          }}
-        >
-          Cette diversité de perceptions nécessite une analyse approfondie pour
-          comprendre comment les différents groupes utilisent et valorisent
-          l'information dans leurs prises de décisions.
-        </Typography>
+          <Typography
+            sx={{
+              fontSize: '16px',
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: 400,
+              lineHeight: '24px',
+              width: 700,
+              mb: '20px',
+              ml: '200px',
+            }}
+          >
+            Cette diversité de perceptions nécessite une analyse approfondie
+            pour comprendre comment les différents groupes utilisent et
+            valorisent l'information dans leurs prises de décisions.
+          </Typography>
 
-        <Typography
-          sx={{
-            fontSize: '16px',
-            fontFamily: 'Poppins, sans-serif',
-            fontWeight: 400,
-            lineHeight: '24px',
-            width: 700,
-            mb: '20px',
-            ml: '700px',
-          }}
-        >
-          Les études récentes soulignent l’importance de saisir ces nuances, et
-          notre site web est conçu pour explorer ces aspects en profondeur.
-        </Typography>
+          <Typography
+            sx={{
+              fontSize: '16px',
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: 400,
+              lineHeight: '24px',
+              width: 700,
+              mb: '20px',
+              ml: '700px',
+            }}
+          >
+            Les études récentes soulignent l’importance de saisir ces nuances,
+            et notre site web est conçu pour explorer ces aspects en profondeur.
+          </Typography>
 
-        <Typography
-          sx={{
-            fontSize: '16px',
-            fontFamily: 'Poppins, sans-serif',
-            fontWeight: 400,
-            lineHeight: '24px',
-            width: 700,
-            mb: '5px',
-            ml: '450px',
-          }}
-        >
-          Il offre une plateforme pour :
-        </Typography>
-        <Typography
-          sx={{
-            fontSize: '16px',
-            fontFamily: 'Poppins, sans-serif',
-            fontWeight: 400,
-            lineHeight: '24px',
-            width: 700,
-            mb: '5px',
-            ml: '450px',
-          }}
-        >
-          1) examiner et comparer les perceptions de la valeur de l'information
-          entre journalistes et le grand public à travers des réponses à des
-          scénarios soigneusement élaborés,{' '}
-        </Typography>
-        <Typography
-          sx={{
-            fontSize: '16px',
-            fontFamily: 'Poppins, sans-serif',
-            fontWeight: 400,
-            lineHeight: '24px',
-            width: 700,
-            mb: '25px',
-            ml: '450px',
-          }}
-        >
-          1) examiner et comparer les perceptions de la valeur de l'information
-          entre journalistes et le grand public à travers des réponses à des
-          scénarios soigneusement élaborés,{' '}
-        </Typography>
+          <Typography
+            sx={{
+              fontSize: '16px',
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: 400,
+              lineHeight: '24px',
+              width: 700,
+              mb: '5px',
+              ml: '450px',
+            }}
+          >
+            Il offre une plateforme pour :
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: '16px',
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: 400,
+              lineHeight: '24px',
+              width: 700,
+              mb: '5px',
+              ml: '450px',
+            }}
+          >
+            1) examiner et comparer les perceptions de la valeur de
+            l'information entre journalistes et le grand public à travers des
+            réponses à des scénarios soigneusement élaborés,{' '}
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: '16px',
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: 400,
+              lineHeight: '24px',
+              width: 700,
+              mb: '25px',
+              ml: '450px',
+            }}
+          >
+            1) examiner et comparer les perceptions de la valeur de
+            l'information entre journalistes et le grand public à travers des
+            réponses à des scénarios soigneusement élaborés,{' '}
+          </Typography>
+        </Grid>
       </Grid>
     </Grid>
   );
