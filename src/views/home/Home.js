@@ -12,8 +12,8 @@ import ConsentModal from '../../components/home/ConsentModal';
 import QuizBox from '../../components/home/QuizBox';
 
 const Home = () => {
-  const tokenUser = useSelector((state) => state.user.tokenUser);
-  const userToken = useSelector((state) => state.user.tokenUser);
+    const tokenUser = useSelector((state) => state.user.tokenUser);
+    const userConsent = useSelector((state) => state.user.userConsent);
 
   const [response, setInitialRequest] = useGET();
   const [responseCreateToken, setInitialRequestCreateToken] = useGET();
@@ -31,51 +31,52 @@ const Home = () => {
 
   console.log('home');
 
-  useEffect(() => {
-    if (!tokenUser) setInitialRequestCreateToken({ url: '/createToken' });
-
-    setInitialRequest({
-      url: '/questionnaire/byToken?token=' + userToken,
-      errorMessage: 'Aucun questionnaire',
-    });
-  }, []);
+    useEffect(() => {
+        if (!tokenUser) {
+            console.log('tokenUser')
+            setInitialRequestCreateToken({url: "/createToken",});
+        } else
+            setInitialRequest({url: "/questionnaire/byToken?token=" + tokenUser, errorMessage: "Aucun questionnaire"});
+    }, []);
 
   useEffect(() => {
     if (response?.status >= 200 && response?.status < 300) {
       const fetchedQuestionnaires = response.data;
 
-      if (fetchedQuestionnaires.length > 0) {
-        setQuestionnaires(fetchedQuestionnaires);
-        // set the suggested questionnaire to the first one that is not completed
-        let suggested = fetchedQuestionnaires.find((q) => !q.completed);
-        if (suggested) {
-          setSuggestedQuestionnaire(suggested);
-        } else {
-          setSuggestedQuestionnaire(fetchedQuestionnaires[0]);
+            if (fetchedQuestionnaires.length > 0) {
+                const sortedQuestionnaires = fetchedQuestionnaires.sort((a, b) => {
+                    if (a.completed === b.completed) {
+                        return a.id - b.id;
+                    }
+                    return a.completed - b.completed;
+                });
+
+                setQuestionnaires(sortedQuestionnaires);
+                const suggested = sortedQuestionnaires.find((q) => !q.completed);
+                setSuggestedQuestionnaire(suggested || sortedQuestionnaires[0]);
+            }
         }
-      }
-    }
-  }, [response]);
+    }, [response]);
 
-  useEffect(() => {
-    if (
-      responseCreateToken?.status >= 200 &&
-      responseCreateToken?.status < 300
-    ) {
-      dispatch(userActions.setTokenUser(responseCreateToken.data.token));
-    } else {
-      dispatch(userActions.removeTokenUser());
-    }
-  }, [responseCreateToken]);
 
-  const goToQuestionnaire = (quizId) => {
-    if (localStorage.getItem('user_consent') === 'true') {
-      navigate(`/questions/${quizId}`);
-    } else {
-      setOpenConsentPopup(true);
-      setSelectedQuestionnaire(quizId);
-    }
-  };
+    useEffect(() => {
+        if (responseCreateToken?.status >= 200 && responseCreateToken?.status < 300) {
+            dispatch(userActions.setTokenUser(responseCreateToken.data.token));
+            setInitialRequest({
+                url: "/questionnaire/byToken?token=" + responseCreateToken.data.token,
+                errorMessage: "Aucun questionnaire"
+            });
+        }
+    }, [responseCreateToken]);
+
+    const goToQuestionnaire = (quizId) => {
+        if (userConsent) {
+            navigate(`/questions/${quizId}`);
+        } else {
+            setOpenConsentPopup(true);
+            setSelectedQuestionnaire(quizId);
+        }
+    };
 
   return (
     <Grid
