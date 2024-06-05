@@ -5,6 +5,7 @@ const initialState = {
   adminPrincipal: null,
   tokenUser: null,
   roleUser: '',
+  userConsent: false,
 };
 
 const userSlice = createSlice({
@@ -31,8 +32,8 @@ const userSlice = createSlice({
     setRoleUser(state, action) {
       state.roleUser = action.payload;
     },
-    removeTokenUser(state) {
-      state.tokenUser = null;
+    setUserConsent(state, action) {
+      state.userConsent = action.payload;
     },
   },
 });

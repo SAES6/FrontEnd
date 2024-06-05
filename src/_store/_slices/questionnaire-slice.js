@@ -13,7 +13,9 @@ const questionnaireSlice = createSlice({
             state.currentQuestionnaireId = action.payload;
         },
         setQuestionnaire(state, action) {
-            if (!state.questionnaires.includes(state.currentQuestionnaireId)) {
+            const existingQuestionnaire = state.questionnaires.find(q => q.id === parseInt(action.payload.id));
+            if (!existingQuestionnaire) {
+                state.currentQuestionnaireId = parseInt(action.payload.id);
                 state.questionnaires = [
                     ...state.questionnaires,
                     {
@@ -22,7 +24,8 @@ const questionnaireSlice = createSlice({
                         totalSections: action.payload.totalSections,
                         progression: 0,
                         responses: [],
-                    }];
+                    }
+                ];
             }
         },
         setCurrentSection(state, action) {

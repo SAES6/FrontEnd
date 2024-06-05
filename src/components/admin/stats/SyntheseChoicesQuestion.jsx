@@ -79,32 +79,80 @@ const SyntheseChoicesQuestion = ({
           height: "fit-content",
         }}
       >
-        <Typography
+        <Grid
+          container
+          spacing={2}
           sx={{
-            textAlign: "left",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            width: "100%",
+          }}
+        >
+          {question.question.img_src != null && (
+            <Grid
+              item
+              xs={6}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <img
+                style={{
+                  width: "100%",
+                  maxHeight: "200px",
+                  borderRadius: "15px",
+                  objectFit: "cover",
+                }}
+                src={question.question.img_src}
+              ></img>
+            </Grid>
+          )}
+          <Grid
+            item
+            xs={question.question.img_src != null ? 6 : 12}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              alignSelf: "baseline",
+              justifyContent: "start",
+              width: "100%",
+            }}
+          >
+            <Typography
+              sx={{
+                textAlign: "left",
 
-            fontFamily: "Poppins, sans-serif",
-            fontSize: "16px",
-            fontWeight: "600",
-            lineHeight: "36px",
-            color: themeSynthese.palette.text.primary,
-          }}
-        >
-          Énoncé
-        </Typography>
-        <Typography
-          sx={{
-            textAlign: "left",
-            mt: "10px",
-            fontFamily: "Poppins, sans-serif",
-            fontSize: "16px",
-            fontWeight: "400",
-            lineHeight: "24px",
-            color: themeSynthese.palette.text.primary,
-          }}
-        >
-          {question.question.description}
-        </Typography>
+                fontFamily: "Poppins, sans-serif",
+                fontSize: "16px",
+                fontWeight: "600",
+                lineHeight: "36px",
+                color: themeSynthese.palette.text.primary,
+              }}
+            >
+              Énoncé
+            </Typography>
+            <Typography
+              sx={{
+                textAlign: "left",
+                mt: "10px",
+                fontFamily: "Poppins, sans-serif",
+                fontSize: "16px",
+                fontWeight: "400",
+                lineHeight: "24px",
+                color: themeSynthese.palette.text.primary,
+              }}
+            >
+              {question.question.description}
+            </Typography>
+          </Grid>
+        </Grid>
+
         <Grid
           sx={{
             display: "flex",
