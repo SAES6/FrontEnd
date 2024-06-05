@@ -112,7 +112,8 @@ const Questions = () => {
       dispatch(
         questionnaireActions.nextSectionHandler({
           responses: localResponses,
-          progression: (newSection / currentQuestionnaire.totalSections) * 100,
+          progression:
+            ((newSection - 1) / currentQuestionnaire.totalSections) * 100,
           currentSection: newSection,
         })
       );
