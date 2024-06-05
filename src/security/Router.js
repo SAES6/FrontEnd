@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 import SecuredRoute from '../security/SecuredRoute.js';
 const FullLayout = lazy(() => import('../layouts/FullLayout.js'));
 const Home = lazy(() => import('../views/home/Home.js'));
+const APropos = lazy(() => import('../views/home/APropos.js'));
 const SignIn = lazy(() => import('../views/signin/SingIn.js'));
 const AdminConsole = lazy(() => import('../views/admin/AdminConsole.js'));
 const AdminGestion = lazy(() => import('../views/admin-gestion/AdminGestion'));
@@ -17,6 +18,7 @@ const ThemeRoutes = [
       { path: '/', element: <Navigate to='/accueil' /> },
       { path: '/connection', exact: true, element: <SignIn /> },
       { path: '/accueil', exact: true, element: <Home /> },
+      { path: '/aPropos', exact: true, element: <APropos /> },
       { path: '/questions/:id', exact: true, element: <Questions /> },
       { path: '/summary/:id', exact: true, element: <Summary /> },
       {
