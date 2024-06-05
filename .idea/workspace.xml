@@ -4,12 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fb71d015-2964-42ab-8d1a-df10f0733de2" name="Changes" comment="impeccable">
+    <list default="true" id="fb71d015-2964-42ab-8d1a-df10f0733de2" name="Changes" comment="correctif problème merge">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/_store/_slices/questionnaire-slice.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/_store/_slices/questionnaire-slice.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/theme.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/theme.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/_store/_slices/user-slice.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/_store/_slices/user-slice.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/home/ConsentModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/home/ConsentModal.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/home/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/home/Home.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/questions/Questions.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/questions/Questions.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +19,11 @@
     <execution />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -58,7 +62,18 @@
       <updated>1717487465268</updated>
       <workItem from="1717487466803" duration="211000" />
       <workItem from="1717569436868" duration="5367000" />
+      <workItem from="1717588558213" duration="305000" />
+      <workItem from="1717592773882" duration="1486000" />
     </task>
+    <task id="LOCAL-00001" summary="correctif problème merge">
+      <option name="closed" value="true" />
+      <created>1717577636390</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1717577636390</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -77,6 +92,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="impeccable" />
-    <option name="LAST_COMMIT_MESSAGE" value="impeccable" />
+    <MESSAGE value="correctif problème merge" />
+    <option name="LAST_COMMIT_MESSAGE" value="correctif problème merge" />
   </component>
 </project>

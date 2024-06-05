@@ -3,18 +3,21 @@ import CloseIcon from "@mui/icons-material/Close";
 import {useTheme} from "@mui/material/styles";
 import {theme} from "../../theme";
 import {useNavigate} from "react-router-dom";
+import {userActions} from "../../_store/_slices/user-slice";
+import {useDispatch} from "react-redux";
 
 const ConsentModal = ({open, setOpen, qId}) => {
     const themeLayout = useTheme(theme);
 
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleConsent = () => {
-        localStorage.setItem("user_consent", "true");
+        dispatch(userActions.setUserConsent(true));
         setOpen(false);
         navigate(`/questions/${qId}`);
     };
-    
+
     const closeHandler = () => setOpen(false);
 
     return <Modal open={open} onClose={closeHandler}>
