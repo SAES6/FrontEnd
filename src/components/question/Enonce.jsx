@@ -1,6 +1,6 @@
 import { Grid, Typography } from '@mui/material';
 
-const Enonce = ({ children, imgSrc }) => {
+const Enonce = ({ description, imgSrc }) => {
   return (
     <Grid
       className='enonce'
@@ -27,14 +27,6 @@ const Enonce = ({ children, imgSrc }) => {
           </Grid>
         )}
         <Grid item xs={6}>
-          <Typography
-            sx={{
-              fontFamily: 'Poppins, sans-serif',
-              fontSize: '16px',
-              fontWeight: '400',
-              lineHeight: '24px',
-            }}
-          >
             <Typography
               sx={{
                 fontFamily: 'Poppins, sans-serif',
@@ -45,7 +37,15 @@ const Enonce = ({ children, imgSrc }) => {
             >
               Enoncé
             </Typography>
-            {children}
+            <Typography
+                sx={{
+                    fontFamily: 'Poppins, sans-serif',
+                    fontSize: '16px',
+                    fontWeight: '400',
+                    lineHeight: '24px',
+                }}
+            >
+            {description}
           </Typography>
         </Grid>
       </Grid>

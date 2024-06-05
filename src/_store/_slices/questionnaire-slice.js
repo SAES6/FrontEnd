@@ -1,72 +1,84 @@
-import { createSlice } from '@reduxjs/toolkit';
+import {createSelector, createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-  questionnaires: {},
+    currentQuestionnaireId: null,
+    questionnaires: [],
 };
 
 const questionnaireSlice = createSlice({
-  name: 'questionnaire',
-  initialState,
-  reducers: {
-    setQuestionnaire(state, action) {
-      const { id, totalSections } = action.payload;
-      if (!state.questionnaires[id]) {
-        state.questionnaires[id] = {
-          currentSection: 1,
-          totalSections,
-          progression: 0,
-          responses: [],
-        };
-      }
-    },
-    setCurrentSection(state, action) {
-      const { id, section } = action.payload;
-      if (state.questionnaires[id]) {
-        state.questionnaires[id].currentSection = section;
-      }
-    },
-    setTotalSections(state, action) {
-      const { id, totalSections } = action.payload;
-      if (state.questionnaires[id]) {
-        state.questionnaires[id].totalSections = totalSections;
-      }
-    },
-    setProgression(state, action) {
-      const { id, progression } = action.payload;
-      if (state.questionnaires[id]) {
-        state.questionnaires[id].progression = progression;
-      }
-    },
-    addResponse(state, action) {
-      const { questionnaireId, questionId, questionType, value } =
-        action.payload;
-      if (state.questionnaires[questionnaireId]) {
-        const existingResponseIndex = state.questionnaires[
-          questionnaireId
-        ].responses.findIndex((response) => response.questionId === questionId);
-        if (existingResponseIndex >= 0) {
-          state.questionnaires[questionnaireId].responses[
-            existingResponseIndex
-          ] = { questionId, questionType, value };
-        } else {
-          state.questionnaires[questionnaireId].responses.push({
-            questionId,
-            questionType,
-            value,
-          });
-        }
-      }
-    },
-    reset: () => initialState,
-  },
+    name: 'questionnaire',
+    initialState,
+    reducers: {
+        setCurrentQuestionnaireId(state, action) {
+            state.currentQuestionnaireId = action.payload;
+        },
+        setQuestionnaire(state, action) {
+            if (!state.questionnaires.includes(state.currentQuestionnaireId)) {
+                state.questionnaires = [
+                    ...state.questionnaires,
+                    {
+                        id: parseInt(action.payload.id),
+                        currentSection: 1,
+                        totalSections: action.payload.totalSections,
+                        progression: 0,
+                        responses: [],
+                    }];
+            }
+        },
+        setCurrentSection(state, action) {
+            const currentQuestionnaires = state.questionnaires.find(q => q.id === state.currentQuestionnaireId);
+            if (currentQuestionnaires) {
+                currentQuestionnaires.currentSection = action.payload;
+            }
+        },
+        setTotalSections(state, action) {
+            const currentQuestionnaires = state.questionnaires.find(q => q.id === state.currentQuestionnaireId);
+            if (currentQuestionnaires) {
+                currentQuestionnaires.totalSections = action.payload;
+            }
+        },
+        setProgression(state, action) {
+            const currentQuestionnaires = state.questionnaires.find(q => q.id === state.currentQuestionnaireId);
+            if (currentQuestionnaires) {
+                currentQuestionnaires.progression = action.payload;
+            }
+        },
+        addResponse(state, action) {
+            const currentQuestionnaire = state.questionnaires.find(q => q.id === state.currentQuestionnaireId);
+            if (currentQuestionnaire) {
+                currentQuestionnaire.responses = [...currentQuestionnaire.responses, ...action.payload];
+            }
+        },
+        nextSectionHandler(state, action) {
+            const currentQuestionnaire = state.questionnaires.find(q => q.id === state.currentQuestionnaireId);
+            if (currentQuestionnaire) {
+                currentQuestionnaire.responses = action.payload.responses;
+                currentQuestionnaire.progression = action.payload.progression;
+                currentQuestionnaire.currentSection = action.payload.currentSection;
+            }
+        },
+        reset: () => initialState,
+    }
 });
 
-export const {
-  setQuestionnaire,
-  setCurrentSection,
-  setTotalSections,
-  setProgression,
-  addResponse,
-} = questionnaireSlice.actions;
+const selectQuestionnaires = state => state.questionnaire.questionnaires;
+const selectCurrentQuestionnaireId = state => state.questionnaire.currentQuestionnaireId;
+
+export const selectCurrentSelection = createSelector(
+    [selectQuestionnaires, selectCurrentQuestionnaireId],
+    (questionnaires, currentQuestionnaireId) => questionnaires.find(q => q.id === currentQuestionnaireId)
+);
+
+export const getCurrentFieldCoords = (state) => {
+    if (state.questionnaire.questionnaires) {
+        const existingQestionnaire = state.questionnaire.questionnaires.find(q => q.id === state.questionnaire.currentQuestionnaireId);
+        if (existingQestionnaire) {
+            return existingQestionnaire.responses;
+        }
+        return null;
+    }
+};
+
+export const questionnaireActions = questionnaireSlice.actions;
 
 export default questionnaireSlice;
