@@ -18,7 +18,6 @@ const ThemeRoutes = [
       { path: '/', element: <Navigate to='/accueil' /> },
       { path: '/connection', exact: true, element: <SignIn /> },
       { path: '/accueil', exact: true, element: <Home /> },
-      { path: '/aPropos', exact: true, element: <APropos /> },
       { path: '/questions/:id', exact: true, element: <Questions /> },
       { path: '/summary/:id', exact: true, element: <Summary /> },
       {
