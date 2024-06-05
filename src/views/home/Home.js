@@ -312,14 +312,14 @@ const Home = () => {
         </Grid>
         <Grid
           container
-          gap={2}
           sx={{
             mt: '50px',
             overflow: 'auto',
-            maxHeight: '350px',
+            maxHeight: '500px',
             width: '100%',
-            flexDirection: 'row',
-            alignItems: 'flex-end',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: '10px',
           }}
         >
           {questionnaires.map((quiz) => (
