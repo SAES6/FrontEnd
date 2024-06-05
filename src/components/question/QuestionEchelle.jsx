@@ -10,9 +10,9 @@ const QuestionEchelle = ({
   question,
   mode,
   userResponse = 0,
+  stats,
 }) => {
   const [sliderValue, setSliderValue] = useState(question.slider_max / 2);
-
   const themeQuestion = useTheme(theme);
 
   useEffect(() => {
@@ -136,7 +136,7 @@ const QuestionEchelle = ({
             onChange={handleSliderChange}
             step={question.slider_gap}
             marks={marks}
-            min={question.slider_mim}
+            min={question.slider_min}
             max={question.slider_max}
             sx={{
               '&.MuiSlider-root': {
@@ -179,7 +179,7 @@ const QuestionEchelle = ({
                   color: themeQuestion.palette.primary.main,
                 }}
               >
-                6.1 moyenne des utilisateurs
+                {stats?.others?.mean ?? 'N/A'} moyenne des utilisateurs
               </Typography>
             </Grid>
             <Grid
@@ -204,7 +204,7 @@ const QuestionEchelle = ({
                   color: themeQuestion.palette.secondary.main,
                 }}
               >
-                5.7 moyenne des journalistes
+                {stats?.journalists?.mean ?? 'N/A'} moyenne des journalistes
               </Typography>
             </Grid>
           </Grid>

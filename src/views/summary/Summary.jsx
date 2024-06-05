@@ -45,7 +45,6 @@ const Summary = () => {
     if (stats?.status >= 200 || stats?.status < 300) {
       setUserStats(stats?.data);
     }
-    console.log(JSON.stringify(userStats));
   }, [stats]);
 
   const getResponseForQuestion = (questionId) => {
@@ -53,6 +52,15 @@ const Summary = () => {
       (res) => res.questionId === questionId
     );
     return response ? response.value : '';
+  };
+
+  const getStatsForQuestion = (questionId) => {
+    if (!userStats || !userStats.statsQuestions) return null;
+
+    const stat = userStats.statsQuestions.find(
+      (stat) => stat.question.id === questionId
+    );
+    return stat ? stat.stats : null;
   };
 
   const handleFinishQuestionnaire = () => navigate('/');
@@ -121,6 +129,7 @@ const Summary = () => {
                   <QuestionSimple
                     question={question}
                     userResponse={getResponseForQuestion(question.id)}
+                    stats={getStatsForQuestion(question.id)}
                     mode={'summary'}
                   />
                 )}
@@ -128,6 +137,7 @@ const Summary = () => {
                   <QuestionEchelle
                     question={question}
                     userResponse={getResponseForQuestion(question.id)}
+                    stats={getStatsForQuestion(question.id)}
                     mode={'summary'}
                   />
                 )}

@@ -12,7 +12,13 @@ import { theme } from '../../theme';
 import Enonce from './Enonce';
 import QuestionChoiceStat from './QuestionChoiceStat';
 
-const QuestionSimple = ({ onResponseChange, question, mode, userResponse }) => {
+const QuestionSimple = ({
+  onResponseChange,
+  question,
+  mode,
+  userResponse,
+  stats,
+}) => {
   const [selectedChoices, setSelectedChoices] = useState([]);
   const themeQuestion = useTheme(theme);
 
@@ -35,6 +41,12 @@ const QuestionSimple = ({ onResponseChange, question, mode, userResponse }) => {
         return newSelectedChoices;
       }
     });
+  };
+
+  const getStatById = (statsArray, choiceId) => {
+    if (!statsArray) return { total: 0, pourcentage: 0 };
+    const stat = statsArray.find((stat) => stat.choice_id === choiceId);
+    return stat || { total: 0, pourcentage: 0 };
   };
 
   return (
@@ -100,10 +112,6 @@ const QuestionSimple = ({ onResponseChange, question, mode, userResponse }) => {
       </Grid>
       <Enonce description={question.description} imgSrc={question.img_src} />
       {mode === 'question' ? (
-        //--------------------------------------------------------------------------------------------
-        //-------------------------------------- Mode Question ---------------------------------------
-        //--------------------------------------------------------------------------------------------
-
         <Grid container className='choices' spacing={2} sx={{ width: '100%' }}>
           {question.choices.map((choice) => (
             <Grid item xs={choice.image_src ? 6 : 12} key={choice.id}>
@@ -162,59 +170,68 @@ const QuestionSimple = ({ onResponseChange, question, mode, userResponse }) => {
           ))}
         </Grid>
       ) : (
-        //--------------------------------------------------------------------------------------------
-        //-------------------------------------- Mode Sommaire ---------------------------------------
-        //--------------------------------------------------------------------------------------------
-
         <Grid container className='choices' spacing={2} sx={{ width: '100%' }}>
-          {question.choices.map((choice) => (
-            <Grid item xs={choice.image_src ? 6 : 12} key={choice.id}>
-              {choice.image_src ? (
-                <Grid
-                  sx={{
-                    cursor: 'pointer',
-                    height: '250px',
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'flex-end',
-                    justifyContent: 'space-evenly',
-                    backgroundImage: `url(${choice.image_src})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    outline: selectedChoices.includes(choice.id)
-                      ? `2px solid ${themeQuestion.palette.primary.main}`
-                      : `2px solid transparent`,
-                    borderRadius: '15px',
-                  }}
-                >
+          {question.choices.map((choice) => {
+            const userStat = getStatById(stats?.others, choice.id);
+            const journalistStat = getStatById(stats?.journalists, choice.id);
+            return (
+              <Grid item xs={choice.image_src ? 6 : 12} key={choice.id}>
+                {choice.image_src ? (
                   <Grid
-                    xs={5}
                     sx={{
-                      backgroundColor: themeQuestion.palette.primary.main,
-                      padding: '10px',
-                      opacity: '0.85',
+                      cursor: 'pointer',
+                      height: '250px',
                       display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      height: '75%',
-                      borderRadius: '15px 15px 0 0',
+                      flexDirection: 'row',
+                      alignItems: 'flex-end',
+                      justifyContent: 'space-evenly',
+                      backgroundImage: `url(${choice.image_src})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      outline: selectedChoices.includes(choice.id)
+                        ? `2px solid ${themeQuestion.palette.primary.main}`
+                        : `2px solid transparent`,
+                      borderRadius: '15px',
                     }}
                   >
                     <Grid
                       sx={{
+                        backgroundColor: themeQuestion.palette.primary.main,
+                        padding: '10px',
+                        opacity: '0.85',
                         display: 'flex',
+                        flexDirection: 'column',
                         alignItems: 'center',
-                        gap: '5px',
+                        justifyContent: 'space-between',
+                        height: '75%',
+                        borderRadius: '15px 15px 0 0',
                       }}
                     >
-                      <FontAwesomeIcon
-                        icon='fa-solid fa-user'
-                        style={{
-                          fontSize: '16px',
-                          color: themeQuestion.palette.primary.contrastText,
+                      <Grid
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '5px',
                         }}
-                      />
+                      >
+                        <FontAwesomeIcon
+                          icon='fa-solid fa-user'
+                          style={{
+                            fontSize: '16px',
+                            color: themeQuestion.palette.primary.contrastText,
+                          }}
+                        />
+                        <Typography
+                          sx={{
+                            fontFamily: 'Poppins, sans-serif',
+                            fontSize: '24px',
+                            fontWeight: '600',
+                            color: themeQuestion.palette.primary.contrastText,
+                          }}
+                        >
+                          {userStat.total}
+                        </Typography>
+                      </Grid>
                       <Typography
                         sx={{
                           fontFamily: 'Poppins, sans-serif',
@@ -223,48 +240,47 @@ const QuestionSimple = ({ onResponseChange, question, mode, userResponse }) => {
                           color: themeQuestion.palette.primary.contrastText,
                         }}
                       >
-                        736
+                        {userStat.pourcentage}%
                       </Typography>
                     </Grid>
-                    <Typography
-                      sx={{
-                        fontFamily: 'Poppins, sans-serif',
-                        fontSize: '24px',
-                        fontWeight: '600',
-                        color: themeQuestion.palette.primary.contrastText,
-                      }}
-                    >
-                      75%
-                    </Typography>
-                  </Grid>
-                  <Grid
-                    xs={5}
-                    sx={{
-                      backgroundColor: themeQuestion.palette.secondary.main,
-                      padding: '10px',
-                      opacity: '0.85',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      height: '35%',
-                      borderRadius: '15px 15px 0 0',
-                    }}
-                  >
                     <Grid
                       sx={{
+                        backgroundColor: themeQuestion.palette.secondary.main,
+                        padding: '10px',
+                        opacity: '0.85',
                         display: 'flex',
+                        flexDirection: 'column',
                         alignItems: 'center',
-                        gap: '5px',
+                        justifyContent: 'space-between',
+                        height: '35%',
+                        borderRadius: '15px 15px 0 0',
                       }}
                     >
-                      <FontAwesomeIcon
-                        icon='fa-solid fa-user'
-                        style={{
-                          fontSize: '16px',
-                          color: themeQuestion.palette.primary.contrastText,
+                      <Grid
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '5px',
                         }}
-                      />
+                      >
+                        <FontAwesomeIcon
+                          icon='fa-solid fa-user'
+                          style={{
+                            fontSize: '16px',
+                            color: themeQuestion.palette.primary.contrastText,
+                          }}
+                        />
+                        <Typography
+                          sx={{
+                            fontFamily: 'Poppins, sans-serif',
+                            fontSize: '24px',
+                            fontWeight: '600',
+                            color: themeQuestion.palette.primary.contrastText,
+                          }}
+                        >
+                          {journalistStat.total}
+                        </Typography>
+                      </Grid>
                       <Typography
                         sx={{
                           fontFamily: 'Poppins, sans-serif',
@@ -273,43 +289,51 @@ const QuestionSimple = ({ onResponseChange, question, mode, userResponse }) => {
                           color: themeQuestion.palette.primary.contrastText,
                         }}
                       >
-                        213
+                        {journalistStat.pourcentage}%
                       </Typography>
                     </Grid>
-                    <Typography
-                      sx={{
-                        fontFamily: 'Poppins, sans-serif',
-                        fontSize: '24px',
-                        fontWeight: '600',
-                        color: themeQuestion.palette.primary.contrastText,
-                      }}
-                    >
-                      15%
-                    </Typography>
                   </Grid>
-                </Grid>
-              ) : (
-                <Grid sx={{ display: 'flex' }}>
-                  <FormControlLabel
-                    sx={{
-                      '& .MuiFormControlLabel-label': {
-                        fontFamily: 'Poppins, sans-serif',
-                        fontSize: '16px',
-                        fontWeight: '400',
-                        lineHeight: '24px',
-                        color: themeQuestion.palette.text.primary,
-                      },
-                    }}
-                    control={
-                      <Checkbox checked={selectedChoices.includes(choice.id)} />
-                    }
-                    label={choice.text}
-                  />
-                  <QuestionChoiceStat userPercent={23} journalistPercent={15} />
-                </Grid>
-              )}
-            </Grid>
-          ))}
+                ) : (
+                  <Grid sx={{ display: 'flex' }}>
+                    <FormControlLabel
+                      sx={{
+                        '& .MuiFormControlLabel-label': {
+                          fontFamily: 'Poppins, sans-serif',
+                          fontSize: '16px',
+                          fontWeight: '400',
+                          lineHeight: '24px',
+                          color: themeQuestion.palette.text.primary,
+                        },
+                      }}
+                      control={
+                        <Checkbox
+                          checked={selectedChoices.includes(choice.id)}
+                        />
+                      }
+                      label={choice.text}
+                    />
+                    {stats ? (
+                      <QuestionChoiceStat
+                        userPercent={userStat.total}
+                        journalistPercent={journalistStat.total}
+                      />
+                    ) : (
+                      <Typography
+                        sx={{
+                          fontFamily: 'Poppins, sans-serif',
+                          fontSize: '16px',
+                          fontWeight: '400',
+                          color: themeQuestion.palette.text.primary,
+                        }}
+                      >
+                        Pas de statistiques disponibles
+                      </Typography>
+                    )}
+                  </Grid>
+                )}
+              </Grid>
+            );
+          })}
         </Grid>
       )}
     </Grid>
