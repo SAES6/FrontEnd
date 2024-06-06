@@ -1,4 +1,4 @@
-import { Grid, Button, Typography, useMediaQuery } from '@mui/material';
+import { Grid, Button, Typography, useMediaQuery, Stack } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { theme } from '../../theme';
 import { useEffect, useState } from 'react';
@@ -113,7 +113,6 @@ const Home = () => {
             alignContent: 'center',
             width: '100%',
             mt: 5,
-            mb: 1,
           }}
         >
           <Typography
@@ -128,26 +127,21 @@ const Home = () => {
             Projet Informare Valorem
           </Typography>
         </Grid>
-        <Grid
-          container
-          spacing={4}
+        <Stack
+          direction={'row'}
+          gap={4}
           sx={{
             height: 'fit-content',
             width: '100%',
-            flexDirection: 'row',
-            alignItems: 'flex-start',
-            mt: 0,
           }}
+          mt={5}
         >
           <Caroussel theme={themeLayout} />
-          <Grid
-            item
-            xs={6}
-            md={6}
+          <Stack
             sx={{
               borderRadius: '15px',
-              height: '350px',
             }}
+            width={'100%'}
           >
             <Button
               onClick={() => goToQuestionnaire(suggestedQuestionnaire.id)}
@@ -309,8 +303,8 @@ const Home = () => {
                 </Grid>
               </Grid>
             </Button>
-          </Grid>
-        </Grid>
+          </Stack>
+        </Stack>
         <Grid
           container
           sx={{
