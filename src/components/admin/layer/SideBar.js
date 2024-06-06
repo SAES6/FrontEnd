@@ -20,6 +20,7 @@ import {
   getSectionDetails,
 } from '../../../_store/_actions/quiz-actions';
 import InteractiveListItem from './InteractiveListItem';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const ModalConfirmation = ({ isOpen, setIsOpen, deleteHandler }) => {
   const style = {
@@ -66,6 +67,7 @@ const ModalConfirmation = ({ isOpen, setIsOpen, deleteHandler }) => {
 
 const SideBar = () => {
   const currentQuizId = useSelector((state) => state.quiz.currentQuizId);
+  const currentSectionId = useSelector((state) => state.quiz.currentSectionId);
   const quizzesInfos = useSelector((state) => state.quiz.quizzesInfos);
 
   const [newSectionName, setNewSectionName] = useState('');
@@ -74,7 +76,6 @@ const SideBar = () => {
     id: null,
     isQuiz: false,
   });
-  const [selectedItem, setSelectedItem] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -97,12 +98,10 @@ const SideBar = () => {
 
   const onClickSection = (quizId, sectionId) => {
     dispatch(getSectionDetails(quizId, sectionId));
-    setSelectedItem(sectionId);
   };
 
   const onClickQuiz = (quizId, sectionId) => {
     dispatch(getFirstSectionDetails(quizId, sectionId));
-    setSelectedItem(sectionId);
   };
 
   const beforeDelete = (id, isQuiz) => {
@@ -124,10 +123,10 @@ const SideBar = () => {
       p={2}
       backgroundColor='primary.main'
       color='primary.contrastText'
-      width={'250px'}
-      minWidth={'250px'}
+      width={'275px'}
+      minWidth={'275px'}
       sx={{ borderRadius: '15px' }}
-      spacing={2}
+      gap={3}
     >
       {' '}
       <ModalConfirmation
@@ -138,9 +137,9 @@ const SideBar = () => {
       <Typography align='center' fontWeight='600' fontSize={'24px'}>
         Questionnaires
       </Typography>
-      <Stack alignItems='center' gap={1}>
+      <Stack alignItems='center' gap={2}>
         {quizzesInfos?.map((quiz, index) => (
-          <React.Fragment key={quiz.id + quiz.name}>
+          <Stack width={'100%'} key={quiz.id + quiz.name}>
             <InteractiveListItem
               isQuiz={true}
               item={quiz}
@@ -154,10 +153,15 @@ const SideBar = () => {
                 )
               }
               deleteHandler={() => beforeDelete(quiz.id, true)}
-              selected={selectedItem === quiz.id}
+              selected={quiz.id === currentQuizId}
             />
             {currentQuizId === quiz.id && (
-              <Stack alignItems='flex-start' gap={1} sx={{ width: '100%' }}>
+              <Stack
+                alignItems='flex-start'
+                gap={1}
+                sx={{ width: '100%' }}
+                pt={1}
+              >
                 {quiz.sections.map((section, index) => (
                   <InteractiveListItem
                     isQuiz={false}
@@ -169,45 +173,57 @@ const SideBar = () => {
                     }
                     deleteHandler={() => beforeDelete(section.id, false)}
                     moreSx={{ box: {}, typo: { pl: 3 } }}
-                    selected={selectedItem === section.id}
+                    selected={section.id === currentSectionId}
                   />
                 ))}
-                <Box
+                <Stack
+                  direction={'row'}
+                  gap={1}
                   justifyContent='space-between'
                   alignItems='center'
-                  sx={{
-                    width: '100%',
-                    display: 'flex',
-                    border: 'solid',
-                    borderRadius: '15px',
-                    borderColor: 'red',
-                  }}
+                  pl={'25px'}
                 >
                   <TextField
                     value={newSectionName || ''}
                     onChange={(e) => newNameHandle(e.target.value)}
                     placeholder='Nouvelle section'
-                    variant='standard'
-                    sx={{ flexGrow: 1, pr: 1, pl: 3, width: '80%' }}
-                    size='small'
+                    sx={{
+                      input: {
+                        color: 'background.main',
+                        '::placeholder': {
+                          color: 'background.main75',
+                        },
+                      },
+                    }}
                   />
-                  <IconButton
-                    onClick={() => newSectionHandler()}
-                    sx={{ width: '20%' }}
-                  >
-                    <AddIcon />
+                  <IconButton onClick={() => newSectionHandler()}>
+                    <FontAwesomeIcon
+                      icon={'fa-solid fa-plus-circle'}
+                      fixedWidth
+                      fontSize={20}
+                      color='background'
+                    />
                   </IconButton>
-                </Box>
+                </Stack>
               </Stack>
             )}
-          </React.Fragment>
+          </Stack>
         ))}
-
-        <AddCircleOutlineIcon
-          fontSize='large'
-          sx={{ p: 1, width: '80%', borderRadius: '15px', cursor: 'pointer' }}
-          onClick={() => newQuizHandler()}
-        />
+      </Stack>
+      <Stack
+        borderTop={'1px solid'}
+        borderColor={'primary.contrastText'}
+        pt={1}
+        direction={'row'}
+        alignItems={'center'}
+        justifyContent={'center'}
+        sx={{ cursor: 'pointer' }}
+        onClick={() => newQuizHandler()}
+      >
+        <IconButton color='background'>
+          <FontAwesomeIcon icon={'fa-solid fa-plus-circle'} fontSize={20} />
+        </IconButton>
+        <Typography fontSize={'16px'}>Ajouter un questionnaire</Typography>
       </Stack>
     </Stack>
   );

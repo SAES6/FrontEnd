@@ -8,7 +8,6 @@ import {
   Stack,
   MenuItem,
 } from '@mui/material';
-import CheckIcon from '@mui/icons-material/Check';
 import { useDispatch } from 'react-redux';
 import { renameQuizOrSection } from '../../../_store/_actions/quiz-actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -50,27 +49,37 @@ const InteractiveListItem = ({
     <Stack
       direction={'row'}
       backgroundColor={
-        selected
-          ? isRenaming
-            ? 'primary.main'
-            : 'background.main'
-          : 'background.main10'
+        isRenaming
+          ? 'none'
+          : !selected && isQuiz
+          ? 'background.main10'
+          : selected && isQuiz
+          ? 'background.main'
+          : 'none'
       }
-      color={selected && !isRenaming ? 'primary.main' : 'background.main'}
+      color={
+        isRenaming || !isQuiz
+          ? 'background.main'
+          : isQuiz && !selected
+          ? 'background.main'
+          : 'primary.main'
+      }
       sx={{
         width: '100%',
         borderRadius: '15px',
+        opacity: !isQuiz && !selected ? 0.75 : 1,
+        cursor: 'pointer',
       }}
       onClick={onClickHandler}
     >
       {!isRenaming ? (
         <Stack
           width={'100%'}
-          height={'45px'}
+          height={isQuiz ? '45px' : '35px'}
           direction={'row'}
           alignItems={'center'}
           justifyContent={'space-between'}
-          pl={'15px'}
+          pl={isQuiz ? '15px' : '25px'}
         >
           <Typography fontSize={'16px'} fontWeight={'600'}>
             {item.name}
@@ -79,7 +88,7 @@ const InteractiveListItem = ({
             <Stack direction={'row'}>
               <IconButton
                 aria-describedby={id}
-                color='primary'
+                color={isQuiz ? 'primary' : 'background'}
                 onClick={(event) => handleClick(event)}
               >
                 <FontAwesomeIcon
@@ -130,18 +139,27 @@ const InteractiveListItem = ({
       ) : (
         <Stack
           direction={'row'}
+          spacing={1}
           width={'100%'}
-          height={'45px'}
+          height={isQuiz ? '45px' : '35px'}
           justifyContent={'space-between'}
+          alignItems={'center'}
+          pl={!isQuiz ? '10px' : 'inherit'}
         >
           <TextField
             value={newName || item.name}
             onChange={(e) => newNameHandle(e.target.value)}
             placeholder={item.name}
-            sx={{ input: { color: 'background.main' } }}
+            sx={{
+              input: { color: 'background.main' },
+            }}
           />
           <IconButton onClick={() => renameHandler()} color='background'>
-            <CheckIcon />
+            <FontAwesomeIcon
+              icon={'fa-solid fa-check'}
+              fixedWidth
+              fontSize={20}
+            />
           </IconButton>
         </Stack>
       )}
