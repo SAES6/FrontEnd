@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import NewQuestion from "./NewQuestion";
-import {Box, Button, IconButton} from "@mui/material";
+import {Stack, Box, Button, IconButton} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {postSectionInfos} from "../../../_store/_actions/quiz-actions";
 import NewQuiz from "./NewQuiz";
@@ -63,7 +63,10 @@ const QuizAdministration = () => {
     const previewHandler = () => setIsPreview(!isPreview);
 
     return (
-        <>
+        <Stack
+            className={'sneakyScroll'}
+            sx={{ width: '100%', height: '100%', overflow: 'auto' }}
+            spacing={5}>
             <Box
                 sx={{
                     display: "flex",
@@ -112,7 +115,7 @@ const QuizAdministration = () => {
                     </IconButton>
                 </Box>
             )}
-        </>
+        </Stack>
     );
 };
 

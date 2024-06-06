@@ -1,4 +1,4 @@
-import {Card, FormControl, Grid, TextField, Typography} from "@mui/material";
+import {Stack, FormControl, Grid, TextField, Typography} from "@mui/material";
 import {forwardRef, useEffect, useImperativeHandle, useState} from "react";
 import {useSelector} from "react-redux";
 
@@ -21,7 +21,7 @@ const NewQuiz = forwardRef((_, ref) => {
     }));
 
     return (
-        <Card sx={{padding: 2, margin: 2, borderRadius: "15px"}}>
+        <Stack sx={{ width: '100%' }}>
             <Grid
                 container
                 alignItems="center"
@@ -116,7 +116,7 @@ const NewQuiz = forwardRef((_, ref) => {
                     </FormControl>
                 </Grid>
             </Grid>
-        </Card>
+        </Stack>
     );
 });
 

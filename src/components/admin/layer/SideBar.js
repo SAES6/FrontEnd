@@ -23,17 +23,17 @@ import InteractiveListItem from "./InteractiveListItem";
 
 const ModalConfirmation = ({isOpen, setIsOpen, deleteHandler}) => {
     const style = {
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        backgroundColor: "white",
-        padding: "16px",
-        width: "20rem",
-        height: "10rem",
-        display: "flex",
-        flexDirection: "column",
-        borderRadius: "12px",
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        backgroundColor: 'white',
+        padding: '16px',
+        width: '20rem',
+        height: '10rem',
+        display: 'flex',
+        flexDirection: 'column',
+        borderRadius: '12px',
         zIndex: 1001,
     };
 
@@ -96,7 +96,7 @@ const SideBar = () => {
     };
 
     const onClickQuiz = (quizId, sectionId) => {
-        dispatch(getFirstSectionDetails(quizId, sectionId))
+        dispatch(getFirstSectionDetails(quizId, sectionId));
     };
 
     const beforeDelete = (id, isQuiz) => {
@@ -114,7 +114,7 @@ const SideBar = () => {
     };
 
     return (
-        <Box sx={{p: 1}}>
+        <Stack p={2} backgroundColor='primary.main' sx={{ borderRadius: '15px' }}>
             <ModalConfirmation
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
@@ -194,7 +194,7 @@ const SideBar = () => {
                     onClick={() => newQuizHandler()}
                 />
             </Stack>
-        </Box>
+        </Stack>
     );
 };
 
