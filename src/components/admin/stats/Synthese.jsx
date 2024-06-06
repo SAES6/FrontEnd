@@ -30,9 +30,10 @@ const Synthese = ({ questionnaire_id, section_id, section_order }) => {
   const [responseUser, setResponseUser] = useGET({
     api: process.env.REACT_APP_API_URL,
   });
-  const questionnaireId = 1; //questionnaire_id;
-  const sectionId = 1; //section_id;
-  const sectionOrder = 1; //section_order;
+
+  const questionnaireId = useSelector((state) => state.quiz.currentQuizId);
+  const sectionId = useSelector((state) => state.quiz.currentSectionId);
+  const sectionOrder = useSelector((state) => state.quiz.currentSectionOrder);
   const [selectedUser, setSelectedUser] = useState(null);
 
   const [isJournalist, setIsJournalist] = useState(true);

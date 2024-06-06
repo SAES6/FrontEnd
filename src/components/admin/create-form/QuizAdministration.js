@@ -1,22 +1,50 @@
 import React, { useEffect, useRef, useState } from 'react';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import NewQuestion from './NewQuestion';
-import { Box, Button, Grid, IconButton, Stack } from '@mui/material';
+import { Box, Button, IconButton, Stack } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { postSectionInfos } from '../../../_store/_actions/quiz-actions';
 import NewQuiz from './NewQuiz';
-
+import { Preview } from '@mui/icons-material';
+import PreviewQuestion from './PreviewQuestion';
+import { quizActions } from '../../../_store/_slices/quiz-slice';
 const QuizAdministration = () => {
   const savedSectionInfos = useSelector(
     (state) => state.quiz.currentSectionInfos
   );
+
   const currentSectionId = useSelector((state) => state.quiz.currentSectionId);
+  const currentSectionOrder = useSelector(
+    (state) => state.quiz.currentSectionOrder
+  );
+  console.log('currentSectionId', currentSectionId);
   const [sectionInfos, setSectionInfos] = useState([]);
+  const quizzInfos = useSelector((state) => state.quiz.quizzesInfos);
+  const currentQuizId = useSelector((state) => state.quiz.currentQuizId);
+  const [isPreview, setIsPreview] = useState(false);
   const [quizInfos, setQuizInfos] = useState({
     name: '',
     duree: 0,
     description: '',
   });
+
+  const changeQuizzInfos = (newName, duree, description) => {
+    if (duree) setQuizInfos((prevState) => ({ ...prevState, duree: duree }));
+    if (description)
+      setQuizInfos((prevState) => ({ ...prevState, description: description }));
+    if (newName) {
+      setQuizInfos((prevState) => ({ ...prevState, name: newName }));
+      dispatch(quizActions.rename({ isQuiz: true, name: newName }));
+    }
+  };
+
+  useEffect(() => {
+    if (currentQuizId) {
+      // change seulement le name de quizInfos
+      const name = quizzInfos.find((quiz) => quiz.id === currentQuizId).name;
+      setQuizInfos((prevState) => ({ ...prevState, name }));
+    }
+  }, [quizzInfos]);
 
   const questionRefs = useRef([]);
 
@@ -59,7 +87,9 @@ const QuizAdministration = () => {
     });
   };
 
-  const previewHandler = () => {};
+  const previewHandler = () => {
+    setIsPreview(!isPreview);
+  };
 
   return (
     <Stack
@@ -74,34 +104,47 @@ const QuizAdministration = () => {
           justifyContent: 'flex-end',
         }}
       >
-        <Button onClick={() => gatherData()} variant='contained'>
-          Save
-        </Button>
-        <Button onClick={previewHandler} variant='contained' sx={{ ml: 3 }}>
-          Preview
-        </Button>
+        {!isPreview && sectionInfos.length > 0 && (
+          <Button onClick={() => gatherData()} variant='contained'>
+            Sauvegarder
+          </Button>
+        )}
+        {sectionInfos.length > 0 && (
+          <Button onClick={previewHandler} variant='contained' sx={{ ml: 1 }}>
+            {isPreview ? 'Édition' : 'Prévisualiser'}
+          </Button>
+        )}
       </Box>
+      {currentSectionOrder === 1 && !isPreview && (
+        <NewQuiz setQuizInfos={changeQuizzInfos} quizInfos={quizInfos} />
+      )}
       {sectionInfos.length > 0 &&
         sectionInfos.map((section, index) => (
           <React.Fragment key={section.id + section.order}>
-            {currentSectionId === 1 && (
-              <NewQuiz setQuizInfos={setQuizInfos} quizInfos={quizInfos} />
+            {!isPreview && (
+              <NewQuestion
+                ref={questionRefs.current[index]}
+                handleClose={() => handleClose(index)}
+                index={index}
+                sectionInfos={section}
+              />
             )}
-            <NewQuestion
-              ref={questionRefs.current[index]}
-              handleClose={() => handleClose(index)}
-              index={index}
-              sectionInfos={section}
-            />
+            {isPreview && <PreviewQuestion sectionInfos={section} />}
           </React.Fragment>
         ))}
-      <Box
-        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-      >
-        <IconButton onClick={addNewQuestionHandler}>
-          <AddCircleOutlineIcon fontSize='large' />
-        </IconButton>
-      </Box>
+      {!isPreview && currentSectionId && (
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <IconButton onClick={addNewQuestionHandler}>
+            <AddCircleOutlineIcon fontSize='large' />
+          </IconButton>
+        </Box>
+      )}
     </Stack>
   );
 };

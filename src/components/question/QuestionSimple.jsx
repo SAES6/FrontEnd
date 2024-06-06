@@ -1,32 +1,38 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import {
   Box,
   Checkbox,
   FormControlLabel,
   Grid,
   Typography,
-} from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { theme } from '../../theme';
-import Enonce from './Enonce';
-import QuestionChoiceStat from './QuestionChoiceStat';
+} from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { theme } from "../../theme";
+import Enonce from "./Enonce";
+import QuestionChoiceStat from "./QuestionChoiceStat";
 
-const QuestionSimple = ({ onResponseChange, question, mode, userResponse }) => {
+const QuestionSimple = ({
+  onResponseChange,
+  question,
+  mode,
+  userResponse,
+  preview,
+}) => {
   const [selectedChoices, setSelectedChoices] = useState([]);
   const themeQuestion = useTheme(theme);
 
   useEffect(() => {
-    if (mode === 'question' && selectedChoices.length > 0) {
+    if (mode === "question" && selectedChoices.length > 0) {
       onResponseChange(selectedChoices);
-    } else if (mode !== 'question') {
+    } else if (mode !== "question") {
       setSelectedChoices(userResponse);
     }
   }, [selectedChoices]);
 
   const handleCheckboxChange = (choiceId) => {
     setSelectedChoices((prevSelectedChoices) => {
-      if (question.type === 'single_choice') {
+      if (question.type === "single_choice") {
         return [choiceId];
       } else {
         const newSelectedChoices = prevSelectedChoices.includes(choiceId)
@@ -39,35 +45,35 @@ const QuestionSimple = ({ onResponseChange, question, mode, userResponse }) => {
 
   return (
     <Grid
-      className='question'
+      className="question"
       container
       sx={{
-        width: '100%',
-        height: 'auto',
-        alignItems: 'center',
-        justifyContent: 'center',
-        alignContent: 'center',
-        gap: '10px',
-        padding: '10px 0',
+        width: "100%",
+        height: "auto",
+        alignItems: "center",
+        justifyContent: "center",
+        alignContent: "center",
+        gap: "10px",
+        padding: "10px 0",
       }}
     >
       <Grid
-        className='first-row'
+        className="first-row"
         sx={{
-          width: '100%',
-          height: '56px',
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
+          width: "100%",
+          height: "56px",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
         <Typography
           sx={{
-            fontFamily: 'Poppins, sans-serif',
-            fontSize: '24px',
-            fontWeight: '600',
-            lineHeight: '36px',
+            fontFamily: "Poppins, sans-serif",
+            fontSize: "24px",
+            fontWeight: "600",
+            lineHeight: "36px",
             color: themeQuestion.palette.text.primary,
           }}
         >
@@ -75,82 +81,83 @@ const QuestionSimple = ({ onResponseChange, question, mode, userResponse }) => {
         </Typography>
         <Grid
           sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
           }}
         >
           <FontAwesomeIcon
-            icon='fa-solid fa-bullseye'
-            style={{ opacity: '0.5' }}
+            icon="fa-solid fa-bullseye"
+            style={{ opacity: "0.5" }}
           />
           <Typography
             sx={{
-              fontFamily: 'Poppins, sans-serif',
-              fontSize: '16px',
-              fontWeight: '600',
-              lineHeight: '24px',
-              marginLeft: '5px',
+              fontFamily: "Poppins, sans-serif",
+              fontSize: "16px",
+              fontWeight: "600",
+              lineHeight: "24px",
+              marginLeft: "5px",
               color: themeQuestion.palette.text.primary,
             }}
           >
-            Choix {question.type === 'single_choice' ? 'simple' : 'multiple'}
+            Choix {question.type === "single_choice" ? "simple" : "multiple"}
           </Typography>
         </Grid>
       </Grid>
       <Enonce description={question.description} imgSrc={question.img_src} />
-      {mode === 'question' ? (
+      {mode === "question" ? (
         //--------------------------------------------------------------------------------------------
         //-------------------------------------- Mode Question ---------------------------------------
         //--------------------------------------------------------------------------------------------
 
-        <Grid container className='choices' spacing={2} sx={{ width: '100%' }}>
+        <Grid container className="choices" spacing={2} sx={{ width: "100%" }}>
           {question.choices.map((choice) => (
             <Grid item xs={choice.image_src ? 6 : 12} key={choice.id}>
               {choice.image_src ? (
                 <Box
                   onClick={() => handleCheckboxChange(choice.id)}
                   sx={{
-                    cursor: 'pointer',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    padding: '10px',
+                    cursor: "pointer",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    padding: "10px",
                     border: selectedChoices.includes(choice.id)
                       ? `2px solid ${themeQuestion.palette.primary.main}`
                       : `2px solid transparent`,
-                    borderRadius: '15px',
-                    transition: 'border 0.3s ease',
-                    '&:hover': {
+                    borderRadius: "15px",
+                    transition: "border 0.3s ease",
+                    "&:hover": {
                       border: `2px solid ${themeQuestion.palette.secondary.main}`,
                     },
                   }}
                 >
                   <img
                     style={{
-                      width: '100%',
-                      height: 'auto',
-                      maxHeight: '250px',
-                      objectFit: 'cover',
-                      borderRadius: '15px',
+                      width: "100%",
+                      height: "auto",
+                      maxHeight: "250px",
+                      objectFit: "cover",
+                      borderRadius: "15px",
                     }}
                     src={choice.image_src}
-                    alt='image du choix'
+                    alt="image du choix"
                   />
                 </Box>
               ) : (
                 <FormControlLabel
                   sx={{
-                    '& .MuiFormControlLabel-label': {
-                      fontFamily: 'Poppins, sans-serif',
-                      fontSize: '16px',
-                      fontWeight: '400',
-                      lineHeight: '24px',
+                    "& .MuiFormControlLabel-label": {
+                      fontFamily: "Poppins, sans-serif",
+                      fontSize: "16px",
+                      fontWeight: "400",
+                      lineHeight: "24px",
                       color: themeQuestion.palette.text.primary,
                     },
                   }}
                   control={
                     <Checkbox
+                      disabled={preview}
                       checked={selectedChoices.includes(choice.id)}
                       onChange={() => handleCheckboxChange(choice.id)}
                     />
@@ -166,60 +173,60 @@ const QuestionSimple = ({ onResponseChange, question, mode, userResponse }) => {
         //-------------------------------------- Mode Sommaire ---------------------------------------
         //--------------------------------------------------------------------------------------------
 
-        <Grid container className='choices' spacing={2} sx={{ width: '100%' }}>
+        <Grid container className="choices" spacing={2} sx={{ width: "100%" }}>
           {question.choices.map((choice) => (
             <Grid item xs={choice.image_src ? 6 : 12} key={choice.id}>
               {choice.image_src ? (
                 <Grid
                   sx={{
-                    cursor: 'pointer',
-                    height: '250px',
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'flex-end',
-                    justifyContent: 'space-evenly',
+                    cursor: "pointer",
+                    height: "250px",
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "flex-end",
+                    justifyContent: "space-evenly",
                     backgroundImage: `url(${choice.image_src})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
                     outline: selectedChoices.includes(choice.id)
                       ? `2px solid ${themeQuestion.palette.primary.main}`
                       : `2px solid transparent`,
-                    borderRadius: '15px',
+                    borderRadius: "15px",
                   }}
                 >
                   <Grid
                     xs={5}
                     sx={{
                       backgroundColor: themeQuestion.palette.primary.main,
-                      padding: '10px',
-                      opacity: '0.85',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      height: '75%',
-                      borderRadius: '15px 15px 0 0',
+                      padding: "10px",
+                      opacity: "0.85",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      height: "75%",
+                      borderRadius: "15px 15px 0 0",
                     }}
                   >
                     <Grid
                       sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '5px',
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "5px",
                       }}
                     >
                       <FontAwesomeIcon
-                        icon='fa-solid fa-user'
+                        icon="fa-solid fa-user"
                         style={{
-                          fontSize: '16px',
+                          fontSize: "16px",
                           color: themeQuestion.palette.primary.contrastText,
                         }}
                       />
                       <Typography
                         sx={{
-                          fontFamily: 'Poppins, sans-serif',
-                          fontSize: '24px',
-                          fontWeight: '600',
+                          fontFamily: "Poppins, sans-serif",
+                          fontSize: "24px",
+                          fontWeight: "600",
                           color: themeQuestion.palette.primary.contrastText,
                         }}
                       >
@@ -228,9 +235,9 @@ const QuestionSimple = ({ onResponseChange, question, mode, userResponse }) => {
                     </Grid>
                     <Typography
                       sx={{
-                        fontFamily: 'Poppins, sans-serif',
-                        fontSize: '24px',
-                        fontWeight: '600',
+                        fontFamily: "Poppins, sans-serif",
+                        fontSize: "24px",
+                        fontWeight: "600",
                         color: themeQuestion.palette.primary.contrastText,
                       }}
                     >
@@ -241,35 +248,35 @@ const QuestionSimple = ({ onResponseChange, question, mode, userResponse }) => {
                     xs={5}
                     sx={{
                       backgroundColor: themeQuestion.palette.secondary.main,
-                      padding: '10px',
-                      opacity: '0.85',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      height: '35%',
-                      borderRadius: '15px 15px 0 0',
+                      padding: "10px",
+                      opacity: "0.85",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      height: "35%",
+                      borderRadius: "15px 15px 0 0",
                     }}
                   >
                     <Grid
                       sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '5px',
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "5px",
                       }}
                     >
                       <FontAwesomeIcon
-                        icon='fa-solid fa-user'
+                        icon="fa-solid fa-user"
                         style={{
-                          fontSize: '16px',
+                          fontSize: "16px",
                           color: themeQuestion.palette.primary.contrastText,
                         }}
                       />
                       <Typography
                         sx={{
-                          fontFamily: 'Poppins, sans-serif',
-                          fontSize: '24px',
-                          fontWeight: '600',
+                          fontFamily: "Poppins, sans-serif",
+                          fontSize: "24px",
+                          fontWeight: "600",
                           color: themeQuestion.palette.primary.contrastText,
                         }}
                       >
@@ -278,9 +285,9 @@ const QuestionSimple = ({ onResponseChange, question, mode, userResponse }) => {
                     </Grid>
                     <Typography
                       sx={{
-                        fontFamily: 'Poppins, sans-serif',
-                        fontSize: '24px',
-                        fontWeight: '600',
+                        fontFamily: "Poppins, sans-serif",
+                        fontSize: "24px",
+                        fontWeight: "600",
                         color: themeQuestion.palette.primary.contrastText,
                       }}
                     >
@@ -289,14 +296,14 @@ const QuestionSimple = ({ onResponseChange, question, mode, userResponse }) => {
                   </Grid>
                 </Grid>
               ) : (
-                <Grid sx={{ display: 'flex' }}>
+                <Grid sx={{ display: "flex" }}>
                   <FormControlLabel
                     sx={{
-                      '& .MuiFormControlLabel-label': {
-                        fontFamily: 'Poppins, sans-serif',
-                        fontSize: '16px',
-                        fontWeight: '400',
-                        lineHeight: '24px',
+                      "& .MuiFormControlLabel-label": {
+                        fontFamily: "Poppins, sans-serif",
+                        fontSize: "16px",
+                        fontWeight: "400",
+                        lineHeight: "24px",
                         color: themeQuestion.palette.text.primary,
                       },
                     }}

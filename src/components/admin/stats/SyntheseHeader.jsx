@@ -79,11 +79,24 @@ const SyntheseHeader = ({
         document.body.appendChild(a);
         a.click();
         a.remove();
-        toast.success("Export des données réussi");
+        toast.success("Export des données réussi", {
+          position: "top-center",
+          style: {
+            fontFamily: "Poppins, sans-serif",
+            borderRadius: "15px",
+            textAlign: "center",
+          },
+        });
       })
       .catch((error) => {
-        console.error("Erreur lors de l'export des données", error);
-        toast.error("Erreur lors de l'export des données");
+        toast.error("Erreur lors de l'export des données", {
+          position: "top-center",
+          style: {
+            fontFamily: "Poppins, sans-serif",
+            borderRadius: "15px",
+            textAlign: "center",
+          },
+        });
       });
   };
 

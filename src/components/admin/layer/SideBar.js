@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
-  Grid,
   IconButton,
   Modal,
   Stack,
@@ -68,12 +67,12 @@ const SideBar = () => {
 
   const [newSectionName, setNewSectionName] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+  const [isQuiz, setIsQuiz] = useState(false);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getQuizDetails());
-    console.log('fff');
   }, []);
 
   const newNameHandle = (name) => {
@@ -89,17 +88,23 @@ const SideBar = () => {
     dispatch(quizActions.addQuiz());
   };
 
-  const onClickModalHandler = (quizId, sectionId, isQuiz = false) => {
+  const onClickModalHandler = (
+    quizId,
+    sectionId,
+    isQuiz = false,
+    sectionOrder
+  ) => {
     console.log(sectionId);
-    dispatch(getSectionDetails(quizId, sectionId, isQuiz));
+    dispatch(getSectionDetails(quizId, sectionId, isQuiz, sectionOrder));
   };
 
-  const beforeDelete = () => {
+  const beforeDelete = (isQuiz) => {
     setIsOpen(true);
+    setIsQuiz(isQuiz);
   };
 
   const deleteHandler = () => {
-    dispatch(quizActions.deleteQuizOrSection());
+    dispatch(quizActions.deleteQuizOrSection(isQuiz));
     setIsOpen(false);
   };
 
@@ -118,6 +123,7 @@ const SideBar = () => {
         {quizzesInfos?.map((quiz) => (
           <React.Fragment key={quiz.id + quiz.name}>
             <InteractiveListItem
+              isQuiz={true}
               item={quiz}
               onClickHandler={() =>
                 onClickModalHandler(
@@ -125,22 +131,31 @@ const SideBar = () => {
                   quiz.sections.reduce((min, section) =>
                     section.order < min.order ? section : min
                   ).id,
-                  true
+                  true,
+                  quiz.sections.reduce((min, section) =>
+                    section.order < min.order ? section : min
+                  ).order
                 )
               }
-              deleteHandler={beforeDelete}
+              deleteHandler={() => beforeDelete(true)}
               moreSx={{ box: { bgcolor: 'red' }, typo: { pl: 2 } }}
             />
             {currentQuizId === quiz.id && (
               <Stack alignItems='flex-start' gap={1} sx={{ width: '100%' }}>
                 {quiz.sections.map((section) => (
                   <InteractiveListItem
+                    isQuiz={false}
                     key={section.id}
                     item={section}
                     onClickHandler={() =>
-                      onClickModalHandler(quiz.id, section.id)
+                      onClickModalHandler(
+                        quiz.id,
+                        section.id,
+                        false,
+                        section.order
+                      )
                     }
-                    deleteHandler={beforeDelete}
+                    deleteHandler={() => beforeDelete(false)}
                     moreSx={{ box: {}, typo: { pl: 3 } }}
                   />
                 ))}
