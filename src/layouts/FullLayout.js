@@ -22,6 +22,10 @@ const FullLayout = () => {
     dispatch(userActions.closeLogin());
   };
 
+  const goToAdminCoonsole = () => {
+    navigate("/admin-console");
+  };
+
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -118,6 +122,17 @@ const FullLayout = () => {
                 >
                   Deconnexion
                 </Button>
+              )}
+              {token && (
+                <ColorButton
+                  variant="contained"
+                  startIcon={
+                    <FontAwesomeIcon icon="fa-fw fa-solid fa-user-tie" />
+                  }
+                  onClick={goToAdminCoonsole}
+                >
+                  Espace Admin
+                </ColorButton>
               )}
             </Grid>
           </Grid>
