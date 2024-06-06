@@ -214,7 +214,9 @@ const SyntheseSlider = ({ question, theme, isJournalist, isUser }) => {
                       },
                       width: "100%",
                     }}
-                    text={({ value, valueMax }) => `${value} / ${valueMax}`}
+                    text={({ value, valueMax }) =>
+                      `${value} / ${valueMax ? valueMax : 0}`
+                    }
                     width={200}
                     height={130} // Ajout de la hauteur
                   />
@@ -259,7 +261,9 @@ const SyntheseSlider = ({ question, theme, isJournalist, isUser }) => {
                     startAngle={-90}
                     endAngle={90}
                     outerRadius={100}
-                    text={({ value, valueMax }) => `${value} / ${valueMax}`}
+                    text={({ value, valueMax }) =>
+                      `${value} / ${valueMax ? valueMax : 0}`
+                    }
                     width={200}
                     height={130} // Ajout de la hauteur
                   />
@@ -361,7 +365,9 @@ const SyntheseSlider = ({ question, theme, isJournalist, isUser }) => {
                       },
                       width: "100%",
                     }}
-                    text={({ value, valueMax }) => `${value} / ${valueMax}`}
+                    text={({ value, valueMax }) =>
+                      `${value} / ${valueMax ? valueMax : 0}`
+                    }
                     width={200}
                     height={130} // Ajout de la hauteur
                   />
@@ -406,7 +412,9 @@ const SyntheseSlider = ({ question, theme, isJournalist, isUser }) => {
                     startAngle={-90}
                     endAngle={90}
                     outerRadius={100}
-                    text={({ value, valueMax }) => `${value} / ${valueMax}`}
+                    text={({ value, valueMax }) =>
+                      `${value} / ${valueMax ? valueMax : 0}`
+                    }
                     width={200}
                     height={130} // Ajout de la hauteur
                   />

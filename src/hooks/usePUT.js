@@ -1,39 +1,18 @@
 import {useState, useEffect} from "react";
-import {toast} from "react-toastify";
-import axios from "axios";
+import {callApiPut} from "../utils/callApi";
 
-/**
- * Hook personnalisé : Pour toutes les requêtes PUT vers les APIs.
- */
-function usePUT() {
+function usePut() {
     const [initialRequest, setInitialRequest] = useState(null);
     const [response, setResponse] = useState();
-    let result;
 
     useEffect(() => {
         const callApi = async () => {
-            if (initialRequest?.url !== "" && initialRequest?.url) {
+            if (initialRequest?.url !== "") {
                 try {
-                    result = await axios
-                        .create({
-                            baseURL: initialRequest.api,
-                        })
-                        .put(
-                            initialRequest.url,
-                            initialRequest.data,
-                            initialRequest.authorization
-                        );
+                    const result = await callApiPut(initialRequest);
                     setResponse(result);
                 } catch (error) {
-                    toast.error(initialRequest.errorMessage, {
-                        position: "top-center",
-                        style: {
-                            fontFamily: "Poppins, sans-serif",
-                            borderRadius: "15px",
-                            textAlign: "center",
-                        },
-                    });
-                    setResponse(error.response);
+                    setResponse(error);
                 }
             }
         };
@@ -44,4 +23,4 @@ function usePUT() {
     return [response, setInitialRequest];
 }
 
-export default usePUT;
+export default usePut;

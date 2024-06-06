@@ -13,7 +13,10 @@ import AddIcon from '@mui/icons-material/Add';
 import { useDispatch, useSelector } from 'react-redux';
 import { quizActions } from '../../../_store/_slices/quiz-slice';
 import {
-  getQuizDetails,
+  deleteQuiz,
+  deleteSection,
+  getFirstSectionDetails,
+  getQuizzesDetails,
   getSectionDetails,
 } from '../../../_store/_actions/quiz-actions';
 import InteractiveListItem from './InteractiveListItem';
@@ -67,13 +70,16 @@ const SideBar = () => {
 
   const [newSectionName, setNewSectionName] = useState('');
   const [isOpen, setIsOpen] = useState(false);
-  const [isQuiz, setIsQuiz] = useState(false);
+  const [currentDeleteTarget, setCurrentDeleteTarget] = useState({
+    id: null,
+    isQuiz: false,
+  });
   const [selectedItem, setSelectedItem] = useState(null);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getQuizDetails());
+    dispatch(getQuizzesDetails());
   }, []);
 
   const newNameHandle = (name) => {
@@ -89,24 +95,27 @@ const SideBar = () => {
     dispatch(quizActions.addQuiz());
   };
 
-  const onClickModalHandler = (
-    quizId,
-    sectionId,
-    isQuiz = false,
-    sectionOrder
-  ) => {
-    console.log(sectionId);
-    dispatch(getSectionDetails(quizId, sectionId, isQuiz, sectionOrder));
+  const onClickSection = (quizId, sectionId) => {
+    dispatch(getSectionDetails(quizId, sectionId));
     setSelectedItem(sectionId);
   };
 
-  const beforeDelete = (isQuiz) => {
+  const onClickQuiz = (quizId, sectionId) => {
+    dispatch(getFirstSectionDetails(quizId, sectionId));
+    setSelectedItem(sectionId);
+  };
+
+  const beforeDelete = (id, isQuiz) => {
     setIsOpen(true);
-    setIsQuiz(isQuiz);
+    setCurrentDeleteTarget({ id, isQuiz });
   };
 
   const deleteHandler = () => {
-    dispatch(quizActions.deleteQuizOrSection(isQuiz));
+    if (currentDeleteTarget.isQuiz) {
+      dispatch(deleteQuiz(currentDeleteTarget.id));
+    } else {
+      dispatch(deleteSection(currentDeleteTarget.id));
+    }
     setIsOpen(false);
   };
 
@@ -120,6 +129,7 @@ const SideBar = () => {
       sx={{ borderRadius: '15px' }}
       spacing={2}
     >
+      {' '}
       <ModalConfirmation
         isOpen={isOpen}
         setIsOpen={setIsOpen}
@@ -136,22 +146,18 @@ const SideBar = () => {
               item={quiz}
               id={index}
               onClickHandler={() =>
-                onClickModalHandler(
+                onClickQuiz(
                   quiz.id,
                   quiz.sections.reduce((min, section) =>
                     section.order < min.order ? section : min
-                  ).id,
-                  true,
-                  quiz.sections.reduce((min, section) =>
-                    section.order < min.order ? section : min
-                  ).order
+                  ).id
                 )
               }
-              deleteHandler={() => beforeDelete(true)}
+              deleteHandler={() => beforeDelete(quiz.id, true)}
               selected={selectedItem === quiz.id}
             />
             {currentQuizId === quiz.id && (
-              <Stack alignItems='flex-start' gap={1}>
+              <Stack alignItems='flex-start' gap={1} sx={{ width: '100%' }}>
                 {quiz.sections.map((section, index) => (
                   <InteractiveListItem
                     isQuiz={false}
@@ -159,14 +165,9 @@ const SideBar = () => {
                     item={section}
                     id={index}
                     onClickHandler={() =>
-                      onClickModalHandler(
-                        quiz.id,
-                        section.id,
-                        false,
-                        section.order
-                      )
+                      onClickSection(quiz.id, section.id, false, section.order)
                     }
-                    deleteHandler={() => beforeDelete(false)}
+                    deleteHandler={() => beforeDelete(section.id, false)}
                     moreSx={{ box: {}, typo: { pl: 3 } }}
                     selected={selectedItem === section.id}
                   />

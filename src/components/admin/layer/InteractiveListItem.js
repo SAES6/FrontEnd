@@ -1,37 +1,17 @@
 import React, { useState } from 'react';
 import {
-  Box,
   Typography,
   IconButton,
   TextField,
-  Stack,
-  Popover,
-  MenuItem,
   MenuList,
+  Popover,
+  Stack,
+  MenuItem,
 } from '@mui/material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CheckIcon from '@mui/icons-material/Check';
-import { quizActions } from '../../../_store/_slices/quiz-slice';
 import { useDispatch } from 'react-redux';
-
-const DropDownTypography = ({ text, onClick }) => (
-  <Typography
-    sx={{
-      cursor: 'pointer',
-      pl: 2,
-      transition: 'background-color 0.3s',
-      borderRadius: '15px',
-      '&:hover': {
-        backgroundColor: 'rgba(0, 0, 0, 0.2)',
-        color: 'black',
-      },
-    }}
-    onClick={onClick}
-  >
-    {text}
-  </Typography>
-);
+import { renameQuizOrSection } from '../../../_store/_actions/quiz-actions';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const InteractiveListItem = ({
   item,
@@ -61,12 +41,7 @@ const InteractiveListItem = ({
   };
 
   const renameHandler = () => {
-    dispatch(
-      quizActions.rename({
-        isQuiz: isQuiz,
-        name: newName,
-      })
-    );
+    dispatch(renameQuizOrSection(isQuiz, item.id, newName));
     setNewName('');
     setIsRenaming(false);
   };

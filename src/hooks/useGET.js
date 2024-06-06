@@ -6,7 +6,7 @@ function useGET() {
     const [response, setResponse] = useState();
 
     useEffect(() => {
-        const fetchApi = async () => {
+        const callApi = async () => {
             if (initialRequest?.url !== "") {
                 try {
                     const result = await callApiGet(initialRequest);
@@ -17,7 +17,7 @@ function useGET() {
             }
         };
 
-        fetchApi();
+        callApi();
     }, [initialRequest]);
 
     return [response, setInitialRequest];

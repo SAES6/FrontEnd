@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
 import { Grid, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
@@ -102,17 +102,18 @@ const SyntheseGlobal = ({ statsTypeUser }) => {
                   cornerRadius: 5,
                   startAngle: -90,
                   endAngle: 300,
-                  highlightScope: { faded: "global", highlighted: "item" },
+                  highlightScope: {
+                    faded: "global",
+                    highlighted: "item",
+                  },
                   faded: {
                     innerRadius: 30,
                     additionalRadius: -30,
                     color: "gray",
                   },
-                  cx: -50,
-                  cy: 150,
                 },
               ]}
-              margin={{ left: 150 }}
+              margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
               sx={{
                 [`& .${pieArcLabelClasses.root}`]: {
                   fill: themeSynthese.palette.primary.contrastText,

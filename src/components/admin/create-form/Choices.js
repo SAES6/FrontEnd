@@ -1,15 +1,12 @@
 import { Button, Grid, IconButton } from '@mui/material';
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import CloseIcon from '@mui/icons-material/Close';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import ImageIcon from '@mui/icons-material/Image';
-import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import ChoicesText from './ChoicesText';
 import ChoicesImage from './ChoicesImage';
 
 const Choices = ({ choices, updateChoices }) => {
-  const [choicesMode, setChoicesMode] = useState(true);
+  const [choicesMode, setChoicesMode] = useState(!choices.some(choice => typeof choice.image_src === 'string'));
 
   const addChoice = () => {
     const updateChoicesNicely = () => {
@@ -135,7 +132,7 @@ const Choices = ({ choices, updateChoices }) => {
             {choices.map((choice) => (
               <ChoicesImage
                 key={choice.id}
-                image_url={choice.image_src?.fileUrl}
+                image_url={choice.image_src?.fileUrl || choice.image_src}
                 updateChoiceImage={(imgData) =>
                   updateChoiceImage(choice.id, imgData)
                 }
