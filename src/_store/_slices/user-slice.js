@@ -1,20 +1,27 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   token: null,
+  openLogin: false,
   adminPrincipal: null,
   tokenUser: null,
-  roleUser: '',
+  roleUser: "",
   userConsent: false,
 };
 
 const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {
     login(state, action) {
       state.token = action.payload.token;
       state.adminPrincipal = action.payload.admin;
+    },
+    openLogin(state) {
+      state.openLogin = true;
+    },
+    closeLogin(state) {
+      state.openLogin = false;
     },
     logout(state) {
       state.token = initialState.token;
