@@ -216,135 +216,167 @@ const SyntheseChoicesQuestion = ({
                   fontFamily: "Poppins, sans-serif",
                 }}
               >
-                <Grid
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "40%",
-                    height: "100%",
-                    fontFamily: "Poppins, sans-serif",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  <PieChart
-                    tooltip={false}
-                    colors={graphColors}
-                    series={[
-                      {
-                        arcLabel: (item) =>
-                          `${calculPourcentage(item, question.stats.others)}%`,
-                        arcLabelMinAngle: 45,
-                        data: question.stats.others.map((item) => ({
-                          value: item.total,
-                        })),
-                        innerRadius: 2,
-                        outerRadius: 100,
-                        paddingAngle: 2,
-                        cornerRadius: 5,
-                        startAngle: -90,
-                        endAngle: 300,
-                        highlightScope: {
-                          faded: "global",
-                          highlighted: "item",
-                        },
-                        faded: {
-                          innerRadius: 30,
-                          additionalRadius: -30,
-                          color: "gray",
-                        },
-                      },
-                    ]}
+                {question.stats.others.length == 0 ? (
+                  <Grid
                     sx={{
-                      [`& .${pieArcLabelClasses.root}`]: {
-                        fill: themeSynthese.palette.primary.contrastText,
-                        fontSize: 16,
-                        fontWeight: 600,
-                        lineHeight: "24px",
-                        fontFamily: "Poppins, sans-serif",
-                      },
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "100%",
+                      height: "100%",
+                      fontFamily: "Poppins, sans-serif",
                     }}
-                    margin={{ right: 0 }}
-                    height={250}
-                    width={205}
-                  />
-                </Grid>
-                <Grid
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "start",
-                    marginLeft: "10px",
-                    textAlign: "left",
-                    width: "60%",
-                    height: "100%",
-                    fontFamily: "Poppins, sans-serif",
-                  }}
-                >
-                  {question.stats.others.map((item, index) => (
-                    <Grid
-                      container
-                      key={index}
+                  >
+                    <Typography
                       sx={{
-                        mt: "10px",
-                        mb: "10px",
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "start",
-                        width: "100%",
-                        height: "100%",
+                        textAlign: "center",
                         fontFamily: "Poppins, sans-serif",
+                        fontSize: "16px",
+                        fontWeight: "600",
+                        lineHeight: "24px",
+                        color: themeSynthese.palette.text.primary,
                       }}
                     >
-                      <Grid item xs={1}>
-                        <FontAwesomeIcon
-                          icon="fa-fw fa-solid fa-square"
-                          fixedWidth
-                          fontSize={16}
-                          color={
-                            index < 9
-                              ? graphColors[index]
-                              : graphColors[index - 9]
-                          }
-                        />
+                      Aucun Résultat
+                    </Typography>
+                  </Grid>
+                ) : (
+                  <Grid
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "40%",
+                      height: "100%",
+                      fontFamily: "Poppins, sans-serif",
+                      textOverflow: "ellipsis",
+                    }}
+                  >
+                    <PieChart
+                      tooltip={false}
+                      colors={graphColors}
+                      series={[
+                        {
+                          arcLabel: (item) =>
+                            `${calculPourcentage(
+                              item,
+                              question.stats.others
+                            )}%`,
+                          arcLabelMinAngle: 45,
+                          data: question.stats.others.map((item) => ({
+                            value: item.total,
+                          })),
+                          innerRadius: 2,
+                          outerRadius: 100,
+                          paddingAngle: 2,
+                          cornerRadius: 5,
+                          startAngle: -90,
+                          endAngle: 300,
+                          highlightScope: {
+                            faded: "global",
+                            highlighted: "item",
+                          },
+                          faded: {
+                            innerRadius: 30,
+                            additionalRadius: -30,
+                            color: "gray",
+                          },
+                        },
+                      ]}
+                      sx={{
+                        [`& .${pieArcLabelClasses.root}`]: {
+                          fill: themeSynthese.palette.primary.contrastText,
+                          fontSize: 16,
+                          fontWeight: 600,
+                          lineHeight: "24px",
+                          fontFamily: "Poppins, sans-serif",
+                        },
+                      }}
+                      margin={{ right: 0 }}
+                      height={250}
+                      width={205}
+                    />
+                  </Grid>
+                )}
+                {question.stats.others.length > 0 && (
+                  <Grid
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "start",
+                      marginLeft: "10px",
+                      textAlign: "left",
+                      width: "60%",
+                      height: "100%",
+                      fontFamily: "Poppins, sans-serif",
+                    }}
+                  >
+                    {question.stats.others.map((item, index) => (
+                      <Grid
+                        container
+                        key={index}
+                        sx={{
+                          mt: "10px",
+                          mb: "10px",
+                          display: "flex",
+                          flexDirection: "row",
+                          alignItems: "center",
+                          justifyContent: "start",
+                          width: "100%",
+                          height: "100%",
+                          fontFamily: "Poppins, sans-serif",
+                        }}
+                      >
+                        <Grid item xs={1}>
+                          <FontAwesomeIcon
+                            icon="fa-fw fa-solid fa-square"
+                            fixedWidth
+                            fontSize={16}
+                            color={
+                              index < 9
+                                ? graphColors[index]
+                                : graphColors[index - 9]
+                            }
+                          />
+                        </Grid>
+                        <Grid item xs={9}>
+                          <Typography
+                            sx={{
+                              textAlign: "left",
+                              fontFamily: "Poppins, sans-serif",
+                              fontSize: "16px",
+                              fontWeight: "400",
+                              lineHeight: "24px",
+                              color: themeSynthese.palette.text.primary,
+                              textOverflow: "ellipsis",
+                              textWrap: "nowrap",
+                              overflow: "hidden",
+                            }}
+                          >
+                            {item.choice_text}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={2}>
+                          <Typography
+                            sx={{
+                              textAlign: "right",
+                              fontFamily: "Poppins, sans-serif",
+                              fontSize: "16px",
+                              fontWeight: "600",
+                              lineHeight: "24px",
+                              color: themeSynthese.palette.text.secondary,
+                            }}
+                          >
+                            {item.total}
+                          </Typography>
+                        </Grid>
                       </Grid>
-                      <Grid item xs={9}>
-                        <Typography
-                          sx={{
-                            textAlign: "left",
-                            fontFamily: "Poppins, sans-serif",
-                            fontSize: "16px",
-                            fontWeight: "400",
-                            lineHeight: "24px",
-                            color: themeSynthese.palette.text.primary,
-                            textOverflow: "ellipsis",
-                            textWrap: "nowrap",
-                            overflow: "hidden",
-                          }}
-                        >
-                          {item.choice_text}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <Typography
-                          sx={{
-                            textAlign: "right",
-                            fontFamily: "Poppins, sans-serif",
-                            fontSize: "16px",
-                            fontWeight: "600",
-                            lineHeight: "24px",
-                            color: themeSynthese.palette.text.secondary,
-                          }}
-                        >
-                          {item.total}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  ))}
-                </Grid>
+                    ))}
+                  </Grid>
+                )}
               </Grid>
             </Grid>
           )}
@@ -401,137 +433,166 @@ const SyntheseChoicesQuestion = ({
                   fontFamily: "Poppins, sans-serif",
                 }}
               >
-                <Grid
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "40%",
-                    height: "100%",
-                    fontFamily: "Poppins, sans-serif",
-                  }}
-                >
-                  <PieChart
-                    tooltip={false}
-                    colors={graphColors}
-                    series={[
-                      {
-                        arcLabel: (item) =>
-                          `${calculPourcentage(
-                            item,
-                            question.stats.journalists
-                          )}%`,
-                        arcLabelMinAngle: 45,
-                        data: question.stats.journalists.map((item) => ({
-                          value: item.total,
-                        })),
-                        innerRadius: 2,
-                        outerRadius: 100,
-                        paddingAngle: 2,
-                        cornerRadius: 5,
-                        startAngle: -90,
-                        endAngle: 300,
-                        highlightScope: {
-                          faded: "global",
-                          highlighted: "item",
-                        },
-                        faded: {
-                          innerRadius: 30,
-                          additionalRadius: -30,
-                          color: "gray",
-                        },
-                      },
-                    ]}
+                {question.stats.journalists.length == 0 ? (
+                  <Grid
                     sx={{
-                      [`& .${pieArcLabelClasses.root}`]: {
-                        fill: themeSynthese.palette.primary.contrastText,
-                        fontSize: 16,
-                        fontWeight: 600,
-                        lineHeight: "24px",
-                        fontFamily: "Poppins, sans-serif",
-                      },
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "100%",
+                      height: "100%",
+                      fontFamily: "Poppins, sans-serif",
                     }}
-                    margin={{ right: 0 }}
-                    height={250}
-                    width={205}
-                  />
-                </Grid>
-                <Grid
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "start",
-                    marginLeft: "10px",
-                    textAlign: "left",
-                    width: "60%",
-                    height: "100%",
-                    fontFamily: "Poppins, sans-serif",
-                  }}
-                >
-                  {question.stats.journalists.map((item, index) => (
-                    <Grid
-                      container
-                      key={index}
+                  >
+                    <Typography
                       sx={{
-                        display: "flex",
-                        mt: "10px",
-                        mb: "10px",
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "start",
-                        width: "100%",
-                        height: "100%",
+                        textAlign: "center",
                         fontFamily: "Poppins, sans-serif",
+                        fontSize: "16px",
+                        fontWeight: "600",
+                        lineHeight: "24px",
+                        color: themeSynthese.palette.text.primary,
                       }}
                     >
-                      <Grid item xs={1}>
-                        <FontAwesomeIcon
-                          icon="fa-fw fa-solid fa-square"
-                          fixedWidth
-                          fontSize={16}
-                          color={
-                            index < 9
-                              ? graphColors[index]
-                              : graphColors[index - 9]
-                          }
-                        />
+                      Aucun Résultat
+                    </Typography>
+                  </Grid>
+                ) : (
+                  <Grid
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: "40%",
+                      height: "100%",
+                      fontFamily: "Poppins, sans-serif",
+                    }}
+                  >
+                    <PieChart
+                      tooltip={false}
+                      colors={graphColors}
+                      series={[
+                        {
+                          arcLabel: (item) =>
+                            `${calculPourcentage(
+                              item,
+                              question.stats.journalists
+                            )}%`,
+                          arcLabelMinAngle: 45,
+                          data: question.stats.journalists.map((item) => ({
+                            value: item.total,
+                          })),
+                          innerRadius: 2,
+                          outerRadius: 100,
+                          paddingAngle: 2,
+                          cornerRadius: 5,
+                          startAngle: -90,
+                          endAngle: 300,
+                          highlightScope: {
+                            faded: "global",
+                            highlighted: "item",
+                          },
+                          faded: {
+                            innerRadius: 30,
+                            additionalRadius: -30,
+                            color: "gray",
+                          },
+                        },
+                      ]}
+                      sx={{
+                        [`& .${pieArcLabelClasses.root}`]: {
+                          fill: themeSynthese.palette.primary.contrastText,
+                          fontSize: 16,
+                          fontWeight: 600,
+                          lineHeight: "24px",
+                          fontFamily: "Poppins, sans-serif",
+                        },
+                      }}
+                      margin={{ right: 0 }}
+                      height={250}
+                      width={205}
+                    />
+                  </Grid>
+                )}
+                {question.stats.journalists.length > 0 && (
+                  <Grid
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "start",
+                      marginLeft: "10px",
+                      textAlign: "left",
+                      width: "60%",
+                      height: "100%",
+                      fontFamily: "Poppins, sans-serif",
+                    }}
+                  >
+                    {question.stats.journalists.map((item, index) => (
+                      <Grid
+                        container
+                        key={index}
+                        sx={{
+                          display: "flex",
+                          mt: "10px",
+                          mb: "10px",
+                          flexDirection: "row",
+                          alignItems: "center",
+                          justifyContent: "start",
+                          width: "100%",
+                          height: "100%",
+                          fontFamily: "Poppins, sans-serif",
+                        }}
+                      >
+                        <Grid item xs={1}>
+                          <FontAwesomeIcon
+                            icon="fa-fw fa-solid fa-square"
+                            fixedWidth
+                            fontSize={16}
+                            color={
+                              index < 9
+                                ? graphColors[index]
+                                : graphColors[index - 9]
+                            }
+                          />
+                        </Grid>
+                        <Grid item xs={9}>
+                          <Typography
+                            sx={{
+                              textAlign: "left",
+                              fontFamily: "Poppins, sans-serif",
+                              fontSize: "16px",
+                              fontWeight: "400",
+                              lineHeight: "24px",
+                              color: themeSynthese.palette.text.primary,
+                              textOverflow: "ellipsis",
+                              textWrap: "nowrap",
+                              overflow: "hidden",
+                            }}
+                          >
+                            {item.choice_text}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={2}>
+                          <Typography
+                            sx={{
+                              textAlign: "right",
+                              fontFamily: "Poppins, sans-serif",
+                              fontSize: "16px",
+                              fontWeight: "600",
+                              lineHeight: "24px",
+                              color: themeSynthese.palette.text.secondary,
+                            }}
+                          >
+                            {item.total}
+                          </Typography>
+                        </Grid>
                       </Grid>
-                      <Grid item xs={9}>
-                        <Typography
-                          sx={{
-                            textAlign: "left",
-                            fontFamily: "Poppins, sans-serif",
-                            fontSize: "16px",
-                            fontWeight: "400",
-                            lineHeight: "24px",
-                            color: themeSynthese.palette.text.primary,
-                            textOverflow: "ellipsis",
-                            textWrap: "nowrap",
-                            overflow: "hidden",
-                          }}
-                        >
-                          {item.choice_text}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <Typography
-                          sx={{
-                            textAlign: "right",
-                            fontFamily: "Poppins, sans-serif",
-                            fontSize: "16px",
-                            fontWeight: "600",
-                            lineHeight: "24px",
-                            color: themeSynthese.palette.text.secondary,
-                          }}
-                        >
-                          {item.total}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  ))}
-                </Grid>
+                    ))}
+                  </Grid>
+                )}
               </Grid>
             </Grid>
           )}
