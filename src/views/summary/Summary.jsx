@@ -1,23 +1,26 @@
-import { Grid, Button, Typography, useMediaQuery } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import { theme } from "../../theme";
-import QuestionOpen from "../../components/question/QuestionOpen";
-import QuestionSimple from "../../components/question/QuestionSimple";
-import QuestionEchelle from "../../components/question/QuestionEchelle";
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import useGET from "../../hooks/useGET";
-import { selectCurrentSelection } from "../../_store/_slices/questionnaire-slice";
+import { Grid, Button, Typography, useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { theme } from '../../theme';
+import QuestionOpen from '../../components/question/QuestionOpen';
+import QuestionSimple from '../../components/question/QuestionSimple';
+import QuestionEchelle from '../../components/question/QuestionEchelle';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import useGET from '../../hooks/useGET';
+import { selectCurrentSelection } from '../../_store/_slices/questionnaire-slice';
 
 const Summary = () => {
   const questionnaireState = useSelector(selectCurrentSelection);
+  const userToken = useSelector((state) => state.user.tokenUser);
 
   const [response, setRequest] = useGET();
+  const [stats, setStatsRequest] = useGET();
 
   const [questions, setQuestions] = useState([]);
+  const [userStats, setUserStats] = useState(null);
 
-  const screenSize = useMediaQuery("(min-width:1600px)");
+  const screenSize = useMediaQuery('(min-width:1600px)');
   const themeSummary = useTheme(theme);
   const { id } = useParams();
 
@@ -25,10 +28,11 @@ const Summary = () => {
 
   useEffect(() => {
     setRequest({ url: `/questionnaire/loadById?id=${id}` });
+    setStatsRequest({ url: `/users/${id}/${userToken}` });
   }, []);
 
   useEffect(() => {
-    if (!questionnaireState || questionnaireState?.length === 0) navigate("/");
+    if (!questionnaireState || questionnaireState?.length === 0) navigate('/');
   }, [questionnaireState]);
 
   useEffect(() => {
@@ -37,25 +41,40 @@ const Summary = () => {
     }
   }, [response]);
 
+  useEffect(() => {
+    if (stats?.status >= 200 || stats?.status < 300) {
+      setUserStats(stats?.data);
+    }
+  }, [stats]);
+
   const getResponseForQuestion = (questionId) => {
     const response = questionnaireState.responses?.find(
       (res) => res.questionId === questionId
     );
-    return response ? response.value : "";
+    return response ? response.value : '';
   };
 
-  const handleFinishQuestionnaire = () => navigate("/");
+  const getStatsForQuestion = (questionId) => {
+    if (!userStats || !userStats.statsQuestions) return null;
+
+    const stat = userStats.statsQuestions.find(
+      (stat) => stat.question.id === questionId
+    );
+    return stat ? stat.stats : null;
+  };
+
+  const handleFinishQuestionnaire = () => navigate('/');
 
   return (
     <Grid
       sx={{
-        height: "100%",
-        width: "100%",
-        display: "flex",
-        padding: "50px 0",
-        flexDirection: "column",
-        alignItems: "center",
-        overflow: "auto",
+        height: '100%',
+        width: '100%',
+        display: 'flex',
+        padding: '50px 0',
+        flexDirection: 'column',
+        alignItems: 'center',
+        overflow: 'auto',
       }}
     >
       <Grid>
@@ -72,62 +91,61 @@ const Summary = () => {
           <Grid
             key={section + 1}
             sx={{
-              width: screenSize ? "1500px" : "1300px",
-              padding: "20px 25px",
-              border: "solid 1px",
-              borderRadius: "15px",
+              width: screenSize ? '1500px' : '1300px',
+              padding: '20px 25px',
+              border: 'solid 1px',
+              borderRadius: '15px',
               borderColor: themeSummary.palette.secondary.main,
-              marginBottom: "40px",
+              marginBottom: '40px',
             }}
           >
             <Typography
-              variant="h5"
+              variant='h5'
               sx={{
-                width: "100%",
-                textAlign: "center",
-                paddingBottom: "15px",
-                fontFamily: "Poppins, sans-serif",
-                fontWeight: "600",
+                width: '100%',
+                textAlign: 'center',
+                paddingBottom: '15px',
+                fontFamily: 'Poppins, sans-serif',
+                fontWeight: '600',
                 color: themeSummary.palette.text.primary,
-                borderBottom: "solid 1px",
+                borderBottom: 'solid 1px',
                 borderBottomColor: theme.palette.secondary.main,
-                marginBottom: "10px",
+                marginBottom: '10px',
               }}
             >
               Section {section}
             </Typography>
             {sectionQuestions.map((question) => (
               <React.Fragment key={question.id}>
-                {question.type === "text" && (
+                {question.type === 'text' && (
                   <QuestionOpen
                     question={question}
-                    mode={"summary"}
+                    mode={'summary'}
                     userResponse={getResponseForQuestion(question.id)}
-                    preview={false}
                   />
                 )}
-                {(question.type === "single_choice" ||
-                  question.type === "multiple_choice") && (
+                {(question.type === 'single_choice' ||
+                  question.type === 'multiple_choice') && (
                   <QuestionSimple
                     question={question}
                     userResponse={getResponseForQuestion(question.id)}
-                    mode={"summary"}
-                    preview={false}
+                    stats={getStatsForQuestion(question.id)}
+                    mode={'summary'}
                   />
                 )}
-                {question.type === "slider" && (
+                {question.type === 'slider' && (
                   <QuestionEchelle
                     question={question}
                     userResponse={getResponseForQuestion(question.id)}
-                    mode={"summary"}
-                    preview={false}
+                    stats={getStatsForQuestion(question.id)}
+                    mode={'summary'}
                   />
                 )}
               </React.Fragment>
             ))}
           </Grid>
         ))}
-        <Button onClick={handleFinishQuestionnaire} variant="contained">
+        <Button onClick={handleFinishQuestionnaire} variant='contained'>
           Terminer le formulaire
         </Button>
       </Grid>
