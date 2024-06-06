@@ -6,7 +6,7 @@ const usePOST = () => {
     const [responses, setResponses] = useState({});
 
     useEffect(() => {
-        const fetchApi = async () => {
+        const callApi = async () => {
             if (initialRequest && initialRequest?.url !== "") {
                 try {
                     const result = await callApiPost(initialRequest);
@@ -17,7 +17,7 @@ const usePOST = () => {
             }
         };
 
-        fetchApi();
+        callApi();
     }, [initialRequest]);
 
     return [responses, setInitialRequest];

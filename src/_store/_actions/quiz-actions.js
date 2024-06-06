@@ -1,233 +1,271 @@
-import { quizActions } from "../_slices/quiz-slice";
-import { callApiGet, callApiPost } from "../../utils/callApi";
-import { toast } from "react-toastify";
+import {quizActions, selectCurrentSectionDetails} from "../_slices/quiz-slice";
+import {callApiDelete, callApiGet, callApiPost, callApiPut} from "../../utils/callApi";
+import {toast} from "react-toastify";
 
-export const getSectionDetails = (quizId, sectionId, isQuiz, sectionOrder) => {
-  return async (dispatch, getState) => {
-    const state = getState();
-    const token = state.user.token;
-
-    const fetchFirstSectionDetails = async (sectionId) => {
-      const response = await callApiGet({
+const fetchSectionDetails = async (sectionId, token) => {
+    const response = await callApiGet({
         url: `questions/loadBySection?section_id=${sectionId}`,
-        authorization: { headers: { Authorization: `Bearer ${token}` } },
-        errorMessage: "Could not fetch data!",
-      });
+        authorization: {headers: {Authorization: `Bearer ${token}`}},
+        errorMessage: "Could not fetch data!"
+    });
 
-      return response.data;
-    };
-
-    if (isQuiz)
-      dispatch(
-        quizActions.toggleDropdown({
-          quizId,
-          sectionId: null,
-          sectionOrder: null,
-        })
-      );
-    else
-      dispatch(quizActions.toggleDropdown({ quizId, sectionId, sectionOrder }));
-
-    try {
-      const sectionDetails = await fetchFirstSectionDetails(sectionId);
-      dispatch(quizActions.setCurrentSectionInfos(sectionDetails || {}));
-    } catch (e) {}
-  };
+    return response.data;
 };
 
-export const getQuizDetails = () => {
-  return async (dispatch, getState) => {
-    const state = getState();
-    const token = state.user.token;
+export const getFirstSectionDetails = (quizId, sectionId) => {
+    return async (dispatch, getState) => {
+        const state = getState();
+        const token = state.user.token;
+        const currentSectionId = state.quiz.currentSectionId;
 
-    const fetchQuizzesList = async () => {
-      const response = await callApiGet({
-        url: "/questionnaires/loadWithSections",
-        authorization: { headers: { Authorization: `Bearer ${token}` } },
-        errorMessage: "Could not fetch data!",
-      });
+        dispatch(quizActions.toggleDropdownQuiz(quizId));
 
-      return response.data;
+        try {
+            if ((!currentSectionId || currentSectionId !== sectionId) && typeof quizId !== 'string') {
+                const questions = await fetchSectionDetails(sectionId, token);
+                dispatch(quizActions.setCurrentSectionInfos({questions: questions || [], sectionId}));
+            } else
+                dispatch(quizActions.setCurrentSectionInfos({questions: [], sectionId}));
+        } catch (e) {
+            console.log(e);
+        }
     };
+};
 
-    const fetchFirstSectionDetails = async (sectionId) => {
-      const response = await callApiGet({
-        url: `questions/loadBySection?section_id=${sectionId}`,
-        authorization: { headers: { Authorization: `Bearer ${token}` } },
-        errorMessage: "Could not fetch data!",
-      });
+export const getSectionDetails = (quizId, sectionId) => {
+    return async (dispatch, getState) => {
+        const state = getState();
+        const token = state.user.token;
+        const currentSectionId = state.quiz.currentSectionId;
 
-      return response.data;
+        dispatch(quizActions.toggleDropdownSection(sectionId));
+
+        try {
+            if ((!currentSectionId || currentSectionId !== sectionId) && typeof sectionId !== 'string') {
+                const questions = await fetchSectionDetails(sectionId, token);
+                dispatch(quizActions.setCurrentSectionInfos({questions: questions || [], sectionId}));
+            }else
+                dispatch(quizActions.setCurrentSectionInfos({questions: [], sectionId}));
+        } catch (e) {
+            console.log(e);
+        }
     };
+};
 
-    try {
-      const quizzesList = await fetchQuizzesList();
-      console.log(quizzesList);
-      if (quizzesList && quizzesList.length > 0) {
-        const firstSectionDetails = await fetchFirstSectionDetails(
-          quizzesList[0].sections[0].id
-        );
-        console.log("firstSectionDetails", firstSectionDetails);
-        dispatch(
-          quizActions.setQuizzesAndCurrentSectionInfos({
-            quizzesInfos: quizzesList || [],
-            firstSectionDetails: firstSectionDetails || {},
-          })
-        );
-      } else dispatch(quizActions.setQuizzesInfos(quizzesList || []));
-    } catch (e) {
-      console.error(e);
+export const getQuizzesDetails = () => {
+    return async (dispatch, getState) => {
+        const state = getState();
+        const token = state.user.token;
+
+        const fetchQuizzesList = async () => {
+            const response = await callApiGet({
+                url: "/questionnaires/loadWithSections",
+                authorization: {headers: {Authorization: `Bearer ${token}`}},
+                errorMessage: "Could not fetch data!",
+            });
+
+            return response.data;
+        };
+
+        try {
+            const quizzesList = await fetchQuizzesList();
+            if (quizzesList && quizzesList.length > 0) {
+                const firstSectionDetails = await fetchSectionDetails(quizzesList[0].sections[0].id, token);
+                dispatch(quizActions.setQuizzesAndCurrentSectionInfos({
+                    quizzesInfos: quizzesList || [],
+                    firstSectionDetails: firstSectionDetails || {},
+                }));
+            } else dispatch(quizActions.setQuizzesInfos(quizzesList || []));
+        } catch (e) {
+            console.error(e);
+        }
+    };
+};
+
+const createQuestionFormData = (formData, sectionId, question, qIndex, quizId) => {
+    formData.append(`questions[${qIndex}][id]`, question.id);
+    formData.append(`questions[${qIndex}][type]`, question.type);
+    formData.append(`questions[${qIndex}][questionnaire_id]`, quizId || 0);
+    formData.append(`questions[${qIndex}][section_id]`, question.section_id || sectionId);
+    formData.append(`questions[${qIndex}][order]`, question.order);
+    formData.append(`questions[${qIndex}][title]`, question.title || `Question ${qIndex + 1}`);
+    formData.append(`questions[${qIndex}][description]`, question.enonce || "");
+    formData.append(`questions[${qIndex}][slider_min]`, question.slider_min || "null");
+    formData.append(`questions[${qIndex}][slider_max]`, question.slider_max || "null");
+    formData.append(`questions[${qIndex}][slider_gap]`, question.slider_gap || "null");
+
+    if (question.image && question.image.file) {
+        appendFileToFormData(formData, `questions[${qIndex}][image_src]`, question.image);
     }
-  };
+
+    question.choices.forEach((choice, cIndex) => {
+        appendChoiceToFormData(formData, `questions[${qIndex}][choices][${cIndex}]`, choice);
+    });
 };
 
-export const postSectionInfos = (sectionInfos) => {
-  return async (dispatch, getState) => {
+const appendFileToFormData = (formData, baseKey, file) => {
+    formData.append(`${baseKey}[file]`, file.file);
+    formData.append(`${baseKey}[fileName]`, file.fileName);
+    formData.append(`${baseKey}[fileType]`, file.fileType);
+};
+
+const appendChoiceToFormData = (formData, baseKey, choice) => {
+    formData.append(`${baseKey}[id]`, choice.id);
+    formData.append(`${baseKey}[text]`, choice.text || "");
+    formData.append(`${baseKey}[question_id]`, choice.question_id || 0);
+    formData.append(`${baseKey}[order]`, choice.order);
+
+    if (choice.image_src && choice.image_src.file) {
+        appendFileToFormData(formData, `${baseKey}[image_src]`, choice.image_src);
+    }
+};
+
+export const postSectionInfos = (creationData) => async (dispatch, getState) => {
     const state = getState();
     const token = state.user.token;
-    const sectionId = state.quiz.currentSectionId;
-    const sectionOrder = state.quiz.currentSectionOrder;
-    const sectionName = state.quiz.quizzesInfos
-      .find((quiz) => quiz.id === state.quiz.currentQuizId)
-      .sections.find((section) => section.id === sectionId).name;
+    const sectionDetails = selectCurrentSectionDetails(state);
+    const quizId = state.quiz.currentQuizId;
 
-    const fetchFirstSectionDetails = async (sectionInfos) => {
-      const response = await callApiGet({
-        url: `questions/loadBySection?section_id=${sectionId}`,
-        authorization: { headers: { Authorization: `Bearer ${token}` } },
-        errorMessage: "Could not fetch data!",
-      });
+    const postSectionData = async (sectionInfos) => {
+        const formData = new FormData();
+        formData.append("section_id", sectionDetails.id);
+        formData.append("title", sectionDetails.name);
+        formData.append("order", sectionDetails.order);
+        formData.append("quizInfos", JSON.stringify(sectionInfos.quizInfos));
 
-      return response.data;
-    };
-    const fetchPostSectionInfos = async (
-      sectionInfos,
-      sectionId,
-      sectionName,
-      sectionOrder
-    ) => {
-      const formData = new FormData();
-      formData.append("section_id", sectionId);
-      formData.append("title", sectionName);
-      formData.append("order", sectionOrder);
-      formData.append("quizInfos", JSON.stringify(sectionInfos.quizInfos));
-
-      sectionInfos.questions.forEach((question, qIndex) => {
-        formData.append(`questions[${qIndex}][id]`, question.id);
-        formData.append(`questions[${qIndex}][text]`, question.text);
-        formData.append(`questions[${qIndex}][type]`, question.type);
-        formData.append(
-          `questions[${qIndex}][questionnaire_id]`,
-          question.questionnaire_id || 0
+        sectionInfos.questions.forEach((question, index) =>
+            createQuestionFormData(formData, sectionDetails.id, question, index, quizId)
         );
-        formData.append(
-          `questions[${qIndex}][section_id]`,
-          question.section_id || sectionId
-        );
-        formData.append(`questions[${qIndex}][order]`, question.order);
-        formData.append(
-          `questions[${qIndex}][title]`,
-          question.title || `Question ${qIndex + 1}`
-        );
-        formData.append(
-          `questions[${qIndex}][description]`,
-          question.enonce || ""
-        );
-        formData.append(
-          `questions[${qIndex}][slider_min]`,
-          question.slider_min || "null"
-        );
-        formData.append(
-          `questions[${qIndex}][slider_max]`,
-          question.slider_max || "null"
-        );
-        formData.append(
-          `questions[${qIndex}][slider_gap]`,
-          question.slider_gap || "null"
-        );
-
-        // Si la question a une image, ajoutez-la à FormData
-        if (question.image && question.image.file) {
-          formData.append(
-            `questions[${qIndex}][image_src][file]`,
-            question.image.file
-          );
-          formData.append(
-            `questions[${qIndex}][image_src][fileName]`,
-            question.image.fileName
-          );
-          formData.append(
-            `questions[${qIndex}][image_src][fileType]`,
-            question.image.fileType
-          );
+        for (let [key, value] of formData.entries()) {
+            console.log(key, value.toString()); // This will show files as [object File]
         }
 
-        // Ajoutez les choix de chaque question
-        question.choices.forEach((choice, cIndex) => {
-          formData.append(
-            `questions[${qIndex}][choices][${cIndex}][id]`,
-            choice.id
-          );
-          formData.append(
-            `questions[${qIndex}][choices][${cIndex}][text]`,
-            choice.text || ""
-          );
-          formData.append(
-            `questions[${qIndex}][choices][${cIndex}][question_id]`,
-            choice.question_id || 0
-          );
-          formData.append(
-            `questions[${qIndex}][choices][${cIndex}][order]`,
-            choice.order
-          );
-
-          // Si le choix a une image, ajoutez-la à FormData
-          if (choice.image_src && choice.image_src.file) {
-            formData.append(
-              `questions[${qIndex}][choices][${cIndex}][image_src][file]`,
-              choice.image_src.file
-            );
-            formData.append(
-              `questions[${qIndex}][choices][${cIndex}][image_src][fileName]`,
-              choice.image_src.fileName
-            );
-            formData.append(
-              `questions[${qIndex}][choices][${cIndex}][image_src][fileType]`,
-              choice.image_src.fileType
-            );
-          }
+        return await callApiPost({
+            url: "/questions/save",
+            data: formData,
+            authorization: {headers: {Authorization: `Bearer ${token}`}},
+            errorMessage: "Impossible de sauvegarder cette section",
         });
-      });
-      const response = await callApiPost({
-        url: "/questions/save",
-        data: formData,
-        authorization: { headers: { Authorization: `Bearer ${token}` } },
-        errorMessage: "Impossible de sauvegarder cette section",
-      });
-      if (response.status >= 200 && response.status < 300) {
-        toast.success("Section sauvegardée avec succès !", {
-          position: "top-center",
-          style: {
-            fontFamily: "Poppins, sans-serif",
-            borderRadius: "15px",
-            textAlign: "center",
-          },
-        });
-      }
-
-      return response.data;
     };
 
     try {
-      console.log("sectionInfos", sectionInfos);
-      await fetchPostSectionInfos(
-        sectionInfos,
-        sectionId,
-        sectionName,
-        sectionOrder
-      );
-      const firstSectionDetails = await fetchFirstSectionDetails(sectionId);
-      dispatch(quizActions.setCurrentSectionInfos(firstSectionDetails || {}));
-    } catch (e) {}
-  };
+        const response = await postSectionData(creationData);
+        if (response.status >= 200 && response.status < 300) {
+            toast.success("Section sauvgardé avec succès !", {
+                position: "top-center",
+                style: {
+                    fontFamily: "Poppins, sans-serif",
+                    borderRadius: "15px",
+                    textAlign: "center",
+                }
+            });
+        }
+        const questions = await fetchSectionDetails(sectionDetails.id, token);
+        dispatch(quizActions.setCurrentSectionInfos({questions: questions || [], sectionId: sectionDetails.id}));
+    } catch (e) {
+        console.error("Failed to post section details:", e);
+    }
+};
+
+export const deleteSection = (sectionId) => {
+    return async (dispatch, getState) => {
+        const state = getState();
+        const token = state.user.token;
+
+        const deleteSectionApi = async (sectionId, token) => {
+            const response = await callApiDelete({
+                url: `section/deleteById?id=${sectionId}`,
+                authorization: {headers: {Authorization: `Bearer ${token}`}},
+                errorMessage: "Could not fetch data!"
+            });
+
+            if (response.status >= 200 && response.status < 300)
+                toast.success("Section supprimé avec succès !", {
+                    position: "top-center",
+                    style: {
+                        fontFamily: "Poppins, sans-serif",
+                        borderRadius: "15px",
+                        textAlign: "center",
+                    }
+                });
+        };
+
+        dispatch(quizActions.deleteSection(sectionId));
+
+        try {
+            if (typeof sectionId !== 'string')
+                await deleteSectionApi(sectionId, token);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+};
+
+export const deleteQuiz = (quizId) => {
+    return async (dispatch, getState) => {
+        const state = getState();
+        const token = state.user.token;
+
+        const deleteQuizApi = async (quizId, token) => {
+            const response = await callApiDelete({
+                url: `questionnaire/deleteById?deleteQuestionnaire=${quizId}`,
+                authorization: {headers: {Authorization: `Bearer ${token}`}},
+                errorMessage: "Could not fetch data!"
+            });
+
+            if (response.status >= 200 && response.status < 300)
+                toast.success("Quiz supprimé avec succès !", {
+                    position: "top-center",
+                    style: {
+                        fontFamily: "Poppins, sans-serif",
+                        borderRadius: "15px",
+                        textAlign: "center",
+                    }
+                });
+        };
+
+        dispatch(quizActions.deleteQuiz(quizId));
+
+        try {
+            if (typeof quizId !== 'string')
+                await deleteQuizApi(quizId, token);
+        } catch (e) {
+            console.log(e);
+        }
+    };
+};
+
+export const renameQuizOrSection = (isQuiz, id, name) => {
+    return async (dispatch, getState) => {
+        const state = getState();
+        const token = state.user.token;
+
+        const putRename = async (isQuiz, id, name, token) => {
+            const response = await callApiPut({
+                url: isQuiz ? 'questionnaire/updateName' : 'section/updateName',
+                data: {id : id, name: name},
+                authorization: {headers: {Authorization: `Bearer ${token}`}},
+                errorMessage: "Could not fetch data!"
+            });
+
+            if (response.status >= 200 && response.status < 300)
+                toast.success("Entrée renomé avec succès !", {
+                    position: "top-center",
+                    style: {
+                        fontFamily: "Poppins, sans-serif",
+                        borderRadius: "15px",
+                        textAlign: "center",
+                    }
+                });
+        };
+
+        dispatch(quizActions.rename({isQuiz, name}));
+
+        try {
+            if (typeof id !== 'string')
+                await putRename(isQuiz, id, name, token);
+        } catch (e) {
+            console.log(e);
+        }
+    };
 };

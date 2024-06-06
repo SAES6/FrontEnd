@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Box, Typography, IconButton, TextField } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import CheckIcon from "@mui/icons-material/Check";
-import { quizActions } from "../../../_store/_slices/quiz-slice";
 import { useDispatch } from "react-redux";
+import {renameQuizOrSection} from "../../../_store/_actions/quiz-actions";
 
 const DropDownTypography = ({ text, onClick }) => (
   <Typography
@@ -40,12 +40,7 @@ const InteractiveListItem = ({
   };
 
   const renameHandler = () => {
-    dispatch(
-      quizActions.rename({
-        isQuiz: isQuiz,
-        name: newName,
-      })
-    );
+    dispatch(renameQuizOrSection(isQuiz, item.id, newName));
     setNewName("");
     setIsRenaming(false);
   };
@@ -84,7 +79,7 @@ const InteractiveListItem = ({
         ) : (
           <>
             <TextField
-              value={newName || item.name}
+              value={newName}
               onChange={(e) => newNameHandle(e.target.value)}
               placeholder={item.name}
               variant="standard"
