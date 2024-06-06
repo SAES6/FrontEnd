@@ -1,25 +1,26 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from 'react';
 import {
-    Box,
-    Button,
-    IconButton,
-    Modal,
-    Stack,
-    TextField,
-    Typography,
-} from "@mui/material";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import AddIcon from "@mui/icons-material/Add";
-import {useDispatch, useSelector} from "react-redux";
-import {quizActions} from "../../../_store/_slices/quiz-slice";
+  Box,
+  Button,
+  IconButton,
+  Modal,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import AddIcon from '@mui/icons-material/Add';
+import { useDispatch, useSelector } from 'react-redux';
+import { quizActions } from '../../../_store/_slices/quiz-slice';
 import {
-    deleteQuiz,
-    deleteSection,
-    getFirstSectionDetails,
-    getQuizzesDetails,
-    getSectionDetails,
-} from "../../../_store/_actions/quiz-actions";
-import InteractiveListItem from "./InteractiveListItem";
+  deleteQuiz,
+  deleteSection,
+  getFirstSectionDetails,
+  getQuizzesDetails,
+  getSectionDetails,
+} from '../../../_store/_actions/quiz-actions';
+import InteractiveListItem from './InteractiveListItem';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const ModalConfirmation = ({ isOpen, setIsOpen, deleteHandler }) => {
   const style = {
@@ -65,149 +66,167 @@ const ModalConfirmation = ({ isOpen, setIsOpen, deleteHandler }) => {
 };
 
 const SideBar = () => {
-    const currentQuizId = useSelector((state) => state.quiz.currentQuizId);
-    const quizzesInfos = useSelector((state) => state.quiz.quizzesInfos);
+  const currentQuizId = useSelector((state) => state.quiz.currentQuizId);
+  const currentSectionId = useSelector((state) => state.quiz.currentSectionId);
+  const quizzesInfos = useSelector((state) => state.quiz.quizzesInfos);
 
-    const [newSectionName, setNewSectionName] = useState("");
-    const [isOpen, setIsOpen] = useState(false);
-    const [currentDeleteTarget, setCurrentDeleteTarget] = useState({id: null, isQuiz: false});
-    const [selectedItem, setSelectedItem] = useState(null);
+  const [newSectionName, setNewSectionName] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentDeleteTarget, setCurrentDeleteTarget] = useState({
+    id: null,
+    isQuiz: false,
+  });
 
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-    useEffect(() => {
-        dispatch(getQuizzesDetails());
-    }, []);
+  useEffect(() => {
+    dispatch(getQuizzesDetails());
+  }, []);
 
-    const newNameHandle = (name) => {
-        setNewSectionName(name);
-    };
+  const newNameHandle = (name) => {
+    setNewSectionName(name);
+  };
 
-    const newSectionHandler = () => {
-        dispatch(quizActions.addSection(newSectionName || "Nouvelle section"));
-        setNewSectionName("");
-    };
+  const newSectionHandler = () => {
+    dispatch(quizActions.addSection(newSectionName || 'Nouvelle section'));
+    setNewSectionName('');
+  };
 
-    const newQuizHandler = () => {
-        dispatch(quizActions.addQuiz());
-    };
+  const newQuizHandler = () => {
+    dispatch(quizActions.addQuiz());
+  };
 
-    const onClickSection = (quizId, sectionId,) => {
-        dispatch(getSectionDetails(quizId, sectionId));
-        setSelectedItem(sectionId);
-    };
+  const onClickSection = (quizId, sectionId) => {
+    dispatch(getSectionDetails(quizId, sectionId));
+  };
 
-    const onClickQuiz = (quizId, sectionId) => {
-        dispatch(getFirstSectionDetails(quizId, sectionId));
-        setSelectedItem(sectionId);
-    };
+  const onClickQuiz = (quizId, sectionId) => {
+    dispatch(getFirstSectionDetails(quizId, sectionId));
+  };
 
-    const beforeDelete = (id, isQuiz) => {
-        setIsOpen(true);
-        setCurrentDeleteTarget({id, isQuiz});
-    };
+  const beforeDelete = (id, isQuiz) => {
+    setIsOpen(true);
+    setCurrentDeleteTarget({ id, isQuiz });
+  };
 
-    const deleteHandler = () => {
-        if (currentDeleteTarget.isQuiz) {
-            dispatch(deleteQuiz(currentDeleteTarget.id));
-        } else {
-            dispatch(deleteSection(currentDeleteTarget.id));
-        }
-        setIsOpen(false);
-    };
+  const deleteHandler = () => {
+    if (currentDeleteTarget.isQuiz) {
+      dispatch(deleteQuiz(currentDeleteTarget.id));
+    } else {
+      dispatch(deleteSection(currentDeleteTarget.id));
+    }
+    setIsOpen(false);
+  };
 
-    return (
-        <Stack
-            p={2}
-            backgroundColor='primary.main'
-            color='primary.contrastText'
-            width={'250px'}
-            minWidth={'250px'}
-            sx={{ borderRadius: '15px' }}
-            spacing={2}
-        >    <ModalConfirmation
-                isOpen={isOpen}
-                setIsOpen={setIsOpen}
-                deleteHandler={deleteHandler}
+  return (
+    <Stack
+      p={2}
+      backgroundColor='primary.main'
+      color='primary.contrastText'
+      width={'275px'}
+      minWidth={'275px'}
+      sx={{ borderRadius: '15px' }}
+      gap={3}
+    >
+      {' '}
+      <ModalConfirmation
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        deleteHandler={deleteHandler}
+      />
+      <Typography align='center' fontWeight='600' fontSize={'24px'}>
+        Questionnaires
+      </Typography>
+      <Stack alignItems='center' gap={2}>
+        {quizzesInfos?.map((quiz, index) => (
+          <Stack width={'100%'} key={quiz.id + quiz.name}>
+            <InteractiveListItem
+              isQuiz={true}
+              item={quiz}
+              id={index}
+              onClickHandler={() =>
+                onClickQuiz(
+                  quiz.id,
+                  quiz.sections.reduce((min, section) =>
+                    section.order < min.order ? section : min
+                  ).id
+                )
+              }
+              deleteHandler={() => beforeDelete(quiz.id, true)}
+              selected={quiz.id === currentQuizId}
             />
-            <Typography align='center' fontWeight='600' fontSize={'24px'}>
-                Questionnaires
-            </Typography>
-            <Stack alignItems="center" gap={1}>
-                {quizzesInfos?.map((quiz, index) => (
-                    <React.Fragment key={quiz.id + quiz.name}>
-                        <InteractiveListItem
-                            isQuiz={true}
-                            item={quiz}
-                            id={index}
-                            onClickHandler={() =>
-                                onClickQuiz(
-                                    quiz.id,
-                                    quiz.sections.reduce((min, section) =>
-                                        section.order < min.order ? section : min
-                                    ).id,)}
-                            deleteHandler={() => beforeDelete(quiz.id, true)}
-                            selected={selectedItem === quiz.id}
-                        />
-                        {currentQuizId === quiz.id && (
-                            <Stack alignItems="flex-start" gap={1} sx={{width: "100%"}}>
-                                {quiz.sections.map((section, index) => (
-                                    <InteractiveListItem
-                                        isQuiz={false}
-                                        key={section.id}
-                                        item={section}
-                                        id={index}
-                                        onClickHandler={() =>
-                                            onClickSection(
-                                                quiz.id,
-                                                section.id,
-                                                false,
-                                                section.order
-                                            )
-                                        }
-                                        deleteHandler={() => beforeDelete(section.id, false)}
-                                        moreSx={{ box: {}, typo: { pl: 3 } }}
-                                        selected={selectedItem === section.id} />
-                                ))}
-                                <Box
-                                    justifyContent="space-between"
-                                    alignItems="center"
-                                    sx={{
-                                        width: "100%",
-                                        display: "flex",
-                                        border: "solid",
-                                        borderRadius: "15px",
-                                        borderColor: "red",
-                                    }}
-                                >
-                                    <TextField
-                                        value={newSectionName || ''}
-                                        onChange={(e) => newNameHandle(e.target.value)}
-                                        placeholder="Nouvelle section"
-                                        variant="standard"
-                                        sx={{flexGrow: 1, pr: 1, pl: 3, width: "80%"}}
-                                        size="small"
-                                    />
-                                    <IconButton
-                                        onClick={() => newSectionHandler()}
-                                        sx={{width: "20%"}}
-                                    >
-                                        <AddIcon/>
-                                    </IconButton>
-                                </Box>
-                            </Stack>
-                        )}
-                    </React.Fragment>
+            {currentQuizId === quiz.id && (
+              <Stack
+                alignItems='flex-start'
+                gap={1}
+                sx={{ width: '100%' }}
+                pt={1}
+              >
+                {quiz.sections.map((section, index) => (
+                  <InteractiveListItem
+                    isQuiz={false}
+                    key={section.id}
+                    item={section}
+                    id={index}
+                    onClickHandler={() =>
+                      onClickSection(quiz.id, section.id, false, section.order)
+                    }
+                    deleteHandler={() => beforeDelete(section.id, false)}
+                    moreSx={{ box: {}, typo: { pl: 3 } }}
+                    selected={section.id === currentSectionId}
+                  />
                 ))}
-
-                <AddCircleOutlineIcon
-                    fontSize="large"
-                    sx={{p: 1, width: "80%", borderRadius: "15px", cursor: "pointer"}}
-                    onClick={() => newQuizHandler()}
-                />
-            </Stack>
-        </Stack>
-    );
+                <Stack
+                  direction={'row'}
+                  gap={1}
+                  justifyContent='space-between'
+                  alignItems='center'
+                  pl={'25px'}
+                >
+                  <TextField
+                    value={newSectionName || ''}
+                    onChange={(e) => newNameHandle(e.target.value)}
+                    placeholder='Nouvelle section'
+                    sx={{
+                      input: {
+                        color: 'background.main',
+                        '::placeholder': {
+                          color: 'background.main75',
+                        },
+                      },
+                    }}
+                  />
+                  <IconButton onClick={() => newSectionHandler()}>
+                    <FontAwesomeIcon
+                      icon={'fa-solid fa-plus-circle'}
+                      fixedWidth
+                      fontSize={20}
+                      color='background'
+                    />
+                  </IconButton>
+                </Stack>
+              </Stack>
+            )}
+          </Stack>
+        ))}
+      </Stack>
+      <Stack
+        borderTop={'1px solid'}
+        borderColor={'primary.contrastText'}
+        pt={1}
+        direction={'row'}
+        alignItems={'center'}
+        justifyContent={'center'}
+        sx={{ cursor: 'pointer' }}
+        onClick={() => newQuizHandler()}
+      >
+        <IconButton color='background'>
+          <FontAwesomeIcon icon={'fa-solid fa-plus-circle'} fontSize={20} />
+        </IconButton>
+        <Typography fontSize={'16px'}>Ajouter un questionnaire</Typography>
+      </Stack>
+    </Stack>
+  );
 };
 
 export default React.memo(SideBar);

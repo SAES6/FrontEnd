@@ -20,6 +20,8 @@ export const theme = createTheme({
     },
     background: {
       main: '#F7F9FB',
+      main10: 'rgba(247, 249, 251, 0.1)',
+      main75: 'rgba(247, 249, 251, 0.75)',
       default: '#F7F9FB',
     },
   },

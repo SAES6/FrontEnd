@@ -80,7 +80,7 @@ const AdminConsole = () => {
           }}
         >
           {!view.admin && (
-            <Stack sx={{ width: '400px' }}>
+            <Stack height={'100%'}>
               <SideBar />
             </Stack>
           )}
