@@ -6,24 +6,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { postSectionInfos } from "../../../_store/_actions/quiz-actions";
 import NewQuiz from "./NewQuiz";
 import PreviewQuestion from "./PreviewQuestion";
+import {toast} from "react-toastify";
 import { selectCurrentSectionOrder } from "../../../_store/_slices/quiz-slice";
 
 const QuizAdministration = () => {
-  const savedSectionInfos = useSelector(
-    (state) => state.quiz.currentSectionInfos
-  );
+    const savedSectionInfos = useSelector((state) => state.quiz.currentSectionInfos);
+    const currentSectionId = useSelector((state) => state.quiz.currentSectionId);
+    const currentSectionOrder = useSelector(selectCurrentSectionOrder);
 
-  const currentSectionId = useSelector((state) => state.quiz.currentSectionId);
-  const currentSectionOrder = useSelector(selectCurrentSectionOrder);
-  console.log("currentSectionOrder", currentSectionOrder);
+    const [sectionInfos, setSectionInfos] = useState([])
+    const [isPreview, setIsPreview] = useState(false);
 
-  const [sectionInfos, setSectionInfos] = useState([]);
-  const [isPreview, setIsPreview] = useState(false);
+    const questionRefs = useRef([]);
+    const quizInfoRef = useRef();
 
-  const questionRefs = useRef([]);
-  const quizInfoRef = useRef();
-
-  const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
   useEffect(() => {
     setSectionInfos(savedSectionInfos.questions);
@@ -38,12 +35,23 @@ const QuizAdministration = () => {
     }
   }, [sectionInfos]);
 
-  const gatherData = () => {
-    const quizInfos = quizInfoRef.current?.getData();
-    const questions = questionRefs.current.map((ref) => ref.current?.getData());
-    console.log(quizInfos || {}, questions);
-    dispatch(postSectionInfos({ quizInfos: quizInfos || {}, questions }));
-  };
+    const gatherData = () => {
+        const quizInfos = quizInfoRef.current?.getData();
+        if (quizInfoRef.current && (!quizInfos.name || !quizInfos.duree || !quizInfos.description))
+            toast.error("Merci de replire les informations du questionnaire", {
+                position: "top-center",
+                style: {
+                    fontFamily: "Poppins, sans-serif",
+                    borderRadius: "15px",
+                    textAlign: "center",
+                }
+            });
+        else {
+            const questions = questionRefs.current.map((ref) => ref.current?.getData());
+            console.log(quizInfos || {}, questions)
+            dispatch(postSectionInfos({quizInfos: quizInfos || {}, questions}));
+        }
+    };
 
   const addNewQuestionHandler = () => {
     setSectionInfos((prevState) => [

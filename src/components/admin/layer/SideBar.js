@@ -100,9 +100,9 @@ const SideBar = () => {
     dispatch(getSectionDetails(quizId, sectionId));
   };
 
-  const onClickQuiz = (quizId, sectionId) => {
-    dispatch(getFirstSectionDetails(quizId, sectionId));
-  };
+    const onClickQuiz = (quizId, sectionId = null) => {
+        dispatch(getFirstSectionDetails(quizId, sectionId));
+    };
 
   const beforeDelete = (id, isQuiz) => {
     setIsOpen(true);
@@ -169,7 +169,7 @@ const SideBar = () => {
                     item={section}
                     id={index}
                     onClickHandler={() =>
-                      onClickSection(quiz.id, section.id, false, section.order)
+                      onClickSection(quiz.id, section.id)
                     }
                     deleteHandler={() => beforeDelete(section.id, false)}
                     moreSx={{ box: {}, typo: { pl: 3 } }}
