@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const InteractiveListItem = ({
   item,
   id,
+  lockEdit,
   onClickHandler,
   deleteHandler,
   isQuiz,
@@ -84,7 +85,7 @@ const InteractiveListItem = ({
           <Typography fontSize={'16px'} fontWeight={'600'}>
             {item.name}
           </Typography>
-          {selected && (
+          {selected && !lockEdit && (
             <Stack direction={'row'}>
               <IconButton
                 aria-describedby={id}

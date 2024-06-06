@@ -81,7 +81,7 @@ const AdminConsole = () => {
         >
           {!view.admin && (
             <Stack height={'100%'}>
-              <SideBar />
+              <SideBar lockEdit={view.stats} />
             </Stack>
           )}
           {view.quiz && <QuizAdministration />}
