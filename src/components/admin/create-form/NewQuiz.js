@@ -10,9 +10,9 @@ const NewQuiz = forwardRef((_, ref) => {
     useEffect(() => {
         if (currentQuizInfos)
             setQuizInfos({
-                name: currentQuizInfos.name,
-                duree: currentQuizInfos.duree,
-                description: currentQuizInfos.description
+                name: currentQuizInfos.name || '',
+                duree: currentQuizInfos.duree || 0,
+                description: currentQuizInfos.description || ''
             });
     }, [currentQuizInfos]);
 

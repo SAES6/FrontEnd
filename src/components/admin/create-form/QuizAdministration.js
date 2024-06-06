@@ -98,10 +98,9 @@ const QuizAdministration = () => {
           </Button>
         )}
       </Box>
-      {(typeof currentSectionOrder === "string"
-        ? parseInt(currentSectionOrder) === 1
-        : currentSectionOrder === 1) &&
-        !isPreview && <NewQuiz ref={quizInfoRef} />}
+      {(typeof currentSectionOrder === "string" ? parseInt(currentSectionOrder) === 1 : currentSectionOrder === 1) && !isPreview &&
+          <NewQuiz ref={quizInfoRef} />
+      }
       {sectionInfos.length > 0 &&
         sectionInfos.map((section, index) => (
           <React.Fragment key={section.id + section.order}>

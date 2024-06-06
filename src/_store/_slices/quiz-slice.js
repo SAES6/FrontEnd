@@ -4,7 +4,6 @@ import {v4 as uuid} from "uuid";
 const initialState = {
     currentQuizId: null,
     currentSectionId: null,
-    currentSectionOrder: null,
     quizzesInfos: [],
     currentQuizInfos: {
         id: null,
@@ -44,32 +43,28 @@ const quizSlice = createSlice({
             state.currentQuizInfos = action.payload.quizzesInfos[0];
             state.currentSectionInfos.questions = action.payload.firstSectionDetails;
             state.currentSectionId = action.payload.firstSectionDetails[0].section_id;
-            state.currentSectionOrder = action.payload.firstSectionDetails[0].section_order;
         },
         setQuizzesInfos(state, action) {
             state.quizzesInfos = action.payload;
+            state.currentQuizId = action.payload[0].id;
+            state.currentQuizInfos = action.payload[0];
         },
         addQuiz(state) {
             const newId = uuid();
+            const newSection = {id: uuid(), name: "Section 1", order: 1};
             const newQuiz = {
                 id: newId,
                 name: "Questionnaire " + (state.quizzesInfos.length + 1),
                 dropdownOpen: true,
-                sections: [],
+                sections: [newSection],
             };
-            const newSection = {id: uuid(), name: "Section 1", order: 1};
-            const existingQuiz = newQuiz;
-            if (existingQuiz) existingQuiz.sections.push(newSection);
-            state.quizzesInfos = state.quizzesInfos.map((quiz) => ({
-                ...quiz,
-                dropdownOpen: false,
-            }));
+
+            state.quizzesInfos = state.quizzesInfos.map((quiz) => ({...quiz, dropdownOpen: false,}));
             state.quizzesInfos.push(newQuiz);
             state.currentQuizInfos = newQuiz;
             state.currentQuizId = newId;
             state.currentSectionId = newSection.id;
             state.currentSectionInfos.questions = [];
-            state.currentSectionOrder = newSection.order;
         },
         addSection(state, action) {
             const newSection = {
@@ -101,7 +96,6 @@ const quizSlice = createSlice({
             });
             if (state.currentSectionId === action.payload) {
                 state.currentSectionId = null;
-                state.currentSectionOrder = null;
                 state.currentSectionInfos.questions = [];
             }
         },
@@ -110,6 +104,7 @@ const quizSlice = createSlice({
 
             state.quizzesInfos = state.quizzesInfos.map((quiz) => {
                 if (quiz.id === action.payload) {
+                    state.currentQuizInfos = quiz;
                     return {
                         ...quiz,
                         dropdownOpen: true,
