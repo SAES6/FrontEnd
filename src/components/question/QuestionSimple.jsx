@@ -179,12 +179,7 @@ const QuestionSimple = ({
                 {choice.image_src ? (
                   <Grid
                     sx={{
-                      cursor: 'pointer',
                       height: '250px',
-                      display: 'flex',
-                      flexDirection: 'row',
-                      alignItems: 'flex-end',
-                      justifyContent: 'space-evenly',
                       backgroundImage: `url(${choice.image_src})`,
                       backgroundSize: 'contain',
                       backgroundRepeat: 'no-repeat',
@@ -195,104 +190,190 @@ const QuestionSimple = ({
                       borderRadius: '15px',
                     }}
                   >
-                    <Grid
-                      sx={{
-                        backgroundColor: themeQuestion.palette.primary.main,
-                        padding: '10px',
-                        opacity: '0.85',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        height: '75%',
-                        borderRadius: '15px 15px 0 0',
-                      }}
-                    >
+                    {selectedChoices.includes(choice.id) && (
                       <Grid
                         sx={{
+                          height: '250px',
                           display: 'flex',
-                          alignItems: 'center',
-                          gap: '5px',
+                          flexDirection: 'row',
+                          alignItems: 'flex-end',
+                          justifyContent: 'space-evenly',
                         }}
                       >
-                        <FontAwesomeIcon
-                          icon='fa-solid fa-user'
-                          style={{
-                            fontSize: '16px',
-                            color: themeQuestion.palette.primary.contrastText,
-                          }}
-                        />
-                        <Typography
+                        <Grid
                           sx={{
-                            fontFamily: 'Poppins, sans-serif',
-                            fontSize: '24px',
-                            fontWeight: '600',
-                            color: themeQuestion.palette.primary.contrastText,
+                            width: '48%',
+                            display: 'flex',
+                            ml: '1%',
+                            mr: '1%',
+                            height: `${userStat.pourcentage}%`,
+                            flexDirection: 'column',
+                            alignItems: 'space-between',
+                            justifyContent: 'space-between',
+                            backgroundColor: themeQuestion.palette.primary.main,
+                            borderRadius: '15px 15px 0 0',
+                            opacity: 0.85,
+                            position: 'relative',
                           }}
                         >
-                          {userStat.total}
-                        </Typography>
-                      </Grid>
-                      <Typography
-                        sx={{
-                          fontFamily: 'Poppins, sans-serif',
-                          fontSize: '24px',
-                          fontWeight: '600',
-                          color: themeQuestion.palette.primary.contrastText,
-                        }}
-                      >
-                        {userStat.pourcentage}%
-                      </Typography>
-                    </Grid>
-                    <Grid
-                      sx={{
-                        backgroundColor: themeQuestion.palette.secondary.main,
-                        padding: '10px',
-                        opacity: '0.85',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        height: '35%',
-                        borderRadius: '15px 15px 0 0',
-                      }}
-                    >
-                      <Grid
-                        sx={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '5px',
-                        }}
-                      >
-                        <FontAwesomeIcon
-                          icon='fa-solid fa-user'
-                          style={{
-                            fontSize: '16px',
-                            color: themeQuestion.palette.primary.contrastText,
-                          }}
-                        />
-                        <Typography
+                          <Grid
+                            sx={{
+                              position: 'absolute',
+                              width: '100%',
+                              pt: userStat.pourcentage >= 33 ? '15px' : 0,
+                              top: userStat.pourcentage >= 33 ? '0' : '-100%',
+                              height: '100%',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              justifyContent:
+                                userStat.pourcentage >= 33
+                                  ? 'space-between'
+                                  : 'center',
+                              marginLeft: 'auto',
+                              marginRight: 'auto',
+                              textAlign: 'center',
+                              alignSelf: 'stretch',
+                            }}
+                          >
+                            <Grid
+                              sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '100%',
+                                height: 'fit-content',
+                              }}
+                            >
+                              <FontAwesomeIcon
+                                icon='fa-solid fa-user'
+                                fontSize={'20px'}
+                                fixedWidth
+                                color={
+                                  themeQuestion.palette.primary.contrastText
+                                }
+                              />
+                              <Typography
+                                sx={{
+                                  fontFamily: 'Poppins, sans-serif',
+                                  fontSize: '24px',
+                                  fontWeight: '600',
+                                  lineHeight: '36px',
+                                  color:
+                                    themeQuestion.palette.primary.contrastText,
+                                }}
+                              >
+                                {userStat.total}
+                              </Typography>
+                            </Grid>
+                            <Typography
+                              sx={{
+                                fontFamily: 'Poppins, sans-serif',
+                                fontSize: '24px',
+                                fontWeight: '600',
+                                lineHeight: '36px',
+                                visibility:
+                                  userStat.pourcentage >= 1
+                                    ? 'visible'
+                                    : 'hidden',
+                                color:
+                                  themeQuestion.palette.primary.contrastText,
+                              }}
+                            >
+                              {userStat.pourcentage}%
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        <Grid
                           sx={{
-                            fontFamily: 'Poppins, sans-serif',
-                            fontSize: '24px',
-                            fontWeight: '600',
-                            color: themeQuestion.palette.primary.contrastText,
+                            width: '48%',
+                            display: 'flex',
+                            ml: '1%',
+                            mr: '1%',
+                            height: `${journalistStat.pourcentage}%`,
+                            flexDirection: 'column',
+                            alignItems: 'space-between',
+                            justifyContent: 'space-between',
+                            backgroundColor:
+                              themeQuestion.palette.secondary.main,
+                            borderRadius: '15px 15px 0 0',
+                            opacity: 0.85,
+                            position: 'relative',
                           }}
                         >
-                          {journalistStat.total}
-                        </Typography>
+                          <Grid
+                            sx={{
+                              position: 'absolute',
+                              width: '100%',
+                              pt: journalistStat.pourcentage >= 33 ? '15px' : 0,
+                              top:
+                                journalistStat.pourcentage >= 33
+                                  ? '0'
+                                  : '-100%',
+                              height: '100%',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              justifyContent:
+                                journalistStat.pourcentage >= 33
+                                  ? 'space-between'
+                                  : 'center',
+                              marginLeft: 'auto',
+                              marginRight: 'auto',
+                              textAlign: 'center',
+                              alignSelf: 'stretch',
+                            }}
+                          >
+                            <Grid
+                              sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '100%',
+                                height: 'fit-content',
+                              }}
+                            >
+                              <FontAwesomeIcon
+                                icon='fa-solid fa-user-secret'
+                                fontSize={'20px'}
+                                fixedWidth
+                                color={
+                                  themeQuestion.palette.primary.contrastText
+                                }
+                              />
+                              <Typography
+                                sx={{
+                                  fontFamily: 'Poppins, sans-serif',
+                                  fontSize: '24px',
+                                  fontWeight: '600',
+                                  lineHeight: '36px',
+                                  color:
+                                    themeQuestion.palette.primary.contrastText,
+                                }}
+                              >
+                                {journalistStat.total}
+                              </Typography>
+                            </Grid>
+                            <Typography
+                              sx={{
+                                fontFamily: 'Poppins, sans-serif',
+                                fontSize: '24px',
+                                fontWeight: '600',
+                                lineHeight: '36px',
+                                visibility:
+                                  journalistStat.pourcentage >= 1
+                                    ? 'visible'
+                                    : 'hidden',
+                                color:
+                                  themeQuestion.palette.primary.contrastText,
+                              }}
+                            >
+                              {journalistStat.pourcentage}%
+                            </Typography>
+                          </Grid>
+                        </Grid>
                       </Grid>
-                      <Typography
-                        sx={{
-                          fontFamily: 'Poppins, sans-serif',
-                          fontSize: '24px',
-                          fontWeight: '600',
-                          color: themeQuestion.palette.primary.contrastText,
-                        }}
-                      >
-                        {journalistStat.pourcentage}%
-                      </Typography>
-                    </Grid>
+                    )}
                   </Grid>
                 ) : (
                   <Grid sx={{ display: 'flex' }}>
@@ -314,10 +395,12 @@ const QuestionSimple = ({
                       label={choice.text}
                     />
                     {stats ? (
-                      <QuestionChoiceStat
-                        userPercent={userStat.pourcentage}
-                        journalistPercent={journalistStat.pourcentage}
-                      />
+                      selectedChoices.includes(choice.id) && (
+                        <QuestionChoiceStat
+                          userPercent={userStat.pourcentage}
+                          journalistPercent={journalistStat.pourcentage}
+                        />
+                      )
                     ) : (
                       <Typography
                         sx={{
