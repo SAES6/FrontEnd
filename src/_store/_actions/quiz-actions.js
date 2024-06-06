@@ -1,5 +1,6 @@
 import { quizActions } from "../_slices/quiz-slice";
 import { callApiGet, callApiPost } from "../../utils/callApi";
+import { toast } from "react-toastify";
 
 export const getSectionDetails = (quizId, sectionId, isQuiz, sectionOrder) => {
   return async (dispatch, getState) => {
@@ -203,6 +204,16 @@ export const postSectionInfos = (sectionInfos) => {
         authorization: { headers: { Authorization: `Bearer ${token}` } },
         errorMessage: "Impossible de sauvegarder cette section",
       });
+      if (response.status >= 200 && response.status < 300) {
+        toast.success("Section sauvegardée avec succès !", {
+          position: "top-center",
+          style: {
+            fontFamily: "Poppins, sans-serif",
+            borderRadius: "15px",
+            textAlign: "center",
+          },
+        });
+      }
 
       return response.data;
     };
