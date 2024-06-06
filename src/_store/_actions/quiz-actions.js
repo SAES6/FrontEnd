@@ -24,8 +24,7 @@ export const getFirstSectionDetails = (quizId, sectionId) => {
             if ((!currentSectionId || currentSectionId !== sectionId) && typeof quizId !== 'string') {
                 const questions = await fetchSectionDetails(sectionId, token);
                 dispatch(quizActions.setCurrentSectionInfos({questions: questions || [], sectionId}));
-            } else
-                dispatch(quizActions.setCurrentSectionInfos({questions: [], sectionId}));
+            }
         } catch (e) {
             console.log(e);
         }
@@ -44,8 +43,7 @@ export const getSectionDetails = (quizId, sectionId) => {
             if ((!currentSectionId || currentSectionId !== sectionId) && typeof sectionId !== 'string') {
                 const questions = await fetchSectionDetails(sectionId, token);
                 dispatch(quizActions.setCurrentSectionInfos({questions: questions || [], sectionId}));
-            }else
-                dispatch(quizActions.setCurrentSectionInfos({questions: [], sectionId}));
+            }
         } catch (e) {
             console.log(e);
         }
