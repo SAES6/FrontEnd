@@ -35,6 +35,12 @@ const Synthese = ({ questionnaire_id, section_id, section_order }) => {
   const questionnaireId = useSelector((state) => state.quiz.currentQuizId);
   const sectionId = useSelector((state) => state.quiz.currentSectionId);
   const sectionOrder = useSelector(selectCurrentSectionOrder);
+
+  useEffect(() => {
+    if (sectionOrder) {
+      setSelectedUser(null);
+    }
+  }, [sectionOrder]);
   const [selectedUser, setSelectedUser] = useState(null);
 
   const [isJournalist, setIsJournalist] = useState(true);
@@ -230,7 +236,9 @@ const Synthese = ({ questionnaire_id, section_id, section_order }) => {
       sx={{ width: "100%", height: "100%", overflow: "auto" }}
       spacing={5}
     >
-      {sectionOrder === 1 && <SyntheseGlobal statsTypeUser={statsTypeUser} />}
+      {sectionOrder === 1 && statsTypeUser && statsTypeUser.length > 0 && (
+        <SyntheseGlobal statsTypeUser={statsTypeUser} />
+      )}
       <SyntheseHeader
         setIsJournalist={setIsJournalist}
         setIsUser={setIsUser}
