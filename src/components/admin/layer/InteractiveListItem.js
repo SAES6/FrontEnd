@@ -1,37 +1,31 @@
 import React, { useState } from "react";
-import { Box, Typography, IconButton, TextField } from "@mui/material";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import {Typography, IconButton, TextField, MenuList, Popover, Stack, MenuItem} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import { useDispatch } from "react-redux";
 import {renameQuizOrSection} from "../../../_store/_actions/quiz-actions";
-
-const DropDownTypography = ({ text, onClick }) => (
-  <Typography
-    sx={{
-      cursor: "pointer",
-      pl: 2,
-      transition: "background-color 0.3s",
-      borderRadius: "15px",
-      "&:hover": {
-        backgroundColor: "rgba(0, 0, 0, 0.2)",
-        color: "black",
-      },
-    }}
-    onClick={onClick}
-  >
-    {text}
-  </Typography>
-);
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const InteractiveListItem = ({
   item,
+  id,
   onClickHandler,
   deleteHandler,
   moreSx,
   isQuiz,
+  selected,
 }) => {
   const [isRenaming, setIsRenaming] = useState(false);
   const [newName, setNewName] = useState(item.name);
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const dispatch = useDispatch();
 
@@ -46,65 +40,105 @@ const InteractiveListItem = ({
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
-      <Box
-        justifyContent="space-between"
-        alignItems="center"
-        sx={{
-          ...moreSx.box,
-          width: "100%",
-          borderRadius: "15px",
-          display: "flex",
-          transition: "background-color 0.3s",
-          "&:hover": {
-            backgroundColor: "rgba(0, 0, 0, 0.2)",
-            color: "black",
-          },
-        }}
-        onClick={onClickHandler}
-      >
-        {!isRenaming ? (
-          <>
-            <Typography
-              align="left"
-              variant="h6"
-              sx={{ ...moreSx.typo, cursor: "pointer", width: "80%" }}
-            >
-              {item.name}
-            </Typography>
-            <IconButton>
-              <MoreHorizIcon />
-            </IconButton>
-          </>
-        ) : (
-          <>
-            <TextField
-              value={newName}
-              onChange={(e) => newNameHandle(e.target.value)}
-              placeholder={item.name}
-              variant="standard"
-              sx={{ flexGrow: 1, pr: 1, pl: 3, width: "80%" }}
-              size="small"
-            />
-            <IconButton onClick={() => renameHandler()} sx={{ width: "20%" }}>
-              <CheckIcon />
-            </IconButton>
-          </>
-        )}
-      </Box>
-      {item.dropdownOpen && (
-        <Box sx={{ width: "100%" }}>
-          <DropDownTypography
-            text="Renommer"
-            onClick={() => setIsRenaming(true)}
+    <Stack
+      direction={'row'}
+      backgroundColor={
+        selected
+          ? isRenaming
+            ? 'primary.main'
+            : 'background.main'
+          : 'background.main10'
+      }
+      color={selected && !isRenaming ? 'primary.main' : 'background.main'}
+      sx={{
+        width: '100%',
+        borderRadius: '15px',
+      }}
+      onClick={onClickHandler}
+    >
+      {!isRenaming ? (
+        <Stack
+          width={'100%'}
+          height={'45px'}
+          direction={'row'}
+          alignItems={'center'}
+          justifyContent={'space-between'}
+          pl={'15px'}
+        >
+          <Typography fontSize={'16px'} fontWeight={'600'}>
+            {item.name}
+          </Typography>
+          {selected && (
+            <Stack direction={'row'}>
+              <IconButton
+                aria-describedby={id}
+                color='primary'
+                onClick={(event) => handleClick(event)}
+              >
+                <FontAwesomeIcon
+                  fixedWidth
+                  icon='fa-solid fa-ellipsis-vertical'
+                  fontSize={16}
+                />
+              </IconButton>
+
+              <Popover
+                id={id}
+                open={Boolean(anchorEl)}
+                anchorEl={anchorEl}
+                onClose={() => handleClose()}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
+                }}
+              >
+                <MenuList>
+                  <MenuItem onClick={() => setIsRenaming(true)}>
+                    <FontAwesomeIcon
+                      icon={'fa-solid fa-pen'}
+                      fixedWidth
+                      color='text.secondary'
+                      opacity={0.6}
+                    />
+                    Renommer
+                  </MenuItem>
+                  <MenuItem onClick={() => deleteHandler()}>
+                    <FontAwesomeIcon
+                      icon={'fa-solid fa-trash'}
+                      fixedWidth
+                      color='text.secondary'
+                      opacity={0.6}
+                    />
+                    Supprimer
+                  </MenuItem>
+                </MenuList>
+              </Popover>
+            </Stack>
+          )}
+        </Stack>
+      ) : (
+        <Stack
+          direction={'row'}
+          width={'100%'}
+          height={'45px'}
+          justifyContent={'space-between'}
+        >
+          <TextField
+            value={newName || item.name}
+            onChange={(e) => newNameHandle(e.target.value)}
+            placeholder={item.name}
+            sx={{ input: { color: 'background.main' } }}
           />
-          <DropDownTypography
-            text="Supprimer"
-            onClick={() => deleteHandler()}
-          />
-        </Box>
+          <IconButton onClick={() => renameHandler()} color='background'>
+            <CheckIcon />
+          </IconButton>
+        </Stack>
       )}
-    </Box>
+    </Stack>
   );
 };
 

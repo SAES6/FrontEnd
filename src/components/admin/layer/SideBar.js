@@ -21,47 +21,47 @@ import {
 } from "../../../_store/_actions/quiz-actions";
 import InteractiveListItem from "./InteractiveListItem";
 
-const ModalConfirmation = ({isOpen, setIsOpen, deleteHandler}) => {
-    const style = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        backgroundColor: 'white',
-        padding: '16px',
-        width: '20rem',
-        height: '10rem',
-        display: 'flex',
-        flexDirection: 'column',
-        borderRadius: '12px',
-        zIndex: 1001,
-    };
+const ModalConfirmation = ({ isOpen, setIsOpen, deleteHandler }) => {
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    backgroundColor: 'white',
+    padding: '16px',
+    width: '20rem',
+    height: '10rem',
+    display: 'flex',
+    flexDirection: 'column',
+    borderRadius: '12px',
+    zIndex: 1001,
+  };
 
-    return (
-        <Modal
-            open={isOpen}
-            onClose={() => setIsOpen(false)}
-            aria-labelledby="modal-title"
-            aria-describedby="modal-description"
-        >
-            <Box sx={style}>
-                <Typography id="modal-title" variant="h6" component="h2">
-                    Confirmer la suppression
-                </Typography>
-                <Typography id="modal-description" sx={{mt: 2}}>
-                    Si vous poursouvez, l'entrée sera définitivement supprimée.
-                </Typography>
-                <Box sx={{display: "flex", justifyContent: "flex-end", mt: 3}}>
-                    <Button color="primary" onClick={() => deleteHandler()}>
-                        Je confirme
-                    </Button>
-                    <Button onClick={() => setIsOpen(false)} sx={{ml: 2}}>
-                        Annuler
-                    </Button>
-                </Box>
-            </Box>
-        </Modal>
-    );
+  return (
+    <Modal
+      open={isOpen}
+      onClose={() => setIsOpen(false)}
+      aria-labelledby='modal-title'
+      aria-describedby='modal-description'
+    >
+      <Box sx={style}>
+        <Typography id='modal-title' variant='h6' component='h2'>
+          Confirmer la suppression
+        </Typography>
+        <Typography id='modal-description' sx={{ mt: 2 }}>
+          Si vous poursouvez, l'entrée sera définitivement supprimée.
+        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
+          <Button color='primary' onClick={() => deleteHandler()}>
+            Je confirme
+          </Button>
+          <Button onClick={() => setIsOpen(false)} sx={{ ml: 2 }}>
+            Annuler
+          </Button>
+        </Box>
+      </Box>
+    </Modal>
+  );
 };
 
 const SideBar = () => {
@@ -71,6 +71,7 @@ const SideBar = () => {
     const [newSectionName, setNewSectionName] = useState("");
     const [isOpen, setIsOpen] = useState(false);
     const [currentDeleteTarget, setCurrentDeleteTarget] = useState({id: null, isQuiz: false});
+    const [selectedItem, setSelectedItem] = useState(null);
 
     const dispatch = useDispatch();
 
@@ -93,10 +94,12 @@ const SideBar = () => {
 
     const onClickSection = (quizId, sectionId,) => {
         dispatch(getSectionDetails(quizId, sectionId));
+        setSelectedItem(sectionId);
     };
 
     const onClickQuiz = (quizId, sectionId) => {
         dispatch(getFirstSectionDetails(quizId, sectionId));
+        setSelectedItem(sectionId);
     };
 
     const beforeDelete = (id, isQuiz) => {
@@ -114,21 +117,29 @@ const SideBar = () => {
     };
 
     return (
-        <Stack p={2} backgroundColor='primary.main' sx={{ borderRadius: '15px' }}>
-            <ModalConfirmation
+        <Stack
+            p={2}
+            backgroundColor='primary.main'
+            color='primary.contrastText'
+            width={'250px'}
+            minWidth={'250px'}
+            sx={{ borderRadius: '15px' }}
+            spacing={2}
+        >    <ModalConfirmation
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
                 deleteHandler={deleteHandler}
             />
-            <Typography align="center" variant="h5" sx={{mb: 2}} fontWeight="bold">
+            <Typography align='center' fontWeight='600' fontSize={'24px'}>
                 Questionnaires
             </Typography>
             <Stack alignItems="center" gap={1}>
-                {quizzesInfos?.map((quiz) => (
+                {quizzesInfos?.map((quiz, index) => (
                     <React.Fragment key={quiz.id + quiz.name}>
                         <InteractiveListItem
                             isQuiz={true}
                             item={quiz}
+                            id={index}
                             onClickHandler={() =>
                                 onClickQuiz(
                                     quiz.id,
@@ -136,15 +147,16 @@ const SideBar = () => {
                                         section.order < min.order ? section : min
                                     ).id,)}
                             deleteHandler={() => beforeDelete(quiz.id, true)}
-                            moreSx={{box: {bgcolor: "red"}, typo: {pl: 2}}}
+                            selected={selectedItem === quiz.id}
                         />
                         {currentQuizId === quiz.id && (
                             <Stack alignItems="flex-start" gap={1} sx={{width: "100%"}}>
-                                {quiz.sections.map((section) => (
+                                {quiz.sections.map((section, index) => (
                                     <InteractiveListItem
                                         isQuiz={false}
                                         key={section.id}
                                         item={section}
+                                        id={index}
                                         onClickHandler={() =>
                                             onClickSection(
                                                 quiz.id,
@@ -154,8 +166,8 @@ const SideBar = () => {
                                             )
                                         }
                                         deleteHandler={() => beforeDelete(section.id, false)}
-                                        moreSx={{box: {}, typo: {pl: 3}}}
-                                    />
+                                        moreSx={{ box: {}, typo: { pl: 3 } }}
+                                        selected={selectedItem === section.id} />
                                 ))}
                                 <Box
                                     justifyContent="space-between"
@@ -169,7 +181,7 @@ const SideBar = () => {
                                     }}
                                 >
                                     <TextField
-                                        value={newSectionName || ""}
+                                        value={newSectionName || ''}
                                         onChange={(e) => newNameHandle(e.target.value)}
                                         placeholder="Nouvelle section"
                                         variant="standard"
