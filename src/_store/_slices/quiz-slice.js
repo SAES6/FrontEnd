@@ -153,6 +153,17 @@ const quizSlice = createSlice({
         return quiz;
       });
     },
+
+    setDeployedQuiz(state, action) {
+      state.currentQuizInfos.deployed = action.payload;
+      state.quizzesInfos = state.quizzesInfos.map((quiz) => {
+        if (quiz.id === state.currentQuizId) {
+          return { ...quiz, deployed: action.payload };
+        }
+        return quiz;
+      });
+    },
+
     rename(state, action) {
       let isQuiz = action.payload.isQuiz;
       console.log("isQuiz", isQuiz);
@@ -180,169 +191,6 @@ const quizSlice = createSlice({
     },
     reset: () => initialState,
   },
-  setCurrentSectionInfos(state, action) {
-    state.currentSectionInfos.questions = action.payload.questions;
-
-    const sectionIndex = state.currentQuizInfos.sections.findIndex(
-      (section) => section.id === state.currentSectionId
-    );
-    if (sectionIndex !== -1) {
-      state.currentQuizInfos.sections[sectionIndex].id =
-        action.payload.sectionId;
-    }
-    state.currentSectionId = action.payload.sectionId;
-  },
-
-  setDeployedQuiz(state, action) {
-    state.currentQuizInfos.deployed = action.payload;
-    state.quizzesInfos = state.quizzesInfos.map((quiz) => {
-      if (quiz.id === state.currentQuizId) {
-        return { ...quiz, deployed: action.payload };
-      }
-      return quiz;
-    });
-  },
-
-  setQuizzesAndCurrentSectionInfos(state, action) {
-    state.quizzesInfos = action.payload.quizzesInfos;
-    state.currentQuizId = action.payload.quizzesInfos[0].id;
-    state.currentQuizInfos = action.payload.quizzesInfos[0];
-    state.currentSectionInfos.questions = action.payload.firstSectionDetails;
-    state.currentSectionId = action.payload.firstSectionDetails[0].section_id;
-    state.currentSectionOrder =
-      action.payload.firstSectionDetails[0].section_order;
-  },
-  setQuizzesInfos(state, action) {
-    state.quizzesInfos = action.payload;
-  },
-  addQuiz(state) {
-    const newId = uuid();
-    const newQuiz = {
-      id: newId,
-      name: "Questionnaire " + (state.quizzesInfos.length + 1),
-      dropdownOpen: true,
-      sections: [],
-    };
-    const newSection = { id: uuid(), name: "Section 1", order: 1 };
-    const existingQuiz = newQuiz;
-    if (existingQuiz) existingQuiz.sections.push(newSection);
-    state.quizzesInfos = state.quizzesInfos.map((quiz) => ({
-      ...quiz,
-      dropdownOpen: false,
-    }));
-    state.quizzesInfos.push(newQuiz);
-    state.currentQuizInfos = newQuiz;
-    state.currentQuizId = newId;
-    state.currentSectionId = newSection.id;
-    state.currentSectionInfos.questions = [];
-    state.currentSectionOrder = newSection.order;
-  },
-  addSection(state, action) {
-    const newSection = {
-      id: uuid(),
-      name: action.payload,
-      order: state.currentQuizInfos.sections.length + 1,
-    };
-    state.currentQuizInfos.sections.push(newSection);
-
-    const existingQuiz = state.quizzesInfos.find(
-      (item) => item.id === state.currentQuizId
-    );
-    if (existingQuiz) existingQuiz.sections.push(newSection);
-  },
-  deleteQuiz(state, action) {
-    state.quizzesInfos = state.quizzesInfos.filter(
-      (quiz) => quiz.id !== action.payload
-    );
-    if (state.currentQuizId === action.payload) state.currentQuizId = null;
-  },
-  deleteSection(state, action) {
-    state.quizzesInfos = state.quizzesInfos.map((quiz) => {
-      if (quiz.id === state.currentQuizId) {
-        const updatedSections = quiz.sections.filter(
-          (section) => section.id !== action.payload
-        );
-        return { ...quiz, sections: updatedSections };
-      }
-      return quiz;
-    });
-    if (state.currentSectionId === action.payload) {
-      state.currentSectionId = null;
-      state.currentSectionOrder = null;
-      state.currentSectionInfos.questions = [];
-    }
-  },
-  toggleDropdownQuiz(state, action) {
-    state.currentQuizId = action.payload;
-
-    state.quizzesInfos = state.quizzesInfos.map((quiz) => {
-      if (quiz.id === action.payload) {
-        return {
-          ...quiz,
-          dropdownOpen: true,
-          sections: quiz.sections.map((section) => ({
-            ...section,
-            dropdownOpen: false,
-          })),
-        };
-      } else {
-        return {
-          ...quiz,
-          dropdownOpen: false,
-          sections: quiz.sections.map((section) => ({
-            ...section,
-            dropdownOpen: false,
-          })),
-        };
-      }
-    });
-  },
-  toggleDropdownSection(state, action) {
-    state.currentSectionId = action.payload;
-
-    state.quizzesInfos = state.quizzesInfos.map((quiz) => {
-      if (quiz.id === state.currentQuizId) {
-        return {
-          ...quiz,
-          dropdownOpen: false,
-          sections: quiz.sections.map((section) => {
-            return {
-              ...section,
-              dropdownOpen:
-                section.id === action.payload ? !section.dropdownOpen : false,
-            };
-          }),
-        };
-      }
-      return quiz;
-    });
-  },
-  rename(state, action) {
-    let isQuiz = action.payload.isQuiz;
-    console.log("isQuiz", isQuiz);
-    if (!isQuiz) {
-      state.quizzesInfos = state.quizzesInfos.map((quiz) => {
-        if (quiz.id === state.currentQuizId) {
-          const updatedSections = quiz.sections.map((section) => {
-            if (section.id === state.currentSectionId) {
-              return { ...section, name: action.payload.name };
-            }
-            return section;
-          });
-          return { ...quiz, sections: updatedSections };
-        }
-        return quiz;
-      });
-    } else {
-      state.quizzesInfos = state.quizzesInfos.map((quiz) => {
-        if (quiz.id === state.currentQuizId) {
-          return { ...quiz, name: action.payload.name };
-        }
-        return quiz;
-      });
-    }
-  },
-  reset: () => initialState,
 });
 
 const selectCurrentSectionId = (state) => state.quiz.currentSectionId;
