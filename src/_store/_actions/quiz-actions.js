@@ -117,29 +117,32 @@ export const postSectionInfos = (sectionInfos) => {
         formData.append(`questions[${qIndex}][type]`, question.type);
         formData.append(
           `questions[${qIndex}][questionnaire_id]`,
-          question.questionnaire_id
+          question.questionnaire_id || 0
         );
         formData.append(
           `questions[${qIndex}][section_id]`,
-          question.section_id
+          question.section_id || sectionId
         );
         formData.append(`questions[${qIndex}][order]`, question.order);
-        formData.append(`questions[${qIndex}][title]`, question.title);
+        formData.append(
+          `questions[${qIndex}][title]`,
+          question.title || `Question ${qIndex + 1}`
+        );
         formData.append(
           `questions[${qIndex}][description]`,
-          question.description
+          question.enonce || ""
         );
         formData.append(
           `questions[${qIndex}][slider_min]`,
-          question.slider_min
+          question.slider_min || "null"
         );
         formData.append(
           `questions[${qIndex}][slider_max]`,
-          question.slider_max
+          question.slider_max || "null"
         );
         formData.append(
           `questions[${qIndex}][slider_gap]`,
-          question.slider_gap
+          question.slider_gap || "null"
         );
 
         // Si la question a une image, ajoutez-la à FormData
@@ -166,11 +169,11 @@ export const postSectionInfos = (sectionInfos) => {
           );
           formData.append(
             `questions[${qIndex}][choices][${cIndex}][text]`,
-            choice.text
+            choice.text || ""
           );
           formData.append(
             `questions[${qIndex}][choices][${cIndex}][question_id]`,
-            choice.question_id
+            choice.question_id || 0
           );
           formData.append(
             `questions[${qIndex}][choices][${cIndex}][order]`,
