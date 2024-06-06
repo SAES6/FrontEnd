@@ -13,6 +13,7 @@ import SyntheseChoicesQuestionImage from './SyntheseChoicesQuestionImage';
 import SyntheseChoicesQuestionUser from './SyntheseChoicesQuestionUser'; // Assurez-vous d'importer vos composants User
 import SyntheseChoicesQuestionImageUser from './SyntheseChoicesQuestionImageUser';
 import SyntheseSliderUser from './SyntheseSliderUser';
+import {selectCurrentSectionOrder} from "../../../_store/_slices/quiz-slice";
 
 const Synthese = ({ questionnaire_id, section_id, section_order }) => {
   const themeSynthese = useTheme(theme);
@@ -33,7 +34,7 @@ const Synthese = ({ questionnaire_id, section_id, section_order }) => {
 
   const questionnaireId = useSelector((state) => state.quiz.currentQuizId);
   const sectionId = useSelector((state) => state.quiz.currentSectionId);
-  const sectionOrder = useSelector((state) => state.quiz.currentSectionOrder);
+  const sectionOrder = useSelector(selectCurrentSectionOrder);
   const [selectedUser, setSelectedUser] = useState(null);
 
   const [isJournalist, setIsJournalist] = useState(true);

@@ -21,10 +21,11 @@ export const getFirstSectionDetails = (quizId, sectionId) => {
         dispatch(quizActions.toggleDropdownQuiz(quizId));
 
         try {
-            if (sectionId !== null && (!currentSectionId || currentSectionId !== sectionId) && typeof quizId !== 'string') {
+            if (typeof quizId !== 'string' && (!currentSectionId || currentSectionId !== sectionId)) {
                 const questions = await fetchSectionDetails(sectionId, token);
                 dispatch(quizActions.setCurrentSectionInfos({questions: questions || [], sectionId}));
-            }
+            }else if (typeof sectionId === 'string' && (!currentSectionId || currentSectionId !== sectionId))
+                dispatch(quizActions.setCurrentSectionInfos({questions: [], sectionId}));
         } catch (e) {
             console.log(e);
         }
@@ -40,10 +41,11 @@ export const getSectionDetails = (quizId, sectionId) => {
         dispatch(quizActions.toggleDropdownSection(sectionId));
 
         try {
-            if ((!currentSectionId || currentSectionId !== sectionId) && typeof sectionId !== 'string') {
+            if (typeof sectionId !== 'string' && (!currentSectionId || currentSectionId !== sectionId)) {
                 const questions = await fetchSectionDetails(sectionId, token);
                 dispatch(quizActions.setCurrentSectionInfos({questions: questions || [], sectionId}));
-            }
+            } else if (typeof sectionId === 'string' && (!currentSectionId || currentSectionId !== sectionId))
+                dispatch(quizActions.setCurrentSectionInfos({questions: [], sectionId}));
         } catch (e) {
             console.log(e);
         }
@@ -135,9 +137,9 @@ export const postSectionInfos = (creationData) => async (dispatch, getState) => 
             createQuestionFormData(formData, sectionDetails.id, question, index, quizId)
         );
 
-        // for (let [key, value] of formData.entries()) {
-        //     console.log(key, value.toString()); // This will show files as [object File]
-        // }
+        for (let [key, value] of formData.entries()) {
+            console.log(key, value.toString()); // This will show files as [object File]
+        }
 
         return await callApiPost({
             url: "/questions/save",
@@ -158,15 +160,15 @@ export const postSectionInfos = (creationData) => async (dispatch, getState) => 
                     textAlign: "center",
                 },
             });
-        }
-        dispatch(quizActions.setCurrentSectionInfos({
-            questions: creationData.questions || [],
-            sectionId: response.data.id,
-        }));
+            dispatch(quizActions.setCurrentSectionInfos({
+                questions: creationData.questions || [],
+                sectionId: response.data.id,
+            }));
 
-        console.log(response.data.questionnaire_id, quizId)
-        if (quizId !== response.data.questionnaire_id)
-            dispatch(quizActions.setCurrentQuizId(response.data.questionnaire_id));
+            console.log(response.data.questionnaire_id, quizId)
+            if (quizId !== response.data.questionnaire_id)
+                dispatch(quizActions.setCurrentQuizId(response.data.questionnaire_id));
+        }
     } catch (e) {
         console.error("Failed to post section details:", e);
     }
