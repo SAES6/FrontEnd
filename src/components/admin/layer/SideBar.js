@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -7,30 +7,30 @@ import {
   Stack,
   TextField,
   Typography,
-} from "@mui/material";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import AddIcon from "@mui/icons-material/Add";
-import { useDispatch, useSelector } from "react-redux";
-import { quizActions } from "../../../_store/_slices/quiz-slice";
+} from '@mui/material';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import AddIcon from '@mui/icons-material/Add';
+import { useDispatch, useSelector } from 'react-redux';
+import { quizActions } from '../../../_store/_slices/quiz-slice';
 import {
   getQuizDetails,
   getSectionDetails,
-} from "../../../_store/_actions/quiz-actions";
-import InteractiveListItem from "./InteractiveListItem";
+} from '../../../_store/_actions/quiz-actions';
+import InteractiveListItem from './InteractiveListItem';
 
 const ModalConfirmation = ({ isOpen, setIsOpen, deleteHandler }) => {
   const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    backgroundColor: "white",
-    padding: "16px",
-    width: "20rem",
-    height: "10rem",
-    display: "flex",
-    flexDirection: "column",
-    borderRadius: "12px",
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    backgroundColor: 'white',
+    padding: '16px',
+    width: '20rem',
+    height: '10rem',
+    display: 'flex',
+    flexDirection: 'column',
+    borderRadius: '12px',
     zIndex: 1001,
   };
 
@@ -38,18 +38,18 @@ const ModalConfirmation = ({ isOpen, setIsOpen, deleteHandler }) => {
     <Modal
       open={isOpen}
       onClose={() => setIsOpen(false)}
-      aria-labelledby="modal-title"
-      aria-describedby="modal-description"
+      aria-labelledby='modal-title'
+      aria-describedby='modal-description'
     >
       <Box sx={style}>
-        <Typography id="modal-title" variant="h6" component="h2">
+        <Typography id='modal-title' variant='h6' component='h2'>
           Confirmer la suppression
         </Typography>
-        <Typography id="modal-description" sx={{ mt: 2 }}>
+        <Typography id='modal-description' sx={{ mt: 2 }}>
           Si vous poursouvez, l'entrée sera définitivement supprimée.
         </Typography>
-        <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3 }}>
-          <Button color="primary" onClick={() => deleteHandler()}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
+          <Button color='primary' onClick={() => deleteHandler()}>
             Je confirme
           </Button>
           <Button onClick={() => setIsOpen(false)} sx={{ ml: 2 }}>
@@ -65,7 +65,7 @@ const SideBar = () => {
   const currentQuizId = useSelector((state) => state.quiz.currentQuizId);
   const quizzesInfos = useSelector((state) => state.quiz.quizzesInfos);
 
-  const [newSectionName, setNewSectionName] = useState("");
+  const [newSectionName, setNewSectionName] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [isQuiz, setIsQuiz] = useState(false);
 
@@ -73,7 +73,6 @@ const SideBar = () => {
 
   useEffect(() => {
     dispatch(getQuizDetails());
-    console.log("fff");
   }, []);
 
   const newNameHandle = (name) => {
@@ -81,8 +80,8 @@ const SideBar = () => {
   };
 
   const newSectionHandler = () => {
-    dispatch(quizActions.addSection(newSectionName || "Nouvelle section"));
-    setNewSectionName("");
+    dispatch(quizActions.addSection(newSectionName || 'Nouvelle section'));
+    setNewSectionName('');
   };
 
   const newQuizHandler = () => {
@@ -111,16 +110,16 @@ const SideBar = () => {
 
   console.log(currentQuizId);
   return (
-    <Box sx={{ p: 1 }}>
+    <Stack p={2} backgroundColor='primary.main' sx={{ borderRadius: '15px' }}>
       <ModalConfirmation
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         deleteHandler={deleteHandler}
       />
-      <Typography align="center" variant="h5" sx={{ mb: 2 }} fontWeight="bold">
+      <Typography align='center' variant='h5' sx={{ mb: 2 }} fontWeight='bold'>
         Questionnaires
       </Typography>
-      <Stack alignItems="center" gap={1}>
+      <Stack alignItems='center' gap={1}>
         {quizzesInfos?.map((quiz) => (
           <React.Fragment key={quiz.id + quiz.name}>
             <InteractiveListItem
@@ -139,10 +138,10 @@ const SideBar = () => {
                 )
               }
               deleteHandler={() => beforeDelete(true)}
-              moreSx={{ box: { bgcolor: "red" }, typo: { pl: 2 } }}
+              moreSx={{ box: { bgcolor: 'red' }, typo: { pl: 2 } }}
             />
             {currentQuizId === quiz.id && (
-              <Stack alignItems="flex-start" gap={1} sx={{ width: "100%" }}>
+              <Stack alignItems='flex-start' gap={1} sx={{ width: '100%' }}>
                 {quiz.sections.map((section) => (
                   <InteractiveListItem
                     isQuiz={false}
@@ -161,27 +160,27 @@ const SideBar = () => {
                   />
                 ))}
                 <Box
-                  justifyContent="space-between"
-                  alignItems="center"
+                  justifyContent='space-between'
+                  alignItems='center'
                   sx={{
-                    width: "100%",
-                    display: "flex",
-                    border: "solid",
-                    borderRadius: "15px",
-                    borderColor: "red",
+                    width: '100%',
+                    display: 'flex',
+                    border: 'solid',
+                    borderRadius: '15px',
+                    borderColor: 'red',
                   }}
                 >
                   <TextField
-                    value={newSectionName || ""}
+                    value={newSectionName || ''}
                     onChange={(e) => newNameHandle(e.target.value)}
-                    placeholder="Nouvelle section"
-                    variant="standard"
-                    sx={{ flexGrow: 1, pr: 1, pl: 3, width: "80%" }}
-                    size="small"
+                    placeholder='Nouvelle section'
+                    variant='standard'
+                    sx={{ flexGrow: 1, pr: 1, pl: 3, width: '80%' }}
+                    size='small'
                   />
                   <IconButton
                     onClick={() => newSectionHandler()}
-                    sx={{ width: "20%" }}
+                    sx={{ width: '20%' }}
                   >
                     <AddIcon />
                   </IconButton>
@@ -192,12 +191,12 @@ const SideBar = () => {
         ))}
 
         <AddCircleOutlineIcon
-          fontSize="large"
-          sx={{ p: 1, width: "80%", borderRadius: "15px", cursor: "pointer" }}
+          fontSize='large'
+          sx={{ p: 1, width: '80%', borderRadius: '15px', cursor: 'pointer' }}
           onClick={() => newQuizHandler()}
         />
       </Stack>
-    </Box>
+    </Stack>
   );
 };
 

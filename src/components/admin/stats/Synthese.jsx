@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { Grid } from "@mui/material";
-import { theme } from "../../../theme";
-import { useTheme } from "@mui/material/styles";
-import { useSelector } from "react-redux";
-import SyntheseGlobal from "./SyntheseGlobal";
-import useGET from "../../../hooks/useGET";
-import SyntheseChoicesQuestion from "./SyntheseChoicesQuestion";
-import SyntheseHeader from "./SyntheseHeader";
-import SyntheseTextQuestion from "./SyntheseTextQuestion";
-import SyntheseSlider from "./SyntheseSlider";
-import SyntheseChoicesQuestionImage from "./SyntheseChoicesQuestionImage";
-import SyntheseChoicesQuestionUser from "./SyntheseChoicesQuestionUser"; // Assurez-vous d'importer vos composants User
-import SyntheseChoicesQuestionImageUser from "./SyntheseChoicesQuestionImageUser";
-import SyntheseSliderUser from "./SyntheseSliderUser";
+import React, { useEffect, useState } from 'react';
+import { Grid, Stack } from '@mui/material';
+import { theme } from '../../../theme';
+import { useTheme } from '@mui/material/styles';
+import { useSelector } from 'react-redux';
+import SyntheseGlobal from './SyntheseGlobal';
+import useGET from '../../../hooks/useGET';
+import SyntheseChoicesQuestion from './SyntheseChoicesQuestion';
+import SyntheseHeader from './SyntheseHeader';
+import SyntheseTextQuestion from './SyntheseTextQuestion';
+import SyntheseSlider from './SyntheseSlider';
+import SyntheseChoicesQuestionImage from './SyntheseChoicesQuestionImage';
+import SyntheseChoicesQuestionUser from './SyntheseChoicesQuestionUser'; // Assurez-vous d'importer vos composants User
+import SyntheseChoicesQuestionImageUser from './SyntheseChoicesQuestionImageUser';
+import SyntheseSliderUser from './SyntheseSliderUser';
 
 const Synthese = ({ questionnaire_id, section_id, section_order }) => {
   const themeSynthese = useTheme(theme);
@@ -59,13 +59,13 @@ const Synthese = ({ questionnaire_id, section_id, section_order }) => {
       setUserList([]);
       setSelectedUser(null);
     } else if (isJournalist && !isUser) {
-      setUserList(userList.filter((user) => user.role === "journalist"));
-      if (selectedUser && selectedUser.role === "other") {
+      setUserList(userList.filter((user) => user.role === 'journalist'));
+      if (selectedUser && selectedUser.role === 'other') {
         setSelectedUser(null);
       }
     } else if (!isJournalist && isUser) {
-      setUserList(userList.filter((user) => user.role === "other"));
-      if (selectedUser && selectedUser.role === "journalist") {
+      setUserList(userList.filter((user) => user.role === 'other'));
+      if (selectedUser && selectedUser.role === 'journalist') {
         setSelectedUser(null);
       }
     }
@@ -92,7 +92,7 @@ const Synthese = ({ questionnaire_id, section_id, section_order }) => {
           Authorization: `Bearer ` + tokenAdmin,
         },
       },
-      errorMessage: "Erreur lors du chargement des réponses",
+      errorMessage: 'Erreur lors du chargement des réponses',
     });
   };
 
@@ -105,7 +105,7 @@ const Synthese = ({ questionnaire_id, section_id, section_order }) => {
           Authorization: `Bearer ` + tokenAdmin,
         },
       },
-      errorMessage: "Erreur lors du chargement des utilisateurs",
+      errorMessage: 'Erreur lors du chargement des utilisateurs',
     });
   };
 
@@ -118,7 +118,7 @@ const Synthese = ({ questionnaire_id, section_id, section_order }) => {
           Authorization: `Bearer ` + tokenAdmin,
         },
       },
-      errorMessage: "Erreur lors du chargement des statistiques",
+      errorMessage: 'Erreur lors du chargement des statistiques',
     });
   };
 
@@ -144,7 +144,7 @@ const Synthese = ({ questionnaire_id, section_id, section_order }) => {
     const isSelecteduser =
       selectedUser != null && userAnswers.length > 0 ? true : false;
 
-    if (["single_choice", "multiple_choice"].includes(question.question.type)) {
+    if (['single_choice', 'multiple_choice'].includes(question.question.type)) {
       if (question.question?.choices[0]?.image_src == null) {
         return isSelecteduser ? (
           <SyntheseChoicesQuestionUser
@@ -188,7 +188,7 @@ const Synthese = ({ questionnaire_id, section_id, section_order }) => {
           />
         );
       }
-    } else if (["slider"].includes(question.question.type)) {
+    } else if (['slider'].includes(question.question.type)) {
       return isSelecteduser ? (
         <SyntheseSliderUser
           key={index}
@@ -207,7 +207,7 @@ const Synthese = ({ questionnaire_id, section_id, section_order }) => {
           isUser={isUser}
         />
       );
-    } else if (["text"].includes(question.question.type)) {
+    } else if (['text'].includes(question.question.type)) {
       return (
         <SyntheseTextQuestion
           key={index}
@@ -224,15 +224,10 @@ const Synthese = ({ questionnaire_id, section_id, section_order }) => {
   };
 
   return (
-    <Grid
-      container
-      sx={{
-        height: "100%",
-        width: "100%",
-        alignItems: "start",
-        justifyContent: "center",
-        alignContent: "start",
-      }}
+    <Stack
+      className={'sneakyScroll'}
+      sx={{ width: '100%', height: '100%', overflow: 'auto' }}
+      spacing={5}
     >
       {sectionOrder === 1 && <SyntheseGlobal statsTypeUser={statsTypeUser} />}
       <SyntheseHeader
@@ -246,7 +241,7 @@ const Synthese = ({ questionnaire_id, section_id, section_order }) => {
         questionnaireId={questionnaireId}
       />
       {statsQuestion.map((question, index) => renderComponent(question, index))}
-    </Grid>
+    </Stack>
   );
 };
 

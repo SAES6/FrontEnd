@@ -1,13 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import NewQuestion from "./NewQuestion";
-import { Box, Button, IconButton } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import { postSectionInfos } from "../../../_store/_actions/quiz-actions";
-import NewQuiz from "./NewQuiz";
-import { Preview } from "@mui/icons-material";
-import PreviewQuestion from "./PreviewQuestion";
-import { quizActions } from "../../../_store/_slices/quiz-slice";
+import React, { useEffect, useRef, useState } from 'react';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import NewQuestion from './NewQuestion';
+import { Box, Button, IconButton, Stack } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { postSectionInfos } from '../../../_store/_actions/quiz-actions';
+import NewQuiz from './NewQuiz';
+import { Preview } from '@mui/icons-material';
+import PreviewQuestion from './PreviewQuestion';
+import { quizActions } from '../../../_store/_slices/quiz-slice';
 const QuizAdministration = () => {
   const savedSectionInfos = useSelector(
     (state) => state.quiz.currentSectionInfos
@@ -17,15 +17,15 @@ const QuizAdministration = () => {
   const currentSectionOrder = useSelector(
     (state) => state.quiz.currentSectionOrder
   );
-  console.log("currentSectionId", currentSectionId);
+  console.log('currentSectionId', currentSectionId);
   const [sectionInfos, setSectionInfos] = useState([]);
   const quizzInfos = useSelector((state) => state.quiz.quizzesInfos);
   const currentQuizId = useSelector((state) => state.quiz.currentQuizId);
   const [isPreview, setIsPreview] = useState(false);
   const [quizInfos, setQuizInfos] = useState({
-    name: "",
+    name: '',
     duree: 0,
-    description: "",
+    description: '',
   });
 
   const changeQuizzInfos = (newName, duree, description) => {
@@ -92,22 +92,26 @@ const QuizAdministration = () => {
   };
 
   return (
-    <>
+    <Stack
+      className={'sneakyScroll'}
+      sx={{ width: '100%', height: '100%', overflow: 'auto' }}
+      spacing={5}
+    >
       <Box
         sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-end",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
         }}
       >
         {!isPreview && sectionInfos.length > 0 && (
-          <Button onClick={() => gatherData()} variant="contained">
+          <Button onClick={() => gatherData()} variant='contained'>
             Sauvegarder
           </Button>
         )}
         {sectionInfos.length > 0 && (
-          <Button onClick={previewHandler} variant="contained" sx={{ ml: 1 }}>
-            {isPreview ? "Édition" : "Prévisualiser"}
+          <Button onClick={previewHandler} variant='contained' sx={{ ml: 1 }}>
+            {isPreview ? 'Édition' : 'Prévisualiser'}
           </Button>
         )}
       </Box>
@@ -131,17 +135,17 @@ const QuizAdministration = () => {
       {!isPreview && currentSectionId && (
         <Box
           sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
           <IconButton onClick={addNewQuestionHandler}>
-            <AddCircleOutlineIcon fontSize="large" />
+            <AddCircleOutlineIcon fontSize='large' />
           </IconButton>
         </Box>
       )}
-    </>
+    </Stack>
   );
 };
 

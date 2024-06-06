@@ -5,6 +5,14 @@
 
 #root {
   height: 100vh;
+  width: 100vw;
 }
 
+.sneakyScroll::-webkit-scrollbar {
+  display: none;
+}
 
+.sneakyScroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
