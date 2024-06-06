@@ -165,8 +165,9 @@ const QuizAdministration = () => {
                 sectionInfos={section}
               />
             )}
-            {isPreview ||
-              (isQuizzDeploy && <PreviewQuestion sectionInfos={section} />)}
+            {(isPreview || isQuizzDeploy) && (
+              <PreviewQuestion sectionInfos={section} />
+            )}
           </React.Fragment>
         ))}
       {!isPreview && currentSectionId && !isQuizzDeploy && (
