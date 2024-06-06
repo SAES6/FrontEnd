@@ -7,6 +7,7 @@ import {
   Stack,
   Popover,
   MenuItem,
+  MenuList,
 } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -73,8 +74,14 @@ const InteractiveListItem = ({
   return (
     <Stack
       direction={'row'}
-      backgroundColor={selected ? 'background.main' : 'background.main10'}
-      color={selected ? 'primary.main' : 'background.main'}
+      backgroundColor={
+        selected
+          ? isRenaming
+            ? 'primary.main'
+            : 'background.main'
+          : 'background.main10'
+      }
+      color={selected && !isRenaming ? 'primary.main' : 'background.main'}
       sx={{
         width: '100%',
         borderRadius: '15px',
@@ -121,29 +128,44 @@ const InteractiveListItem = ({
                   horizontal: 'left',
                 }}
               >
-                <DropDownTypography
-                  text='Renommer'
-                  onClick={() => setIsRenaming(true)}
-                />
-                <DropDownTypography
-                  text='Supprimer'
-                  onClick={() => deleteHandler()}
-                />
+                <MenuList>
+                  <MenuItem onClick={() => setIsRenaming(true)}>
+                    <FontAwesomeIcon
+                      icon={'fa-solid fa-pen'}
+                      fixedWidth
+                      color='text.secondary'
+                      opacity={0.6}
+                    />
+                    Renommer
+                  </MenuItem>
+                  <MenuItem onClick={() => deleteHandler()}>
+                    <FontAwesomeIcon
+                      icon={'fa-solid fa-trash'}
+                      fixedWidth
+                      color='text.secondary'
+                      opacity={0.6}
+                    />
+                    Supprimer
+                  </MenuItem>
+                </MenuList>
               </Popover>
             </Stack>
           )}
         </Stack>
       ) : (
-        <Stack padding={'10px 15px'}>
+        <Stack
+          direction={'row'}
+          width={'100%'}
+          height={'45px'}
+          justifyContent={'space-between'}
+        >
           <TextField
             value={newName || item.name}
             onChange={(e) => newNameHandle(e.target.value)}
             placeholder={item.name}
-            variant='standard'
-            sx={{ flexGrow: 1, pr: 1, pl: 3, width: '80%' }}
-            size='small'
+            sx={{ input: { color: 'background.main' } }}
           />
-          <IconButton onClick={() => renameHandler()} sx={{ width: '20%' }}>
+          <IconButton onClick={() => renameHandler()} color='background'>
             <CheckIcon />
           </IconButton>
         </Stack>
