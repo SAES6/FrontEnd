@@ -104,9 +104,10 @@ const FullLayout = () => {
               </Box>
               <Typography
                 sx={{
+                  ml: '5px',
                   fontFamily: 'Poppins, sans-serif',
                   fontSize: '20px',
-                  fontWeight: '500',
+                  fontWeight: '600',
                   color: themeLayout.palette.primary.contrastText,
                 }}
               >
