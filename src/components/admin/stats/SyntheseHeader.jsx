@@ -147,6 +147,7 @@ const SyntheseHeader = ({
           />
         </IconButton>
         <Select
+          disabled={userList.length === 0}
           value={selectedUser}
           onChange={setSelectedUserHeader}
           sx={{ width: "100%" }}
@@ -190,6 +191,7 @@ const SyntheseHeader = ({
           }}
           control={
             <Checkbox
+              disabled={userList.length === 0}
               sx={{
                 fontFamily: "Poppins, sans-serif",
                 fontSize: "16px",
@@ -207,6 +209,7 @@ const SyntheseHeader = ({
         <FormControlLabel
           control={
             <Checkbox
+              disabled={userList.length === 0}
               id="journalist"
               name="journalist"
               checked={isJournalist}
@@ -227,6 +230,7 @@ const SyntheseHeader = ({
         }}
       >
         <Button
+          disabled={userList.length === 0}
           variant="contained"
           color="primary"
           sx={{ width: "100%" }}

@@ -3,24 +3,38 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import NewQuestion from "./NewQuestion";
 import { Stack, Box, Button, IconButton } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { postSectionInfos } from "../../../_store/_actions/quiz-actions";
+import {
+  deployOrStopQuiz,
+  postSectionInfos,
+} from "../../../_store/_actions/quiz-actions";
 import NewQuiz from "./NewQuiz";
 import PreviewQuestion from "./PreviewQuestion";
-import {toast} from "react-toastify";
-import { selectCurrentSectionOrder } from "../../../_store/_slices/quiz-slice";
+import { toast } from "react-toastify";
+import {
+  isQuizzDeployed,
+  isReadyToDeploy,
+  selectCurrentSectionOrder,
+} from "../../../_store/_slices/quiz-slice";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const QuizAdministration = () => {
-    const savedSectionInfos = useSelector((state) => state.quiz.currentSectionInfos);
-    const currentSectionId = useSelector((state) => state.quiz.currentSectionId);
-    const currentSectionOrder = useSelector(selectCurrentSectionOrder);
+  const savedSectionInfos = useSelector(
+    (state) => state.quiz.currentSectionInfos
+  );
+  const currentSectionId = useSelector((state) => state.quiz.currentSectionId);
+  const currentSectionOrder = useSelector(selectCurrentSectionOrder);
 
-    const [sectionInfos, setSectionInfos] = useState([])
-    const [isPreview, setIsPreview] = useState(false);
+  const isReadyToDeployQuiz = useSelector(isReadyToDeploy);
 
-    const questionRefs = useRef([]);
-    const quizInfoRef = useRef();
+  const isQuizzDeploy = useSelector(isQuizzDeployed);
 
-    const dispatch = useDispatch();
+  const [sectionInfos, setSectionInfos] = useState([]);
+  const [isPreview, setIsPreview] = useState(false);
+
+  const questionRefs = useRef([]);
+  const quizInfoRef = useRef();
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setSectionInfos(savedSectionInfos.questions);
@@ -35,23 +49,28 @@ const QuizAdministration = () => {
     }
   }, [sectionInfos]);
 
-    const gatherData = () => {
-        const quizInfos = quizInfoRef.current?.getData();
-        if (quizInfoRef.current && (!quizInfos.name || !quizInfos.duree || !quizInfos.description))
-            toast.error("Merci de replire les informations du questionnaire", {
-                position: "top-center",
-                style: {
-                    fontFamily: "Poppins, sans-serif",
-                    borderRadius: "15px",
-                    textAlign: "center",
-                }
-            });
-        else {
-            const questions = questionRefs.current.map((ref) => ref.current?.getData());
-            console.log(quizInfos || {}, questions)
-            dispatch(postSectionInfos({quizInfos: quizInfos || {}, questions}));
-        }
-    };
+  const gatherData = () => {
+    const quizInfos = quizInfoRef.current?.getData();
+    if (
+      quizInfoRef.current &&
+      (!quizInfos.name || !quizInfos.duree || !quizInfos.description)
+    )
+      toast.error("Merci de replire les informations du questionnaire", {
+        position: "top-center",
+        style: {
+          fontFamily: "Poppins, sans-serif",
+          borderRadius: "15px",
+          textAlign: "center",
+        },
+      });
+    else {
+      const questions = questionRefs.current.map((ref) =>
+        ref.current?.getData()
+      );
+      console.log(quizInfos || {}, questions);
+      dispatch(postSectionInfos({ quizInfos: quizInfos || {}, questions }));
+    }
+  };
 
   const addNewQuestionHandler = () => {
     setSectionInfos((prevState) => [
@@ -87,24 +106,58 @@ const QuizAdministration = () => {
           justifyContent: "flex-end",
         }}
       >
-        {!isPreview && sectionInfos.length > 0 && (
+        {sectionInfos.length > 0 && (
+          <Button
+            sx={{ mr: 1 }}
+            onClick={() => {
+              if (!isReadyToDeployQuiz) {
+                toast.error(
+                  "Veuillez sauvegarder toutes les sections du questionnaire",
+                  {
+                    position: "top-center",
+                    style: {
+                      fontFamily: "Poppins, sans-serif",
+                      borderRadius: "15px",
+                      textAlign: "center",
+                    },
+                  }
+                );
+              } else {
+                dispatch(deployOrStopQuiz());
+              }
+            }}
+            variant="contained"
+          >
+            <FontAwesomeIcon
+              icon={isQuizzDeploy ? "fa-solid fa-stop" : "fa-solid fa-play"}
+              fontSize="16px"
+              fixedWidth
+              color={isQuizzDeploy ? "red" : "green"}
+            />
+            {isQuizzDeploy ? "Arrêter" : "Déployer"}
+          </Button>
+        )}
+
+        {!isPreview && sectionInfos.length > 0 && !isQuizzDeploy && (
           <Button onClick={() => gatherData()} variant="contained">
             Sauvegarder
           </Button>
         )}
-        {sectionInfos.length > 0 && (
+        {sectionInfos.length > 0 && !isQuizzDeploy && (
           <Button onClick={previewHandler} variant="contained" sx={{ ml: 1 }}>
             {isPreview ? "Édition" : "Prévisualiser"}
           </Button>
         )}
       </Box>
-      {(typeof currentSectionOrder === "string" ? parseInt(currentSectionOrder) === 1 : currentSectionOrder === 1) && !isPreview &&
-          <NewQuiz ref={quizInfoRef} />
-      }
+      {(typeof currentSectionOrder === "string"
+        ? parseInt(currentSectionOrder) === 1
+        : currentSectionOrder === 1) &&
+        !isPreview &&
+        !isQuizzDeploy && <NewQuiz ref={quizInfoRef} />}
       {sectionInfos.length > 0 &&
         sectionInfos.map((section, index) => (
           <React.Fragment key={section.id + section.order}>
-            {!isPreview && (
+            {!isPreview && !isQuizzDeploy && (
               <NewQuestion
                 ref={questionRefs.current[index]}
                 handleClose={() => handleClose(index)}
@@ -112,10 +165,11 @@ const QuizAdministration = () => {
                 sectionInfos={section}
               />
             )}
-            {isPreview && <PreviewQuestion sectionInfos={section} />}
+            {isPreview ||
+              (isQuizzDeploy && <PreviewQuestion sectionInfos={section} />)}
           </React.Fragment>
         ))}
-      {!isPreview && currentSectionId && (
+      {!isPreview && currentSectionId && !isQuizzDeploy && (
         <Box
           sx={{
             display: "flex",
