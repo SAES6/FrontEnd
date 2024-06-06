@@ -68,6 +68,7 @@ const SideBar = () => {
   const [newSectionName, setNewSectionName] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [isQuiz, setIsQuiz] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -96,6 +97,7 @@ const SideBar = () => {
   ) => {
     console.log(sectionId);
     dispatch(getSectionDetails(quizId, sectionId, isQuiz, sectionOrder));
+    setSelectedItem(sectionId);
   };
 
   const beforeDelete = (isQuiz) => {
@@ -108,23 +110,31 @@ const SideBar = () => {
     setIsOpen(false);
   };
 
-  console.log(currentQuizId);
   return (
-    <Stack p={2} backgroundColor='primary.main' sx={{ borderRadius: '15px' }}>
+    <Stack
+      p={2}
+      backgroundColor='primary.main'
+      color='primary.contrastText'
+      width={'250px'}
+      minWidth={'250px'}
+      sx={{ borderRadius: '15px' }}
+      spacing={2}
+    >
       <ModalConfirmation
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         deleteHandler={deleteHandler}
       />
-      <Typography align='center' variant='h5' sx={{ mb: 2 }} fontWeight='bold'>
+      <Typography align='center' fontWeight='600' fontSize={'24px'}>
         Questionnaires
       </Typography>
       <Stack alignItems='center' gap={1}>
-        {quizzesInfos?.map((quiz) => (
+        {quizzesInfos?.map((quiz, index) => (
           <React.Fragment key={quiz.id + quiz.name}>
             <InteractiveListItem
               isQuiz={true}
               item={quiz}
+              id={index}
               onClickHandler={() =>
                 onClickModalHandler(
                   quiz.id,
@@ -138,15 +148,16 @@ const SideBar = () => {
                 )
               }
               deleteHandler={() => beforeDelete(true)}
-              moreSx={{ box: { bgcolor: 'red' }, typo: { pl: 2 } }}
+              selected={selectedItem === quiz.id}
             />
             {currentQuizId === quiz.id && (
-              <Stack alignItems='flex-start' gap={1} sx={{ width: '100%' }}>
-                {quiz.sections.map((section) => (
+              <Stack alignItems='flex-start' gap={1}>
+                {quiz.sections.map((section, index) => (
                   <InteractiveListItem
                     isQuiz={false}
                     key={section.id}
                     item={section}
+                    id={index}
                     onClickHandler={() =>
                       onClickModalHandler(
                         quiz.id,
@@ -157,6 +168,7 @@ const SideBar = () => {
                     }
                     deleteHandler={() => beforeDelete(false)}
                     moreSx={{ box: {}, typo: { pl: 3 } }}
+                    selected={selectedItem === section.id}
                   />
                 ))}
                 <Box
