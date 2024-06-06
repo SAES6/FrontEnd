@@ -115,6 +115,33 @@ export const theme = createTheme({
         },
       },
     },
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          border: '1px solid',
+          borderColor: '#A5C2D7',
+          boxShadow: 'none',
+          borderRadius: '15px',
+          overflow: 'hidden',
+        },
+      },
+    },
+    MuiAccordionSummary: {
+      styleOverrides: {
+        root: {
+          padding: '0 25px',
+          fontSize: '24px',
+          fontWeight: '600',
+        },
+      },
+    },
+    MuiAccordionDetails: {
+      styleOverrides: {
+        root: {
+          padding: '0 50px 25px 50px',
+        },
+      },
+    },
   },
 });
 

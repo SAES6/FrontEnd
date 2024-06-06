@@ -10,6 +10,7 @@ import { userActions } from '../../_store/_slices/user-slice';
 import Caroussel from '../../components/home/Caroussel';
 import ConsentModal from '../../components/home/ConsentModal';
 import QuizBox from '../../components/home/QuizBox';
+import About from '../../components/home/About';
 
 const Home = () => {
   const tokenUser = useSelector((state) => state.user.tokenUser);
@@ -330,142 +331,12 @@ const Home = () => {
             />
           ))}
         </Grid>
+        <About />
         <ConsentModal
           open={openConsentPopup}
           setOpen={setOpenConsentPopup}
           qId={selectedQuestionnaire}
         />
-        <Grid
-          sx={{
-            height: 'fit-content',
-            width: '100%',
-            mt: 0,
-          }}
-        >
-          <Typography
-            sx={{
-              fontSize: '24px',
-              fontFamily: 'Poppins, sans-serif',
-              fontWeight: 600,
-              lineHeight: '36px',
-              mb: '5px',
-              textAlign: 'center',
-              paddingTop: 10,
-              pb: '15px',
-            }}
-          >
-            A Propos
-          </Typography>
-          <Typography
-            sx={{
-              fontSize: '16px',
-              fontFamily: 'Poppins, sans-serif',
-              fontWeight: 400,
-              lineHeight: '24px',
-              width: 700,
-              mb: '15px',
-              ml: '200px',
-            }}
-          >
-            De l’évaluation de la crédibilité des sources d'information par les
-            journalistes aux décisions quotidiennes prises par le grand public
-            basées sur les nouvelles consommées, l'appréciation de la valeur de
-            l'information joue un rôle crucial dans notre société de
-            l'information.
-          </Typography>
-
-          <Typography
-            sx={{
-              fontSize: '16px',
-              fontFamily: 'Poppins, sans-serif',
-              fontWeight: 400,
-              lineHeight: '24px',
-              width: 700,
-              mb: '20px',
-              ml: '700px',
-            }}
-          >
-            L'importance accordée à différentes types d'informations peut varier
-            significativement entre professionnels de l'information et le grand
-            public, entraînant des perspectives diverses sur ce qui est
-            considéré comme « valeur de l'information ».
-          </Typography>
-
-          <Typography
-            sx={{
-              fontSize: '16px',
-              fontFamily: 'Poppins, sans-serif',
-              fontWeight: 400,
-              lineHeight: '24px',
-              width: 700,
-              mb: '20px',
-              ml: '200px',
-            }}
-          >
-            Cette diversité de perceptions nécessite une analyse approfondie
-            pour comprendre comment les différents groupes utilisent et
-            valorisent l'information dans leurs prises de décisions.
-          </Typography>
-
-          <Typography
-            sx={{
-              fontSize: '16px',
-              fontFamily: 'Poppins, sans-serif',
-              fontWeight: 400,
-              lineHeight: '24px',
-              width: 700,
-              mb: '20px',
-              ml: '700px',
-            }}
-          >
-            Les études récentes soulignent l’importance de saisir ces nuances,
-            et notre site web est conçu pour explorer ces aspects en profondeur.
-          </Typography>
-
-          <Typography
-            sx={{
-              fontSize: '16px',
-              fontFamily: 'Poppins, sans-serif',
-              fontWeight: 400,
-              lineHeight: '24px',
-              width: 700,
-              mb: '5px',
-              ml: '450px',
-            }}
-          >
-            Il offre une plateforme pour :
-          </Typography>
-          <Typography
-            sx={{
-              fontSize: '16px',
-              fontFamily: 'Poppins, sans-serif',
-              fontWeight: 400,
-              lineHeight: '24px',
-              width: 700,
-              mb: '5px',
-              ml: '450px',
-            }}
-          >
-            1) examiner et comparer les perceptions de la valeur de
-            l'information entre journalistes et le grand public à travers des
-            réponses à des scénarios soigneusement élaborés,{' '}
-          </Typography>
-          <Typography
-            sx={{
-              fontSize: '16px',
-              fontFamily: 'Poppins, sans-serif',
-              fontWeight: 400,
-              lineHeight: '24px',
-              width: 700,
-              mb: '25px',
-              ml: '450px',
-            }}
-          >
-            1) examiner et comparer les perceptions de la valeur de
-            l'information entre journalistes et le grand public à travers des
-            réponses à des scénarios soigneusement élaborés,{' '}
-          </Typography>
-        </Grid>
       </Grid>
     </Grid>
   );
