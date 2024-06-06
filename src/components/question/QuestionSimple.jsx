@@ -139,7 +139,7 @@ const QuestionSimple = ({
                       width: '100%',
                       height: 'auto',
                       maxHeight: '250px',
-                      objectFit: 'cover',
+                      objectFit: 'contain',
                       borderRadius: '15px',
                     }}
                     src={choice.image_src}
@@ -186,7 +186,8 @@ const QuestionSimple = ({
                       alignItems: 'flex-end',
                       justifyContent: 'space-evenly',
                       backgroundImage: `url(${choice.image_src})`,
-                      backgroundSize: 'cover',
+                      backgroundSize: 'contain',
+                      backgroundRepeat: 'no-repeat',
                       backgroundPosition: 'center',
                       outline: selectedChoices.includes(choice.id)
                         ? `2px solid ${themeQuestion.palette.primary.main}`
@@ -314,8 +315,8 @@ const QuestionSimple = ({
                     />
                     {stats ? (
                       <QuestionChoiceStat
-                        userPercent={userStat.total}
-                        journalistPercent={journalistStat.total}
+                        userPercent={userStat.pourcentage}
+                        journalistPercent={journalistStat.pourcentage}
                       />
                     ) : (
                       <Typography
