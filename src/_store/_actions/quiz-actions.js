@@ -133,7 +133,7 @@ const createQuestionFormData = (
   qIndex,
   quizId
 ) => {
-    console.log(question)
+  console.log(question);
   formData.append(`questions[${qIndex}][id]`, question.id);
   formData.append(`questions[${qIndex}][type]`, question.type);
   formData.append(`questions[${qIndex}][questionnaire_id]`, quizId || 0);
@@ -146,11 +146,11 @@ const createQuestionFormData = (
     `questions[${qIndex}][title]`,
     question.title || `Question ${qIndex + 1}`
   );
-  formData.append(`questions[${qIndex}][description]`, question.description || "");
   formData.append(
-    `questions[${qIndex}][slider_min]`,
-    question.slider_min || "null"
+    `questions[${qIndex}][description]`,
+    question.description || ""
   );
+  formData.append(`questions[${qIndex}][slider_min]`, question.slider_min || 0);
   formData.append(
     `questions[${qIndex}][slider_max]`,
     question.slider_max || "null"
@@ -250,7 +250,9 @@ export const postSectionInfos =
         );
 
         if (quizId !== response.data.questionnaire_id)
-          dispatch(quizActions.setCurrentQuizId(response.data.questionnaire_id));
+          dispatch(
+            quizActions.setCurrentQuizId(response.data.questionnaire_id)
+          );
 
         dispatch(quizActions.updateCurrentQuiz(creationData.quizInfos));
       }
