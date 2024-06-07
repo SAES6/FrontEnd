@@ -32,12 +32,8 @@ const ModalConfirmation = ({ isOpen, setIsOpen, deleteHandler }) => {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     backgroundColor: 'white',
-    padding: '16px',
-    width: '20rem',
-    height: '10rem',
-    display: 'flex',
-    flexDirection: 'column',
-    borderRadius: '12px',
+    padding: '20px 25px',
+    borderRadius: '15px',
     zIndex: 1001,
   };
 
@@ -48,22 +44,30 @@ const ModalConfirmation = ({ isOpen, setIsOpen, deleteHandler }) => {
       aria-labelledby='modal-title'
       aria-describedby='modal-description'
     >
-      <Box sx={style}>
-        <Typography id='modal-title' variant='h6' component='h2'>
-          Confirmer la suppression
+      <Stack sx={style} alignItems={'center'} gap={4}>
+        <Typography id='modal-title' fontSize={'24px'} fontWeight={'600'}>
+          Attention !
         </Typography>
-        <Typography id='modal-description' sx={{ mt: 2 }}>
-          Si vous poursouvez, l'entrée sera définitivement supprimée.
+        <Typography id='modal-description' fontSize={'16px'}>
+          Si vous poursuivez, l'entrée sera définitivement supprimée.
         </Typography>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 3 }}>
-          <Button color='primary' onClick={() => deleteHandler()}>
-            Je confirme
+        <Box>
+          <Button
+            variant='contained'
+            color='primary'
+            onClick={() => deleteHandler()}
+          >
+            Supprimer
           </Button>
-          <Button onClick={() => setIsOpen(false)} sx={{ ml: 2 }}>
+          <Button
+            variant={'outlined'}
+            onClick={() => setIsOpen(false)}
+            sx={{ ml: 2 }}
+          >
             Annuler
           </Button>
         </Box>
-      </Box>
+      </Stack>
     </Modal>
   );
 };
