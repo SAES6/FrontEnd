@@ -30,24 +30,13 @@ export const getFirstSectionDetails = (quizId, sectionId) => {
     dispatch(quizActions.toggleDropdownQuiz(quizId));
 
     try {
-      if (
-        typeof quizId !== "string" &&
-        (!currentSectionId || currentSectionId !== sectionId)
-      ) {
+      if (typeof quizId !== "string" && typeof sectionId !== "string" && (!currentSectionId || currentSectionId !== sectionId)) {
+        console.log('t')
         const questions = await fetchSectionDetails(sectionId, token);
-        dispatch(
-          quizActions.setCurrentSectionInfos({
-            questions: questions || [],
-            sectionId,
-          })
-        );
-      } else if (
-        typeof sectionId === "string" &&
-        (!currentSectionId || currentSectionId !== sectionId)
-      )
-        dispatch(
-          quizActions.setCurrentSectionInfos({ questions: [], sectionId })
-        );
+        dispatch(quizActions.setCurrentSectionInfos({questions: questions || [], sectionId,}));
+      } else if (typeof sectionId === "string" && (!currentSectionId || currentSectionId !== sectionId))
+        dispatch(quizActions.setCurrentSectionInfos({ questions: [], sectionId }));
+      console.log(sectionId)
     } catch (e) {
       console.log(e);
     }
@@ -63,24 +52,11 @@ export const getSectionDetails = (quizId, sectionId) => {
     dispatch(quizActions.toggleDropdownSection(sectionId));
 
     try {
-      if (
-        typeof sectionId !== "string" &&
-        (!currentSectionId || currentSectionId !== sectionId)
-      ) {
+      if (typeof sectionId !== "string" && (!currentSectionId || currentSectionId !== sectionId)) {
         const questions = await fetchSectionDetails(sectionId, token);
-        dispatch(
-          quizActions.setCurrentSectionInfos({
-            questions: questions || [],
-            sectionId,
-          })
-        );
-      } else if (
-        typeof sectionId === "string" &&
-        (!currentSectionId || currentSectionId !== sectionId)
-      )
-        dispatch(
-          quizActions.setCurrentSectionInfos({ questions: [], sectionId })
-        );
+        dispatch(quizActions.setCurrentSectionInfos({questions: questions || [], sectionId,}));
+      } else if (typeof sectionId === "string" && (!currentSectionId || currentSectionId !== sectionId))
+        dispatch(quizActions.setCurrentSectionInfos({ questions: [], sectionId }));
     } catch (e) {
       console.log(e);
     }
@@ -315,7 +291,7 @@ export const deleteSection = (sectionId) => {
         await deleteSectionApi(sectionId, token, dispatch);
         console.log(quizId);
         if (quizId !== -1) await deleteQuizApi(quizId, token, dispatch);
-      }
+      } else dispatch(quizActions.deleteSection(sectionId));
     } catch (e) {
       console.log(e);
     }
@@ -328,7 +304,7 @@ export const deleteQuiz = (quizId) => {
     const token = state.user.token;
 
     try {
-      if (typeof quizId !== "string") await deleteQuizApi(quizId, token);
+      if (typeof quizId !== "string") await deleteQuizApi(quizId, token, dispatch);
       else dispatch(quizActions.deleteQuiz(quizId));
     } catch (e) {
       console.log(e);
