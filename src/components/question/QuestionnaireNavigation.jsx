@@ -12,7 +12,7 @@ const QuestionnaireNavigation = ({
     <Grid
       sx={{
         padding: '20px 0 40px',
-        width: screenSize ? '1500px' : '1300px',
+        maxWidth: screenSize ? '1500px' : '1300px',
       }}
     >
       {currentSection < totalSections && (
