@@ -43,7 +43,7 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
   const [questionData, setQuestionData] = useState({
     title: `Question ${index + 1}`,
     type: '',
-    enonce: '',
+    description: '',
     image: {},
     choices: [],
   });
@@ -55,7 +55,7 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
     setQuestionData({
       ...sectionInfos,
       type: sectionInfos.type || 'Choix unique',
-      enonce: sectionInfos.description || '',
+      description: sectionInfos.description || '',
       image: sectionInfos.image || {},
       choices:
         sectionInfos.choices?.length > 0
@@ -91,7 +91,7 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
         { type: 'Choix multiple', text: '', image_src: {}, id: 1 },
         { type: 'Choix multiple', text: '', image_src: {}, id: 2 },
       ],
-      Curseur: [{ type: 'Curseur', min: 0, max: 5, step: 0.5 }],
+      Curseur: [{ type: 'Curseur', slider_min: 0, slider_max: 5, slider_gap: 0.5 }],
     };
 
     if (type)
@@ -158,13 +158,21 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
   const updateChoices = (newChoices) => {
     setQuestionData((prevState) => {
       if (newChoices.length > 0 && newChoices[0].type) {
-        const filteredChoices = prevState.choices.filter(
-          (choice) => choice.type !== newChoices[0].type
-        );
-        return {
-          ...prevState,
-          choices: [...filteredChoices, ...newChoices],
-        };
+        if (newChoices[0].type === 'Curseur')
+          return {
+            ...prevState,
+            slider_min: newChoices[0].slider_min,
+            slider_max: newChoices[0].slider_max,
+            slider_gap: newChoices[0].slider_gap
+          };
+
+          const filteredChoices = prevState.choices.filter(
+              (choice) => choice.type !== newChoices[0].type
+          );
+          return {
+            ...prevState,
+            choices: [...filteredChoices, ...newChoices],
+          };
       }
       return prevState;
     });
@@ -283,11 +291,11 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
               fullWidth
               multiline
               placeholder='Rédigez votre question'
-              value={questionData.enonce ? questionData.enonce : ''}
+              value={questionData.description ? questionData.description : ''}
               onChange={(e) =>
                 setQuestionData((prevState) => ({
                   ...prevState,
-                  enonce: e.target.value,
+                  description: e.target.value,
                 }))
               }
             />
@@ -344,10 +352,18 @@ const NewQuestion = forwardRef(({ index, sectionInfos, handleClose }, ref) => {
       <Grid container>
         <Grid item xs={12}>
           <Component
-            choices={questionData.choices.filter(
-              (choice) => choice.type === questionData.type
-            )}
-            updateChoices={updateChoices}
+              choices={questionData.choices.filter(
+                  choice => choice.type === questionData.type
+              )}
+              updateChoices={updateChoices}
+              {...(questionData.type === 'Curseur' ? {
+                  sliderData: {
+                    type:questionData.type,
+                      slider_min: questionData.slider_min,
+                      slider_max: questionData.slider_max,
+                      slider_gap: questionData.slider_gap
+                  }
+              } : {})}
           />
         </Grid>
       </Grid>

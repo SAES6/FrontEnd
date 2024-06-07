@@ -29,6 +29,16 @@ const quizSlice = createSlice({
       state.currentQuizInfos.id = action.payload;
       state.currentQuizId = action.payload;
     },
+    updateCurrentQuiz(state, action) {
+      const index = state.quizzesInfos.findIndex(quiz => quiz.id === state.currentQuizId);
+      if (index !== -1) {
+        state.quizzesInfos[index] = { ...state.quizzesInfos[index], ...action.payload };
+      }
+      state.currentQuizInfos = {
+          ...state.currentQuizInfos,
+          ...action.payload,
+      };
+    },
     setCurrentSectionInfos(state, action) {
       state.currentSectionInfos.questions = action.payload.questions;
 
