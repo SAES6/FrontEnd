@@ -1,4 +1,4 @@
-import { Button, Grid, IconButton } from '@mui/material';
+import { Button, Grid, IconButton, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -6,7 +6,9 @@ import ChoicesText from './ChoicesText';
 import ChoicesImage from './ChoicesImage';
 
 const Choices = ({ choices, updateChoices }) => {
-  const [choicesMode, setChoicesMode] = useState(!choices.some(choice => typeof choice.image_src === 'string'));
+  const [choicesMode, setChoicesMode] = useState(
+    !choices.some((choice) => typeof choice.image_src === 'string')
+  );
 
   const addChoice = () => {
     const updateChoicesNicely = () => {
@@ -102,17 +104,24 @@ const Choices = ({ choices, updateChoices }) => {
               </Grid>
             </Grid>
           ))}
-          <Grid
-            item
-            xs={12}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
+          <Stack
+            direction={'row'}
+            alignItems={'center'}
+            gap={1}
+            mt={3}
+            sx={{ cursor: 'pointer', color: 'secondary.main' }}
+            onClick={addChoice}
           >
-            <AddCircleOutlineIcon fontSize='large' onClick={addChoice} />
-          </Grid>
+            <FontAwesomeIcon
+              icon={'fa-solid fa-plus-circle'}
+              fixedWidth
+              fontSize={20}
+              color='secondary'
+            />
+            <Typography fontSize={'16px'} fontWeight={'600'}>
+              Ajouter une option
+            </Typography>
+          </Stack>
         </>
       ) : (
         <>
@@ -140,17 +149,26 @@ const Choices = ({ choices, updateChoices }) => {
               />
             ))}
           </Grid>
-          <Grid
-            item
-            xs={12}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
+          <Stack
+            direction={'row'}
+            alignItems={'center'}
+            justifyContent={'center'}
+            width={'100%'}
+            gap={1}
+            mt={3}
+            sx={{ cursor: 'pointer', color: 'secondary.main' }}
+            onClick={addChoice}
           >
-            <AddCircleOutlineIcon fontSize='large' onClick={addChoice} />
-          </Grid>
+            <FontAwesomeIcon
+              icon={'fa-solid fa-plus-circle'}
+              fixedWidth
+              fontSize={20}
+              color='secondary'
+            />
+            <Typography fontSize={'16px'} fontWeight={'600'}>
+              Ajouter une option
+            </Typography>
+          </Stack>
         </>
       )}
     </Grid>
