@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -7,33 +7,33 @@ import {
   Stack,
   TextField,
   Typography,
-} from '@mui/material';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import AddIcon from '@mui/icons-material/Add';
-import { useDispatch, useSelector } from 'react-redux';
+} from "@mui/material";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import AddIcon from "@mui/icons-material/Add";
+import { useDispatch, useSelector } from "react-redux";
 import {
   isQuizzDeployed,
   quizActions,
-} from '../../../_store/_slices/quiz-slice';
+} from "../../../_store/_slices/quiz-slice";
 import {
   deleteQuiz,
   deleteSection,
   getFirstSectionDetails,
   getQuizzesDetails,
   getSectionDetails,
-} from '../../../_store/_actions/quiz-actions';
-import InteractiveListItem from './InteractiveListItem';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+} from "../../../_store/_actions/quiz-actions";
+import InteractiveListItem from "./InteractiveListItem";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const ModalConfirmation = ({ isOpen, setIsOpen, deleteHandler }) => {
   const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    backgroundColor: 'white',
-    padding: '20px 25px',
-    borderRadius: '15px',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    backgroundColor: "white",
+    padding: "20px 25px",
+    borderRadius: "15px",
     zIndex: 1001,
   };
 
@@ -41,26 +41,26 @@ const ModalConfirmation = ({ isOpen, setIsOpen, deleteHandler }) => {
     <Modal
       open={isOpen}
       onClose={() => setIsOpen(false)}
-      aria-labelledby='modal-title'
-      aria-describedby='modal-description'
+      aria-labelledby="modal-title"
+      aria-describedby="modal-description"
     >
-      <Stack sx={style} alignItems={'center'} gap={4}>
-        <Typography id='modal-title' fontSize={'24px'} fontWeight={'600'}>
+      <Stack sx={style} alignItems={"center"} gap={4}>
+        <Typography id="modal-title" fontSize={"24px"} fontWeight={"600"}>
           Attention !
         </Typography>
-        <Typography id='modal-description' fontSize={'16px'}>
+        <Typography id="modal-description" fontSize={"16px"}>
           Si vous poursuivez, l'entrée sera définitivement supprimée.
         </Typography>
         <Box>
           <Button
-            variant='contained'
-            color='primary'
+            variant="contained"
+            color="primary"
             onClick={() => deleteHandler()}
           >
             Supprimer
           </Button>
           <Button
-            variant={'outlined'}
+            variant={"outlined"}
             onClick={() => setIsOpen(false)}
             sx={{ ml: 2 }}
           >
@@ -78,7 +78,7 @@ const SideBar = ({ lockEdit }) => {
   const quizzesInfos = useSelector((state) => state.quiz.quizzesInfos);
   const isDeployed = useSelector(isQuizzDeployed);
 
-  const [newSectionName, setNewSectionName] = useState('');
+  const [newSectionName, setNewSectionName] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [currentDeleteTarget, setCurrentDeleteTarget] = useState({
     id: null,
@@ -96,8 +96,8 @@ const SideBar = ({ lockEdit }) => {
   };
 
   const newSectionHandler = () => {
-    dispatch(quizActions.addSection(newSectionName || 'Nouvelle section'));
-    setNewSectionName('');
+    dispatch(quizActions.addSection(newSectionName || "Nouvelle section"));
+    setNewSectionName("");
   };
 
   const newQuizHandler = () => {
@@ -129,25 +129,25 @@ const SideBar = ({ lockEdit }) => {
   return (
     <Stack
       p={2}
-      backgroundColor='primary.main'
-      color='primary.contrastText'
-      width={'275px'}
-      minWidth={'275px'}
-      sx={{ borderRadius: '15px' }}
+      backgroundColor="primary.main"
+      color="primary.contrastText"
+      width={"275px"}
+      minWidth={"275px"}
+      sx={{ borderRadius: "15px" }}
       gap={3}
     >
-      {' '}
+      {" "}
       <ModalConfirmation
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         deleteHandler={deleteHandler}
       />
-      <Typography align='center' fontWeight='600' fontSize={'24px'}>
+      <Typography align="center" fontWeight="600" fontSize={"24px"}>
         Questionnaires
       </Typography>
-      <Stack alignItems='center' gap={2}>
+      <Stack alignItems="center" gap={2}>
         {quizzesInfos?.map((quiz, index) => (
-          <Stack width={'100%'} key={quiz.id + quiz.name}>
+          <Stack width={"100%"} key={quiz.id + quiz.name}>
             <InteractiveListItem
               isQuiz={true}
               item={quiz}
@@ -166,9 +166,9 @@ const SideBar = ({ lockEdit }) => {
             />
             {currentQuizId === quiz.id && (
               <Stack
-                alignItems='flex-start'
+                alignItems="flex-start"
                 gap={1}
-                sx={{ width: '100%' }}
+                sx={{ width: "100%" }}
                 pt={1}
               >
                 {quiz.sections.map((section, index) => (
@@ -184,33 +184,33 @@ const SideBar = ({ lockEdit }) => {
                     lockEdit={lockEdit}
                   />
                 ))}
-                {!isDeployed && (
+                {!isDeployed && !lockEdit && (
                   <Stack
-                    direction={'row'}
+                    direction={"row"}
                     gap={1}
-                    justifyContent='space-between'
-                    alignItems='center'
-                    pl={'25px'}
+                    justifyContent="space-between"
+                    alignItems="center"
+                    pl={"25px"}
                   >
                     <TextField
-                      value={newSectionName || ''}
+                      value={newSectionName || ""}
                       onChange={(e) => newNameHandle(e.target.value)}
-                      placeholder='Nouvelle section'
+                      placeholder="Nouvelle section"
                       sx={{
                         input: {
-                          color: 'background.main',
-                          '::placeholder': {
-                            color: 'background.main75',
+                          color: "background.main",
+                          "::placeholder": {
+                            color: "background.main75",
                           },
                         },
                       }}
                     />
                     <IconButton onClick={() => newSectionHandler()}>
                       <FontAwesomeIcon
-                        icon={'fa-solid fa-plus-circle'}
+                        icon={"fa-solid fa-plus-circle"}
                         fixedWidth
                         fontSize={20}
-                        color='background'
+                        color="background"
                       />
                     </IconButton>
                   </Stack>
@@ -222,19 +222,19 @@ const SideBar = ({ lockEdit }) => {
       </Stack>
       {!lockEdit && (
         <Stack
-          borderTop={'1px solid'}
-          borderColor={'primary.contrastText'}
+          borderTop={"1px solid"}
+          borderColor={"primary.contrastText"}
           pt={1}
-          direction={'row'}
-          alignItems={'center'}
-          justifyContent={'center'}
-          sx={{ cursor: 'pointer' }}
+          direction={"row"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          sx={{ cursor: "pointer" }}
           onClick={() => newQuizHandler()}
         >
-          <IconButton color='background'>
-            <FontAwesomeIcon icon={'fa-solid fa-plus-circle'} fontSize={20} />
+          <IconButton color="background">
+            <FontAwesomeIcon icon={"fa-solid fa-plus-circle"} fontSize={20} />
           </IconButton>
-          <Typography fontSize={'16px'}>Ajouter un questionnaire</Typography>
+          <Typography fontSize={"16px"}>Ajouter un questionnaire</Typography>
         </Stack>
       )}
     </Stack>
