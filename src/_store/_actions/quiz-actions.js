@@ -285,6 +285,7 @@ export const deleteSection = (sectionId) => {
     const state = getState();
     const token = state.user.token;
     const quizId = isLastSection(state);
+    const currentQuizInfos = state.quiz.currentQuizInfos;
 
     const deleteSectionApi = async (sectionId, token, dispatch) => {
       const response = await callApiDelete({
@@ -302,8 +303,10 @@ export const deleteSection = (sectionId) => {
             textAlign: "center",
           },
         });
-
         dispatch(quizActions.deleteSection(sectionId));
+        if (currentQuizInfos.sections.length === 1) {
+          deleteQuiz(currentQuizInfos.id);
+        }
       }
     };
 

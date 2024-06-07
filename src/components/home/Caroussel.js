@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import { autoPlay } from 'react-swipeable-views-utils';
-import { Grid, Typography } from '@mui/material';
+import { Grid, Stack, Typography } from '@mui/material';
 
 const Caroussel = ({ theme }) => {
   const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
@@ -30,16 +30,25 @@ const Caroussel = ({ theme }) => {
       marginTop: '10px',
     },
     dot: {
-      width: '15px',
-      height: '15px',
+      width: '10px',
+      height: '10px',
       borderRadius: '50%',
-      backgroundColor: themeCaroussel.palette.secondary.main,
+      backgroundColor: themeCaroussel.palette.background.main75,
       margin: '0 5px',
       cursor: 'pointer',
-      transition: 'background-color 0.3s ease', // Transition for dot color
+      transition: 'background-color 0.3s ease',
     },
     activeDot: {
-      backgroundColor: themeCaroussel.palette.primary.main,
+      backgroundColor: themeCaroussel.palette.background.main,
+    },
+    text: {
+      color: themeCaroussel.palette.background.main,
+      fontSize: '16px',
+      fontFamily: 'Poppins, sans-serif',
+      fontWeight: 400,
+      lineHeight: '24px',
+      textAlign: 'justify',
+      mb: '5px',
     },
   };
 
@@ -59,7 +68,7 @@ const Caroussel = ({ theme }) => {
     >
       <Typography
         sx={{
-          color: themeCaroussel.palette.text.main,
+          color: themeCaroussel.palette.background.main,
           fontSize: '24px',
           fontFamily: 'Poppins, sans-serif',
           fontWeight: 600,
@@ -69,30 +78,12 @@ const Caroussel = ({ theme }) => {
       >
         Bienvenue !
       </Typography>
-      <Typography
-        sx={{
-          color: themeCaroussel.palette.text.secondary,
-          fontSize: '16px',
-          fontFamily: 'Poppins, sans-serif',
-          fontWeight: 400,
-          lineHeight: '24px',
-          mb: '5px',
-        }}
-      >
+      <Typography sx={styles.text}>
         Dans un monde saturé d'informations, comprendre ce qui constitue une
         "information de valeur" peut varier grandement entre les professionnels
         de l'information et le grand public.
       </Typography>
-      <Typography
-        sx={{
-          color: themeCaroussel.palette.text.secondary,
-          fontSize: '16px',
-          fontFamily: 'Poppins, sans-serif',
-          fontWeight: 400,
-          lineHeight: '24px',
-          mb: '5px',
-        }}
-      >
+      <Typography sx={styles.text}>
         Ce projet, initié par l'IMSIC, vise à explorer ces perceptions diverses
         à travers une série de scénarios interactifs où vous, les participants,
         pouvez exprimer vos opinions et choix.
@@ -108,7 +99,7 @@ const Caroussel = ({ theme }) => {
     >
       <Typography
         sx={{
-          color: themeCaroussel.palette.text.main,
+          color: themeCaroussel.palette.background.main,
           fontSize: '24px',
           fontFamily: 'Poppins, sans-serif',
           fontWeight: 600,
@@ -120,7 +111,7 @@ const Caroussel = ({ theme }) => {
       </Typography>
       <Typography
         sx={{
-          color: themeCaroussel.palette.text.main,
+          color: themeCaroussel.palette.background.main,
           fontSize: '16px',
           fontFamily: 'Poppins, sans-serif',
           fontWeight: 600,
@@ -130,22 +121,13 @@ const Caroussel = ({ theme }) => {
       >
         Exprimez votre avis
       </Typography>
-      <Typography
-        sx={{
-          color: themeCaroussel.palette.text.secondary,
-          fontSize: '16px',
-          fontFamily: 'Poppins, sans-serif',
-          fontWeight: 400,
-          lineHeight: '24px',
-          mb: '5px',
-        }}
-      >
+      <Typography sx={styles.text}>
         Sélectionnez les options qui reflètent le mieux votre opinion sur la
         valeur de l'information présentée dans chaque scénario.
       </Typography>
       <Typography
         sx={{
-          color: themeCaroussel.palette.text.main,
+          color: themeCaroussel.palette.background.main,
           fontSize: '16px',
           fontFamily: 'Poppins, sans-serif',
           fontWeight: 600,
@@ -155,22 +137,13 @@ const Caroussel = ({ theme }) => {
       >
         Contribuez à la Recherche
       </Typography>
-      <Typography
-        sx={{
-          color: themeCaroussel.palette.text.secondary,
-          fontSize: '16px',
-          fontFamily: 'Poppins, sans-serif',
-          fontWeight: 400,
-          lineHeight: '24px',
-          mb: '5px',
-        }}
-      >
+      <Typography sx={styles.text}>
         Vos réponses anonymes aideront les chercheurs à mieux comprendre les
         différences de perception entre les journalistes et le grand public.
       </Typography>
       <Typography
         sx={{
-          color: themeCaroussel.palette.text.main,
+          color: themeCaroussel.palette.background.main,
           fontSize: '16px',
           fontFamily: 'Poppins, sans-serif',
           fontWeight: 600,
@@ -180,16 +153,7 @@ const Caroussel = ({ theme }) => {
       >
         Explorez des Scénarios
       </Typography>
-      <Typography
-        sx={{
-          color: themeCaroussel.palette.text.secondary,
-          fontSize: '16px',
-          fontFamily: 'Poppins, sans-serif',
-          fontWeight: 400,
-          lineHeight: '24px',
-          mb: '5px',
-        }}
-      >
+      <Typography sx={styles.text}>
         Parcourez une série de dilemmes et de situations qui vous amèneront à
         réfléchir sur ce que vous considérez comme une information précieuse.
       </Typography>
@@ -205,7 +169,7 @@ const Caroussel = ({ theme }) => {
     >
       <Typography
         sx={{
-          color: themeCaroussel.palette.text.main,
+          color: themeCaroussel.palette.background.main,
           fontSize: '24px',
           fontFamily: 'Poppins, sans-serif',
           fontWeight: 600,
@@ -215,31 +179,13 @@ const Caroussel = ({ theme }) => {
       >
         Objectif de la Plateforme
       </Typography>
-      <Typography
-        sx={{
-          color: themeCaroussel.palette.text.secondary,
-          fontSize: '16px',
-          fontFamily: 'Poppins, sans-serif',
-          fontWeight: 400,
-          lineHeight: '24px',
-          mb: '5px',
-        }}
-      >
+      <Typography sx={styles.text}>
         Cette plateforme a été conçue pour recueillir de manière anonyme vos
         réponses et opinions. Les données collectées seront utilisées pour
         analyser les tendances et les modèles dans la perception de la valeur de
         l'information.
       </Typography>
-      <Typography
-        sx={{
-          color: themeCaroussel.palette.text.secondary,
-          fontSize: '16px',
-          fontFamily: 'Poppins, sans-serif',
-          fontWeight: 400,
-          lineHeight: '24px',
-          mb: '5px',
-        }}
-      >
+      <Typography sx={styles.text}>
         Les résultats aideront à éclairer les pratiques des professionnels de
         l'information et à sensibiliser le public sur les critères qui
         influencent leur consommation d'informations.
@@ -248,13 +194,10 @@ const Caroussel = ({ theme }) => {
   ];
 
   return (
-    <Grid
-      item
-      xs={6}
-      md={6}
-      sx={{
-        pr: 2,
-      }}
+    <Stack
+      sx={{ backgroundColor: 'secondary.main', borderRadius: '15px' }}
+      width={'100%'}
+      padding={'20px 25px'}
     >
       <SwipeableViews
         axis={'x'}
@@ -283,7 +226,7 @@ const Caroussel = ({ theme }) => {
           ></span>
         ))}
       </div>
-    </Grid>
+    </Stack>
   );
 };
 
