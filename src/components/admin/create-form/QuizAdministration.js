@@ -16,6 +16,7 @@ import {
   selectCurrentSectionOrder,
 } from '../../../_store/_slices/quiz-slice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useNavigate } from 'react-router-dom';
 
 const QuizAdministration = () => {
   const savedSectionInfos = useSelector(

@@ -133,6 +133,7 @@ const createQuestionFormData = (
   qIndex,
   quizId
 ) => {
+  console.log(question);
   formData.append(`questions[${qIndex}][id]`, question.id);
   formData.append(`questions[${qIndex}][type]`, question.type);
   formData.append(`questions[${qIndex}][questionnaire_id]`, quizId || 0);
@@ -145,11 +146,11 @@ const createQuestionFormData = (
     `questions[${qIndex}][title]`,
     question.title || `Question ${qIndex + 1}`
   );
-  formData.append(`questions[${qIndex}][description]`, question.enonce || "");
   formData.append(
-    `questions[${qIndex}][slider_min]`,
-    question.slider_min || "null"
+    `questions[${qIndex}][description]`,
+    question.description || ""
   );
+  formData.append(`questions[${qIndex}][slider_min]`, question.slider_min || 0);
   formData.append(
     `questions[${qIndex}][slider_max]`,
     question.slider_max || "null"
@@ -218,7 +219,7 @@ export const postSectionInfos =
       );
 
       for (let [key, value] of formData.entries()) {
-        console.log(key, value.toString()); // This will show files as [object File]
+        console.log(key, value.toString());
       }
 
       return await callApiPost({
@@ -240,6 +241,7 @@ export const postSectionInfos =
             textAlign: "center",
           },
         });
+
         dispatch(
           quizActions.setCurrentSectionInfos({
             questions: creationData.questions || [],
@@ -247,11 +249,12 @@ export const postSectionInfos =
           })
         );
 
-        console.log(response.data.questionnaire_id, quizId);
         if (quizId !== response.data.questionnaire_id)
           dispatch(
             quizActions.setCurrentQuizId(response.data.questionnaire_id)
           );
+
+        dispatch(quizActions.updateCurrentQuiz(creationData.quizInfos));
       }
     } catch (e) {
       console.error("Failed to post section details:", e);
@@ -328,6 +331,7 @@ export const deleteQuiz = (quizId) => {
 
     try {
       if (typeof quizId !== "string") await deleteQuizApi(quizId, token);
+      else dispatch(quizActions.deleteQuiz(quizId));
     } catch (e) {
       console.log(e);
     }
@@ -382,7 +386,7 @@ export const deployOrStopQuiz = () => {
       });
 
       if (response.status >= 200 && response.status < 300) {
-        if (response.data == "deployed") {
+        if (response.data === "deployed") {
           toast.success("Quiz déployé avec succès !", {
             position: "top-center",
             style: {
@@ -402,7 +406,7 @@ export const deployOrStopQuiz = () => {
           });
         }
         dispatch(
-          quizActions.setDeployedQuiz(response.data == "deployed" ? 1 : 0)
+          quizActions.setDeployedQuiz(response.data === "deployed" ? 1 : 0)
         );
       }
     };
